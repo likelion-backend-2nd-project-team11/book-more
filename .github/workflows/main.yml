@@ -48,6 +48,7 @@ jobs:
       with:
         name: build-artifact
         path: build/libs/*-SNAPSHOT.jar
+        working-directory: ${{ env.working-directory }}
 
   docker-push:
     needs: gradle-build
