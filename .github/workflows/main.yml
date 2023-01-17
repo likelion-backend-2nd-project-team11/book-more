@@ -36,7 +36,7 @@ jobs:
       run: chmod +x backend/gradlew
       
     - name: Build with Gradle
-      uses: backend/gradle/gradle-build-action@67421db6bd0bf253fb4bd25b31ebb98943c375e1
+      uses: gradle/gradle-build-action@67421db6bd0bf253fb4bd25b31ebb98943c375e1
       with:
         arguments: build
 
@@ -44,7 +44,7 @@ jobs:
       uses: actions/upload-artifact@v3.1.2
       with:
         name: build-artifact
-        path: backend/build/libs/*-SNAPSHOT.jar
+        path: build/libs/*-SNAPSHOT.jar
 
   docker-push:
     needs: gradle-build
