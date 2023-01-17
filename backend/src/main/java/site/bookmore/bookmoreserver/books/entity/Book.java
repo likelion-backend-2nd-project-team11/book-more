@@ -20,10 +20,10 @@ public class Book {
     @Column(nullable = false)
     private String title;
 
-    @OneToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST})
+    @OneToMany(mappedBy = "book", fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST})
     private List<Author> authors = new ArrayList<>();
 
-    @OneToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST})
+    @OneToMany(mappedBy = "book", fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST})
     private List<Translator> translators = new ArrayList<>();
 
     @Column(nullable = false)
@@ -32,12 +32,12 @@ public class Book {
     @Column(nullable = false)
     private String publisher;
 
-    private int page;
+    private int pages;
 
     private String image;
 
     @Column(nullable = false)
-    private String index;
+    private String chapter;
 
     @Column(nullable = false)
     private String introduce;
