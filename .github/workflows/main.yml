@@ -15,7 +15,7 @@ on:
 
 env:
   REGISTRY: ghcr.io
-  working-directory: ./backend
+  working-directory: backend
   
 # 해당 Workflow의 하나 이상의 Job 목록
 jobs:
@@ -35,7 +35,7 @@ jobs:
         
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
-      working-directory: ${{ env.working-directory }}
+      working-directory: ./${{ env.working-directory }}
       
     - name: Build with Gradle
       uses: gradle/gradle-build-action@67421db6bd0bf253fb4bd25b31ebb98943c375e1
