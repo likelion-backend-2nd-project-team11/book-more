@@ -74,9 +74,7 @@ jobs:
         build-root-directory: backend/
 
     - name: Docker Build
-      run: docker build -t ${{ env.REGISTRY }}/${{ github.repository }} .
-      working-directory: ${{ env.working-directory }}
+      run: docker build -t ${{ env.REGISTRY }}/${{ github.repository }}/${{ env.working-directory }} .
 
     - name: Docker push
-      run: docker push ${{ env.REGISTRY }}/${{ github.repository }}
-      working-directory: ${{ env.working-directory }}
+      run: docker push ${{ env.REGISTRY }}/${{ github.repository }}/${{ env.working-directory }}
