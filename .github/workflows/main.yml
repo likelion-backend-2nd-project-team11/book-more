@@ -16,6 +16,7 @@ on:
 env:
   REGISTRY: ghcr.io
   working-directory: backend
+  dockerfile-directory: Docker
   
 # 해당 Workflow의 하나 이상의 Job 목록
 jobs:
@@ -74,7 +75,7 @@ jobs:
         build-root-directory: backend/
 
     - name: Docker Build
-      run: docker build -t ${{ env.REGISTRY }}/${{ github.repository }}/${{ env.working-directory }} .
+      run: docker build -t ${{ env.REGISTRY }}/${{ github.repository }}/${{ env.working-directory }}/${{ env.dockerfile-directory }} .
 
     - name: Docker push
       run: docker push ${{ env.REGISTRY }}/${{ github.repository }}/${{ env.working-directory }}
