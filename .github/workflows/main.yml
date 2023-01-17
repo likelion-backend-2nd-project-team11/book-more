@@ -49,7 +49,7 @@ jobs:
       uses: actions/upload-artifact@v3.1.2
       with:
         name: build-artifact
-        path: build/libs/*-SNAPSHOT.jar
+        path: backend/build/libs/*-SNAPSHOT.jar
 
   docker-push:
     needs: gradle-build
