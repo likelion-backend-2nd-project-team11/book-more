@@ -1,5 +1,5 @@
 # Repository의 Actions 탭에 나타날 Workflow 이름으로 필수 옵션은 아님
-name: CI PipeLine 
+name: BackEnd CI PipeLine 
 
 # Workflow를 실행시키기 위한 Event 목록
 on:
@@ -75,6 +75,8 @@ jobs:
 
     - name: Docker Build
       run: docker build -t ${{ env.REGISTRY }}/${{ github.repository }} .
+      working-directory: ${{ env.working-directory }}
 
     - name: Docker push
       run: docker push ${{ env.REGISTRY }}/${{ github.repository }}
+      working-directory: ${{ env.working-directory }}
