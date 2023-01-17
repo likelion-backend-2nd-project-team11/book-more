@@ -15,7 +15,6 @@ on:
 
 env:
   REGISTRY: ghcr.io
-  working-directory: backend
   
 defaults:
   run:
@@ -76,7 +75,7 @@ jobs:
         name: build-artifact
 
     - name: Docker Build
-      run: docker build -t ${{ env.REGISTRY }}/${{ github.repository }}/${{ env.working-directory }} .
+      run: docker build -t ${{ env.REGISTRY }}/${{ github.repository }}/ .
 
     - name: Docker push
-      run: docker push ${{ env.REGISTRY }}/${{ github.repository }}/${{ env.working-directory }}
+      run: docker push ${{ env.REGISTRY }}/${{ github.repository }}/
