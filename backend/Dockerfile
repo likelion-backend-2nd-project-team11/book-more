@@ -1,6 +1,6 @@
 FROM openjdk:11.0-slim
 WORKDIR /app
-COPY ./*-SNAPSHOT.jar ./app.jar
+COPY /build/build/libs/*-SNAPSHOT.jar ./app.jar
 
 EXPOSE 8080
 
