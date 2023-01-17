@@ -6,6 +6,8 @@ import static org.springframework.http.HttpStatus.*;
 
 public enum ErrorCode {
     INVALID_PASSWORD(UNAUTHORIZED, "잘못된 패스워드입니다."),
+    INVALID_TOKEN(UNAUTHORIZED, "잘못된 토큰입니다."),
+    USER_NOT_LOGGED_IN(HttpStatus.UNAUTHORIZED, "로그인이 필요합니다."),
     INVALID_PERMISSION(FORBIDDEN, "권한이 없습니다."),
     USER_NOT_FOUND(NOT_FOUND, "해당하는 유저를 찾을 수 없습니다."),
     EMAIL_NOT_FOUND(NOT_FOUND, "해당하는 이메일을 찾을 수 없습니다."),
