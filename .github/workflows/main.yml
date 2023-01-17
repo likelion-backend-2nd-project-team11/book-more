@@ -9,14 +9,17 @@ on:
   pull_request:
     branches:
       - main
-      
+
 # 해당 옵션을 통해 사용자가 직접 Actions 탭에서 Workflow를 실행시킬 수 있음
   workflow_dispatch:
 
 env:
   REGISTRY: ghcr.io
-  working-directory: backend
   
+defaults:
+  run:
+    working-directory: backend
+    
 # 해당 Workflow의 하나 이상의 Job 목록
 jobs:
   gradle-build:
@@ -35,13 +38,11 @@ jobs:
         
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
-      working-directory: ./${{ env.working-directory }}
       
     - name: Build with Gradle
       uses: gradle/gradle-build-action@67421db6bd0bf253fb4bd25b31ebb98943c375e1
       with:
         arguments: build
-        build-root-directory: backend/
 
     - name: Upload Gradle Build Artifact
       uses: actions/upload-artifact@v3.1.2
@@ -73,7 +74,7 @@ jobs:
         name: build-artifact
 
     - name: Docker Build
-      run: docker build -t ${{ env.REGISTRY }}/${{ github.repository }}/${{ env.working-directory }} .
+      run: docker build -t ${{ env.REGISTRY }}/${{ github.repository }}/ .
 
     - name: Docker push
-      run: docker push ${{ env.REGISTRY }}/${{ github.repository }}/${{ env.working-directory }}
+      run: docker push ${{ env.REGISTRY }}/${{ github.repository }}/
