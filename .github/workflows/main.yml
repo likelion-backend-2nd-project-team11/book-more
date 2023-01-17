@@ -71,7 +71,6 @@ jobs:
       uses: actions/download-artifact@v3
       with:
         name: build-artifact
-        build-root-directory: backend/
 
     - name: Docker Build
       run: docker build -t ${{ env.REGISTRY }}/${{ github.repository }}/${{ env.working-directory }} .
