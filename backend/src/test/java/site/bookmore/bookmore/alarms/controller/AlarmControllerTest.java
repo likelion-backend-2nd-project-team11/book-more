@@ -5,16 +5,18 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.data.domain.*;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import site.bookmore.bookmore.alarms.entity.dto.AlarmResponse;
 import site.bookmore.bookmore.alarms.service.AlarmService;
 
-
 import java.util.List;
 
-import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
@@ -44,9 +46,9 @@ class AlarmControllerTest {
     @Test
     @DisplayName("팔로잉 알림 테스트")
     @WithMockUser(username = "user2")
-    void alarm_following_list() throws Exception{
+    void alarm_following_list() throws Exception {
         Page<AlarmResponse> responsePage = new PageImpl<>(List.of(response));
-        given(alarmService.findByFollowingReview(any(Pageable.class),eq("user2"))).willReturn(responsePage);
+        given(alarmService.findByFollowingReview(any(Pageable.class), eq("user2"))).willReturn(responsePage);
 
         mockMvc.perform(get("/api/v1/alarms/reviews")
                         .with(csrf()))
@@ -58,7 +60,7 @@ class AlarmControllerTest {
                 .andExpect(jsonPath("$..['source']").exists())
                 .andDo(print());
 
-        verify(alarmService).findByFollowingReview(any(Pageable.class),eq("user2"));
+        verify(alarmService).findByFollowingReview(any(Pageable.class), eq("user2"));
 
     }
 
