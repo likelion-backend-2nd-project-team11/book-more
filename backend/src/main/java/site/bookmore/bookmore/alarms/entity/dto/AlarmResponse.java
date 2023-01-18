@@ -1,14 +1,11 @@
 package site.bookmore.bookmore.alarms.entity.dto;
 
-import jdk.jshell.Snippet;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import site.bookmore.bookmore.alarms.entity.Alarm;
 
-import javax.persistence.Column;
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 @AllArgsConstructor
