@@ -21,6 +21,6 @@ public class AlarmService {
         Long targetId = user.getId();
 
         // 해당 유저id의 alarm만 조회
-        return alarmRepository.findByTarget_User(targetId,pageable).map(alarm -> new AlarmResponse(alarm));
+        return alarmRepository.findByTarget_User(targetId, pageable).map(alarm -> new AlarmResponse(alarm));
     }
 }
