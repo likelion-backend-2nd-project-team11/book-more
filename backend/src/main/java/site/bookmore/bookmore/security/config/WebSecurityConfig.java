@@ -36,12 +36,12 @@ public class WebSecurityConfig {
 
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
-        http.authorizeHttpRequests()
-                .regexMatchers(HttpMethod.GET, GET_AUTHENTICATED_REGEX_LIST).authenticated()
-                .regexMatchers(HttpMethod.POST, POST_AUTHENTICATED_REGEX_LIST).authenticated()
-                .regexMatchers(HttpMethod.PUT, PUT_AUTHENTICATED_REGEX_LIST).authenticated()
-                .regexMatchers(HttpMethod.DELETE, DELETE_AUTHENTICATED_REGEX_LIST).authenticated()
-                .regexMatchers(ADMIN_ONLY_REGEX_LIST).hasRole("ADMIN");
+//        http.authorizeHttpRequests()
+//                .regexMatchers(HttpMethod.GET, GET_AUTHENTICATED_REGEX_LIST).authenticated()
+//                .regexMatchers(HttpMethod.POST, POST_AUTHENTICATED_REGEX_LIST).authenticated()
+//                .regexMatchers(HttpMethod.PUT, PUT_AUTHENTICATED_REGEX_LIST).authenticated()
+//                .regexMatchers(HttpMethod.DELETE, DELETE_AUTHENTICATED_REGEX_LIST).authenticated()
+//                .regexMatchers(ADMIN_ONLY_REGEX_LIST).hasRole("ADMIN");
 
         http.exceptionHandling().accessDeniedHandler(new CustomAccessDeniedEntryPoint())
                 .and()
