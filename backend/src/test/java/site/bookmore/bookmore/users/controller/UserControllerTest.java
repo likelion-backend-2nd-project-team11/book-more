@@ -9,6 +9,8 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
+import site.bookmore.bookmore.common.exception.conflict.DuplicateEmailException;
+import site.bookmore.bookmore.common.exception.conflict.DuplicateNicknameException;
 import site.bookmore.bookmore.users.dto.UserJoinRequest;
 import site.bookmore.bookmore.users.dto.UserJoinResponse;
 import site.bookmore.bookmore.users.service.UserService;
@@ -58,7 +60,44 @@ class UserControllerTest {
                 .andExpect(jsonPath("$.result.email").value("email@gmail.com"))
                 .andExpect(jsonPath("$.result.nickname").value("nickname"))
                 .andDo(print());
+
         verify(userService).join(any(UserJoinRequest.class));
     }
 
+
+    @Test
+    @DisplayName("회원가입 - 실패(이메일 중복)")
+    void join_fail_1() throws Exception {
+        given(userService.join(any(UserJoinRequest.class))).willThrow(new DuplicateEmailException());
+
+        mockMvc.perform(post("/api/v1/users/join")
+                        .with(csrf())
+                        .content(objectMapper.writeValueAsBytes(userJoinRequest))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isConflict())
+                .andExpect(jsonPath("$.resultCode").value("ERROR"))
+                .andExpect(jsonPath("$.result.errorCode").value("DUPLICATED_EMAIL"))
+                .andExpect(jsonPath("$.result.message").value("이미 사용중인 이메일입니다."))
+                .andDo(print());
+
+        verify(userService).join(any(UserJoinRequest.class));
+    }
+
+    @Test
+    @DisplayName("회원가입 - 실패(닉네임 중복)")
+    void join_fail_2() throws Exception {
+        given(userService.join(any(UserJoinRequest.class))).willThrow(new DuplicateNicknameException());
+
+        mockMvc.perform(post("/api/v1/users/join")
+                        .with(csrf())
+                        .content(objectMapper.writeValueAsBytes(userJoinRequest))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isConflict())
+                .andExpect(jsonPath("$.resultCode").value("ERROR"))
+                .andExpect(jsonPath("$.result.errorCode").value("DUPLICATED_NICKNAME"))
+                .andExpect(jsonPath("$.result.message").value("이미 사용중인 닉네임입니다."))
+                .andDo(print());
+
+        verify(userService).join(any(UserJoinRequest.class));
+    }
 }
