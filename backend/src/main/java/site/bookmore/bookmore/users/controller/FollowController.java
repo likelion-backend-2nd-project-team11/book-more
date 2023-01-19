@@ -10,8 +10,6 @@ import site.bookmore.bookmore.users.dto.FollowerResponse;
 import site.bookmore.bookmore.users.dto.FollowingResponse;
 import site.bookmore.bookmore.users.service.FollowService;
 
-import java.security.Principal;
-
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/users")
@@ -20,7 +18,7 @@ public class FollowController {
     private final FollowService followService;
 
     @PostMapping("/{id}/follow")
-    public ResultResponse<String> following(@PathVariable Long id, Authentication authentication, Principal principal) {
+    public ResultResponse<String> following(@PathVariable Long id, Authentication authentication) {
         String email = authentication.getName();
         return ResultResponse.success(followService.following(id, email));
     }
