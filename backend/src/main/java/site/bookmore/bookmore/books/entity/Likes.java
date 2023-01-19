@@ -2,6 +2,7 @@ package site.bookmore.bookmore.books.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import site.bookmore.bookmore.common.entity.BaseEntity;
 import site.bookmore.bookmore.users.entity.User;
@@ -15,6 +16,7 @@ import static javax.persistence.FetchType.LAZY;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "likes")
+@Getter
 public class Likes extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
