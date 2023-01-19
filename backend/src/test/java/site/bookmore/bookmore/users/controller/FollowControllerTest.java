@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.Page;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithAnonymousUser;
 import org.springframework.security.test.context.support.WithMockUser;
@@ -16,9 +17,7 @@ import site.bookmore.bookmore.users.service.FollowService;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -120,5 +119,61 @@ class FollowControllerTest {
                 .andExpect(jsonPath("$.resultCode").value("ERROR"))
                 .andExpect(jsonPath("$.result.errorCode").exists())
                 .andExpect(jsonPath("$.result.message").exists());
+    }
+
+    @Test
+    @DisplayName("팔로잉 조회 성공")
+    @WithMockUser
+    void findAllFollowing_success() throws Exception {
+
+        when(followService.findAllFollowing(any(), any())).thenReturn(Page.empty());
+
+        mockMvc.perform(get("/api/v1/users/1/following")
+                        .with(csrf())
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.resultCode").value("SUCCESS"))
+                .andExpect(jsonPath("$.result").exists());
+    }
+
+    @Test
+    @DisplayName("팔로잉 조회 실패(1) - 로그인 하지 않은 경우")
+    @WithAnonymousUser
+    void findAllFollowing_fail_1() throws Exception {
+
+        when(followService.findAllFollowing(any(), any())).thenReturn(Page.empty());
+
+        mockMvc.perform(get("/api/v1/users/1/following")
+                        .with(csrf())
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    @DisplayName("팔로워 조회 성공")
+    @WithMockUser
+    void findAllFollower_success() throws Exception {
+
+        when(followService.findAllFollower(any(), any())).thenReturn(Page.empty());
+
+        mockMvc.perform(get("/api/v1/users/1/follower")
+                        .with(csrf())
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.resultCode").value("SUCCESS"))
+                .andExpect(jsonPath("$.result").exists());
+    }
+
+    @Test
+    @DisplayName("팔로워 조회 실패(1) - 로그인 하지 않은 경우")
+    @WithAnonymousUser
+    void findAllFollower_fail_1() throws Exception {
+
+        when(followService.findAllFollower(any(), any())).thenReturn(Page.empty());
+
+        mockMvc.perform(get("/api/v1/users/1/follower")
+                        .with(csrf())
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isUnauthorized());
     }
 }
