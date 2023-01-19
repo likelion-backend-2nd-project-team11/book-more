@@ -1,6 +1,9 @@
 package site.bookmore.bookmore.books.entity;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
@@ -13,6 +16,9 @@ import java.util.List;
 @Getter
 @Table(name = "books")
 @EntityListeners(AuditingEntityListener.class)
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class Book {
     @Id
     private String id;
@@ -20,9 +26,11 @@ public class Book {
     @Column(nullable = false)
     private String title;
 
+    @Builder.Default
     @OneToMany(mappedBy = "book", fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST})
     private List<Author> authors = new ArrayList<>();
 
+    @Builder.Default
     @OneToMany(mappedBy = "book", fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST})
     private List<Translator> translators = new ArrayList<>();
 
