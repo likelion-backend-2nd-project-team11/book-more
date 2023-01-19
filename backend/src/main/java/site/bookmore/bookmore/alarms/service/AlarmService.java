@@ -22,8 +22,8 @@ public class AlarmService {
     public Page<AlarmResponse> findByFollowingReview(Pageable pageable, String email) {
         User user = userRepository.findByEmail(email).orElseThrow(UserNotFoundException::new);
         Long targetId = user.getId();
-        
-        return alarmRepository.findByTarget_User(targetId, pageable).map(alarm -> new AlarmResponse(alarm));
+
+        return alarmRepository.findByTarget_User(targetId, pageable).map(AlarmResponse::new);
     }
 
 }
