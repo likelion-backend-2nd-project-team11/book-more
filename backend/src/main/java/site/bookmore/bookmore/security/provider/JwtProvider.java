@@ -18,7 +18,7 @@ import java.util.Date;
 public class JwtProvider {
     private final String SECRET;
     private final long EXPIRATION;
-    private final String USERNAME_KEY = "username";
+    private final String EMAIL_KEY = "email";
     private final String ID_KEY = "id";
     private final String ROLE_KEY = "role";
 
@@ -30,7 +30,7 @@ public class JwtProvider {
     public String generateToken(User user) {
         Claims claims = Jwts.claims();
         claims.put(ID_KEY, user.getId());
-        claims.put(USERNAME_KEY, user.getEmail());
+        claims.put(EMAIL_KEY, user.getEmail());
         claims.put(ROLE_KEY, user.getRole().name());
 
         return Jwts.builder()
@@ -59,7 +59,7 @@ public class JwtProvider {
     public Authentication getAuthentication(String token) {
         Claims claims = Jwts.parser().setSigningKey(SECRET).parseClaimsJws(token).getBody();
         Long id = Long.parseLong(claims.get(ID_KEY).toString());
-        String email = claims.get(USERNAME_KEY).toString();
+        String email = claims.get(EMAIL_KEY).toString();
         String roleName = claims.get(ROLE_KEY).toString();
 
         User user = User.builder()
