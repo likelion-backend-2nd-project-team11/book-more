@@ -22,9 +22,9 @@ public class AlarmCreate {
      */
     public static AlarmCreate of(AlarmType alarmType, User targetId, User fromId, Long sourceId) {
         return new AlarmCreate(Alarm.builder()
-                .alarmType(alarmType.name())
-                .target_User(targetId)
-                .from_User(fromId)
+                .alarmType(alarmType)
+                .targetUser(targetId)
+                .fromUser(fromId)
                 .source(sourceId)
                 .build());
     }
