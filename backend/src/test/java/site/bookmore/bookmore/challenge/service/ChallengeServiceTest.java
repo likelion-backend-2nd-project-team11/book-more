@@ -18,6 +18,7 @@ import static java.util.Optional.of;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -41,7 +42,7 @@ class ChallengeServiceTest {
         Challenge mockChallenge = mock(Challenge.class);
         User mockUser = mock(User.class);
 
-        when(userRepository.findByNickname(any()))
+        when(userRepository.findByEmail(anyString()))
                 .thenReturn(of(mockUser));
 
         when(challengeRepository.save(any()))

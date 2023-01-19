@@ -4,19 +4,19 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import site.bookmore.bookmore.common.entity.BaseEntity;
 import site.bookmore.bookmore.users.entity.User;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 @Entity
 @Builder
 @AllArgsConstructor
 @Getter
 @NoArgsConstructor
-public class Challenge {
+public class Challenge extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -40,16 +40,7 @@ public class Challenge {
     @NotNull
     private LocalDate deadline;
 
-    @NotNull
-    private LocalDateTime createdDateTime;
-
-    @NotNull
-    private LocalDateTime LastModifiedDatetime;
-
-    @NotNull
-    private LocalDateTime deletedDatetime;
-
-    public void update(Challenge update){
+    public void update(Challenge update) {
         this.title = update.title;
         this.description = update.getDescription();
     }

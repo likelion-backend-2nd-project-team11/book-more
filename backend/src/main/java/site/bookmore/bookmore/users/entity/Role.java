@@ -2,7 +2,7 @@ package site.bookmore.bookmore.users.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import site.bookmore.bookmore.common.exception.badrequest.BadConstantException;
+import site.bookmore.bookmore.common.exception.bad_request.BadConstantException;
 
 @Getter
 @AllArgsConstructor

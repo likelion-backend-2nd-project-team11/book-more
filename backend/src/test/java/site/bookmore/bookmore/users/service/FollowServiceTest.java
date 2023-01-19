@@ -17,6 +17,7 @@ import site.bookmore.bookmore.users.repositroy.UserRepository;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 
 class FollowServiceTest {
@@ -203,7 +204,7 @@ class FollowServiceTest {
         Mockito.when(userRepository.findById(targetUser.getId()))
                 .thenReturn(Optional.of(targetUser));
 
-        Mockito.when(followRepository.findByFollowerAndFollowing(user.getId(), targetUser.getId()))
+        Mockito.when(followRepository.findByFollowerAndFollowing(any(User.class), any(User.class)))
                 .thenReturn(Optional.of(follow));
 
         Mockito.when(followRepository.save(follow))
@@ -243,7 +244,7 @@ class FollowServiceTest {
         Mockito.when(userRepository.findById(targetUser.getId()))
                 .thenReturn(Optional.of(targetUser));
 
-        Mockito.when(followRepository.findByFollowerAndFollowing(user.getId(), targetUser.getId()))
+        Mockito.when(followRepository.findByFollowerAndFollowing(any(User.class), any(User.class)))
                 .thenReturn(Optional.of(follow));
 
         Mockito.when(followRepository.save(follow))
@@ -284,7 +285,7 @@ class FollowServiceTest {
         Mockito.when(userRepository.findByEmail(user.getEmail()))
                 .thenReturn(Optional.of(user));
 
-        Mockito.when(followRepository.findByFollowerAndFollowing(user.getId(), targetUser.getId()))
+        Mockito.when(followRepository.findByFollowerAndFollowing(any(User.class), any(User.class)))
                 .thenReturn(Optional.of(follow));
 
         Mockito.when(followRepository.save(follow))

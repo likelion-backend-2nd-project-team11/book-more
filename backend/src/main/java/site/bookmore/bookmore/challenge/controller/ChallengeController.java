@@ -14,42 +14,42 @@ import site.bookmore.bookmore.challenge.service.ChallengeService;
 import site.bookmore.bookmore.common.dto.ResultResponse;
 
 @RestController
-@RequestMapping("api/v1/challenge")
+@RequestMapping("api/v1/challenges")
 @RequiredArgsConstructor
 public class ChallengeController {
 
     private final ChallengeService challengeService;
 
     @PostMapping()
-    public ResultResponse<ChallengeResponse> addChallenge(Authentication authentication, @RequestBody ChallengeRequest challengeRequest){
-        String userName = authentication.getName();
-        ChallengeResponse challengeResponse = challengeService.add(userName, challengeRequest.getTitle(),challengeRequest.getDescription());
+    public ResultResponse<ChallengeResponse> addChallenge(Authentication authentication, @RequestBody ChallengeRequest challengeRequest) {
+        String email = authentication.getName();
+        ChallengeResponse challengeResponse = challengeService.add(email, challengeRequest.getTitle(), challengeRequest.getDescription());
         return ResultResponse.success(challengeResponse);
     }
 
     @PutMapping("/{id}")
-    public ResultResponse<ChallengeResponse> modifyChallenge(Authentication authentication, @RequestBody ChallengeRequest challengeRequest, @PathVariable Long id){
+    public ResultResponse<ChallengeResponse> modifyChallenge(Authentication authentication, @RequestBody ChallengeRequest challengeRequest, @PathVariable Long id) {
         String userName = authentication.getName();
-        ChallengeResponse challengeResponse =challengeService.modify(userName,id, challengeRequest);
+        ChallengeResponse challengeResponse = challengeService.modify(userName, id, challengeRequest);
         return ResultResponse.success(challengeResponse);
     }
 
     @DeleteMapping("/{id}")
-    public ResultResponse<ChallengeResponse> deleteChallenge(Authentication authentication, @PathVariable Long id){
+    public ResultResponse<ChallengeResponse> deleteChallenge(Authentication authentication, @PathVariable Long id) {
         String userName = authentication.getName();
-        ChallengeResponse challengeResponse = challengeService.delete(userName,id);
+        ChallengeResponse challengeResponse = challengeService.delete(userName, id);
         return ResultResponse.success(challengeResponse);
     }
 
     @GetMapping("/{id}")
-    public ResultResponse<ChallengeDetailResponse> getChallenge(Authentication authentication, @PathVariable Long id){
+    public ResultResponse<ChallengeDetailResponse> getChallenge(Authentication authentication, @PathVariable Long id) {
         String userName = authentication.getName();
-        ChallengeDetailResponse challengeDetailResponse = challengeService.get(userName,id);
+        ChallengeDetailResponse challengeDetailResponse = challengeService.get(userName, id);
         return ResultResponse.success(challengeDetailResponse);
     }
 
     @GetMapping
-    public ResultResponse<Page<ChallengeDetailResponse>> listChallenge(@PageableDefault(size = 20, sort = "createdAt",direction = Sort.Direction.DESC) Pageable pageable){
+    public ResultResponse<Page<ChallengeDetailResponse>> listChallenge(@PageableDefault(size = 20, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
         Page<ChallengeDetailResponse> challengeListResponses = challengeService.list(pageable);
         return ResultResponse.success(challengeListResponses);
     }

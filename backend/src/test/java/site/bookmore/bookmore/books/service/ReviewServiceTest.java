@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
+import org.springframework.context.ApplicationEventPublisher;
 import site.bookmore.bookmore.books.dto.ReviewRequest;
 import site.bookmore.bookmore.books.entity.Book;
 import site.bookmore.bookmore.books.entity.Likes;
@@ -28,7 +29,8 @@ class ReviewServiceTest {
     private final LikesRepository likesRepository = Mockito.mock(LikesRepository.class);
     private final ReviewRepository reviewRepository = Mockito.mock(ReviewRepository.class);
     private final UserRepository userRepository = Mockito.mock(UserRepository.class);
-    private final ReviewService reviewService = new ReviewService(bookRepository, likesRepository, reviewRepository, userRepository);
+    private final ApplicationEventPublisher publisher = Mockito.mock(ApplicationEventPublisher.class);
+    private final ReviewService reviewService = new ReviewService(bookRepository, likesRepository, reviewRepository, userRepository, publisher);
 
     private final User user = User.builder()
             .email("email")

@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import site.bookmore.bookmore.challenge.entity.Challenge;
-import site.bookmore.bookmore.users.entity.User;
 
 
 @AllArgsConstructor
@@ -14,6 +13,7 @@ public class ChallengeRequest {
     private String title;
     private String description;
 
+    // Todo. 기한 추가
     public Challenge toEntity() {
         return Challenge.builder()
                 .title(this.title)

@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import site.bookmore.bookmore.common.exception.bad_request.FollowNotMeException;
 import site.bookmore.bookmore.common.exception.not_found.FollowNotFoundException;
 import site.bookmore.bookmore.common.exception.not_found.UserNotFoundException;
@@ -23,6 +24,7 @@ public class FollowService {
     private final UserRepository userRepository;
 
     public String following(Long id, String email) {
+        //Todo. 이미 팔로우한 경우 예외 처리.
         //나
         User user = userRepository.findByEmail(email)
                 .orElseThrow(UserNotFoundException::new);
@@ -48,6 +50,7 @@ public class FollowService {
         return String.format("%s 님을 팔로우 하셨습니다.", id);
     }
 
+    @Transactional
     public String unfollowing(Long id, String email) {
         //나
         User user = userRepository.findByEmail(email)
@@ -58,23 +61,16 @@ public class FollowService {
                 .orElseThrow(UserNotFoundException::new);
 
         //팔로우 하지 않은 사람을 언팔로우 하는 경우
-        Follow targetFollow = followRepository.findByFollowerAndFollowing(user.getId(), targetUser.getId())
+        Follow targetFollow = followRepository.findByFollowerAndFollowing(user, targetUser)
                 .orElseThrow(FollowNotFoundException::new);
 
-        Follow follow = Follow.builder()
-                .following(targetFollow.getFollowing())
-                .follower(targetFollow.getFollower())
-                .build();
-
-        follow.delete();
-
-        followRepository.save(follow);
+        targetFollow.delete();
 
         return String.format("%s 님을 언팔로우 하셨습니다.", id);
     }
 
     public Page<FollowingResponse> findAllFollowing(Long id, Pageable pageable) {
-
+        // Todo. 소프트 삭제 제외하고 조회.
         userRepository.findById(id).orElseThrow(UserNotFoundException::new);
 
         return followRepository.findAll(pageable).map(follow -> new FollowingResponse(follow));

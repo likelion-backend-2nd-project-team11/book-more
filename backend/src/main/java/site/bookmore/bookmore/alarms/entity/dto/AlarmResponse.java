@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import site.bookmore.bookmore.alarms.entity.Alarm;
+import site.bookmore.bookmore.alarms.entity.AlarmType;
 
 import java.time.format.DateTimeFormatter;
 
@@ -15,7 +16,7 @@ import java.time.format.DateTimeFormatter;
 public class AlarmResponse {
 
     private Long id;
-    private Enum alarmType;
+    private AlarmType alarmType;
     private Long targetUser;
     private Long fromUser;
     private Long source;

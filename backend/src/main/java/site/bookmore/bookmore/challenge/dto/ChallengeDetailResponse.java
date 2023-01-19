@@ -7,7 +7,6 @@ import org.springframework.data.domain.Page;
 import site.bookmore.bookmore.challenge.entity.Challenge;
 import site.bookmore.bookmore.users.entity.User;
 
-import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -36,7 +35,8 @@ public class ChallengeDetailResponse {
     private String LastModifiedDatetime;
 
     private String deletedDatetime;
-    public static Page<ChallengeDetailResponse> toDtoList(Page<Challenge> postEntities){
+
+    public static Page<ChallengeDetailResponse> toDtoList(Page<Challenge> postEntities) {
         Page<ChallengeDetailResponse> postDetailResponses = postEntities.map(m -> ChallengeDetailResponse.builder()
                 .id(m.getId())
                 .title(m.getTitle())
@@ -44,9 +44,9 @@ public class ChallengeDetailResponse {
                 .progress(m.getProgress())
                 .completed(m.isCompleted())
                 .deadline(m.getDeadline())
-                .createdDateTime(m.getCreatedDateTime())
-                .LastModifiedDatetime(m.getLastModifiedDatetime().format(DateTimeFormatter.ofPattern("yyyy-mm-dd hh:mm:ss")))
-                .deletedDatetime(m.getDeletedDatetime().format(DateTimeFormatter.ofPattern("yyyy-mm-dd hh:mm:ss")))
+                .createdDateTime(m.getCreatedDatetime())
+                .LastModifiedDatetime(m.getLastModifiedDatetime().format(DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss")))
+                .deletedDatetime(m.getDeletedDatetime().format(DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss")))
                 .build());
         return postDetailResponses;
     }
