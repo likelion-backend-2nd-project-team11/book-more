@@ -20,10 +20,8 @@ public class AlarmService {
      * 팔로잉의 리뷰 등록 알림
      */
     public Page<AlarmResponse> findByFollowingReview(Pageable pageable, String email) {
-        User user = userRepository.findByEmail(email).orElseThrow(UserNotFoundException::new);
-        Long targetId = user.getId();
-
-        return alarmRepository.findByTarget_User(targetId, pageable).map(AlarmResponse::new);
+        User target = userRepository.findByEmail(email).orElseThrow(UserNotFoundException::new);
+        return alarmRepository.findByTargetUser(target, pageable).map(AlarmResponse::new);
     }
 
 }
