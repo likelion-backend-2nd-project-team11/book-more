@@ -2,7 +2,6 @@ package site.bookmore.bookmore.users.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import site.bookmore.bookmore.common.exception.bad_request.FollowNotMeException;
@@ -15,9 +14,7 @@ import site.bookmore.bookmore.users.entity.User;
 import site.bookmore.bookmore.users.repositroy.FollowRepository;
 import site.bookmore.bookmore.users.repositroy.UserRepository;
 
-import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -80,13 +77,8 @@ public class FollowService {
 
         userRepository.findById(id).orElseThrow(UserNotFoundException::new);
 
-        Page<Follow> follows = followRepository.findAll(pageable);
+        return followRepository.findAll(pageable).map(follow -> new FollowingResponse(follow));
 
-        List<FollowingResponse> followingResponses = follows.stream()
-                .map(Follow::toFollowingResponse)
-                .collect(Collectors.toList());
-
-        return new PageImpl<>(followingResponses);
     }
 
     public Page<FollowerResponse> findAllFollower(Long id, Pageable pageable) {
@@ -95,10 +87,6 @@ public class FollowService {
 
         Page<Follow> follows = followRepository.findAll(pageable);
 
-        List<FollowerResponse> followerResponses = follows.stream()
-                .map(Follow::toFollowerResponse)
-                .collect(Collectors.toList());
-
-        return new PageImpl<>(followerResponses);
+        return followRepository.findAll(pageable).map(follow -> new FollowerResponse(follow));
     }
 }
