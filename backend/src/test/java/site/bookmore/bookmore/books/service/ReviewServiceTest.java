@@ -6,8 +6,10 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import site.bookmore.bookmore.books.dto.ReviewRequest;
 import site.bookmore.bookmore.books.entity.Book;
+import site.bookmore.bookmore.books.entity.Likes;
 import site.bookmore.bookmore.books.entity.Review;
 import site.bookmore.bookmore.books.repository.BookRepository;
+import site.bookmore.bookmore.books.repository.LikesRepository;
 import site.bookmore.bookmore.books.repository.ReviewRepository;
 import site.bookmore.bookmore.common.exception.AbstractAppException;
 import site.bookmore.bookmore.common.exception.ErrorCode;
@@ -16,18 +18,18 @@ import site.bookmore.bookmore.users.repositroy.UserRepository;
 
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 class ReviewServiceTest {
 
     private final BookRepository bookRepository = Mockito.mock(BookRepository.class);
+    private final LikesRepository likesRepository = Mockito.mock(LikesRepository.class);
     private final ReviewRepository reviewRepository = Mockito.mock(ReviewRepository.class);
     private final UserRepository userRepository = Mockito.mock(UserRepository.class);
-    private final ReviewService reviewService = new ReviewService(bookRepository, reviewRepository, userRepository);
+    private final ReviewService reviewService = new ReviewService(bookRepository, likesRepository, reviewRepository, userRepository);
 
-    /* ========== 도서 리뷰 등록 ========== */
     private final User user = User.builder()
             .email("email")
             .build();
@@ -41,6 +43,13 @@ class ReviewServiceTest {
             .book(book)
             .build();
 
+    private final Likes likes = Likes.builder()
+            .liked(true)
+            .review(review)
+            .user(user)
+            .build();
+
+    /* ========== 도서 리뷰 등록 ========== */
     @Test
     @DisplayName("도서 리뷰 등록 성공")
     void create_success() {
@@ -80,5 +89,38 @@ class ReviewServiceTest {
 
         AbstractAppException abstractAppException = Assertions.assertThrows(AbstractAppException.class, () -> reviewService.create(new ReviewRequest(), book.getId(), user.getEmail()));
         assertEquals(ErrorCode.BOOK_NOT_FOUND, abstractAppException.getErrorCode());
+    }
+
+    /* ========== 도서 리뷰 좋아요 | 취소 ========== */
+    @Test
+    @DisplayName("도서 리뷰 좋아요 성공")
+    void doLikes_success() {
+        when(userRepository.findByEmail(user.getEmail()))
+                .thenReturn(Optional.of(user));
+        when(reviewRepository.findById(review.getId()))
+                .thenReturn(Optional.of(review));
+        when(likesRepository.findByUserAndReview(user, review))
+                .thenReturn(Optional.empty());
+
+        boolean result = reviewService.doLikes(user.getEmail(), review.getId());
+
+        assertTrue(result);
+        assertEquals(1, review.getLikesCount());
+    }
+
+    @Test
+    @DisplayName("도서 리뷰 좋아요 취소 성공")
+    void doLikes_cancel_success() {
+        when(userRepository.findByEmail(user.getEmail()))
+                .thenReturn(Optional.of(user));
+        when(reviewRepository.findById(review.getId()))
+                .thenReturn(Optional.of(review));
+        when(likesRepository.findByUserAndReview(user, review))
+                .thenReturn(Optional.of(likes));
+
+        boolean result = reviewService.doLikes(user.getEmail(), review.getId());
+
+        assertFalse(result);
+        assertEquals(0, review.getLikesCount());
     }
 }

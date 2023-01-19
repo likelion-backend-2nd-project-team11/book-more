@@ -56,4 +56,41 @@ class ReviewControllerTest {
 
         verify(reviewService).create(any(ReviewRequest.class), eq("9791158393083"), anyString());
     }
+
+    /* ========== 도서 리뷰 좋아요 | 취소 ========== */
+    @Test
+    @DisplayName("도서 리뷰 좋아요 성공")
+    @WithMockUser
+    void doLikes_success() throws Exception {
+        // when
+        when(reviewService.doLikes(anyString(), eq(1L)))
+                .thenReturn(true);
+
+        // then
+        mockMvc.perform(post("/api/v1/books/reviews/1/likes")
+                        .with(csrf()))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.resultCode").value("SUCCESS"))
+                .andExpect(jsonPath("$.result").value("좋아요를 눌렀습니다."));
+
+        verify(reviewService).doLikes(anyString(), eq(1L));
+    }
+
+    @Test
+    @DisplayName("도서 리뷰 좋아요 취소 성공")
+    @WithMockUser
+    void doLikes_cancel_success() throws Exception {
+        // when
+        when(reviewService.doLikes(anyString(), eq(1L)))
+                .thenReturn(false);
+
+        // then
+        mockMvc.perform(post("/api/v1/books/reviews/1/likes")
+                        .with(csrf()))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.resultCode").value("SUCCESS"))
+                .andExpect(jsonPath("$.result").value("좋아요가 취소되었습니다."));
+
+        verify(reviewService).doLikes(anyString(), eq(1L));
+    }
 }
