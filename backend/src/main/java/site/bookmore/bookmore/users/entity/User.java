@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import site.bookmore.bookmore.common.entity.BaseEntity;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -18,7 +19,7 @@ import java.util.List;
 @Entity
 @NoArgsConstructor
 @Getter
-public class User implements UserDetails {
+public class User extends BaseEntity implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -60,6 +61,8 @@ public class User implements UserDetails {
         this.birth = birth;
         this.role = role == null ? Role.ROLE_USER : role;
     }
+
+
 
     //권한을 리턴
     @Override
