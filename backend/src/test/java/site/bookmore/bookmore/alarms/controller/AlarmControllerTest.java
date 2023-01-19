@@ -8,6 +8,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.test.context.support.WithAnonymousUser;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import site.bookmore.bookmore.alarms.entity.dto.AlarmResponse;
@@ -61,7 +62,17 @@ class AlarmControllerTest {
                 .andDo(print());
 
         verify(alarmService).findByFollowingReview(any(Pageable.class), eq("user2"));
-
     }
+
+    @Test
+    @DisplayName("알람 조회 실패 - 권한 없음")
+    @WithAnonymousUser
+    void alarm_following_list_fail() throws Exception {
+        mockMvc.perform(get("/api/v1/alarms/reviews")
+                        .with(csrf()))
+                .andExpect(status().isUnauthorized())
+                .andDo(print());
+    }
+
 
 }
