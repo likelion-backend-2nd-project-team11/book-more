@@ -1,16 +1,23 @@
 package site.bookmore.bookmore.users.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import site.bookmore.bookmore.common.exception.bad_request.FollowNotMeException;
 import site.bookmore.bookmore.common.exception.not_found.FollowNotFoundException;
 import site.bookmore.bookmore.common.exception.not_found.UserNotFoundException;
+import site.bookmore.bookmore.users.dto.FollowerResponse;
+import site.bookmore.bookmore.users.dto.FollowingResponse;
 import site.bookmore.bookmore.users.entity.Follow;
 import site.bookmore.bookmore.users.entity.User;
 import site.bookmore.bookmore.users.repositroy.FollowRepository;
 import site.bookmore.bookmore.users.repositroy.UserRepository;
 
+import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -67,5 +74,31 @@ public class FollowService {
         followRepository.save(follow);
 
         return String.format("%s 님을 언팔로우 하셨습니다.", id);
+    }
+
+    public Page<FollowingResponse> findAllFollowing(Long id, Pageable pageable) {
+
+        userRepository.findById(id).orElseThrow(UserNotFoundException::new);
+
+        Page<Follow> follows = followRepository.findAll(pageable);
+
+        List<FollowingResponse> followingResponses = follows.stream()
+                .map(Follow::toFollowingResponse)
+                .collect(Collectors.toList());
+
+        return new PageImpl<>(followingResponses);
+    }
+
+    public Page<FollowerResponse> findAllFollower(Long id, Pageable pageable) {
+
+        userRepository.findById(id).orElseThrow(UserNotFoundException::new);
+
+        Page<Follow> follows = followRepository.findAll(pageable);
+
+        List<FollowerResponse> followerResponses = follows.stream()
+                .map(Follow::toFollowerResponse)
+                .collect(Collectors.toList());
+
+        return new PageImpl<>(followerResponses);
     }
 }
