@@ -63,8 +63,7 @@ class UserControllerTest {
                 .andExpect(jsonPath("$.resultCode").value("SUCCESS"))
                 .andExpect(jsonPath("$.result.id").value(0L))
                 .andExpect(jsonPath("$.result.email").value("email@gmail.com"))
-                .andExpect(jsonPath("$.result.nickname").value("nickname"))
-                .andDo(print());
+                .andExpect(jsonPath("$.result.nickname").value("nickname"));
 
         verify(userService).join(any(UserJoinRequest.class));
     }
@@ -82,8 +81,7 @@ class UserControllerTest {
                 .andExpect(status().isConflict())
                 .andExpect(jsonPath("$.resultCode").value("ERROR"))
                 .andExpect(jsonPath("$.result.errorCode").value("DUPLICATED_EMAIL"))
-                .andExpect(jsonPath("$.result.message").value("이미 사용중인 이메일입니다."))
-                .andDo(print());
+                .andExpect(jsonPath("$.result.message").value("이미 사용중인 이메일입니다."));
 
         verify(userService).join(any(UserJoinRequest.class));
     }
@@ -100,8 +98,7 @@ class UserControllerTest {
                 .andExpect(status().isConflict())
                 .andExpect(jsonPath("$.resultCode").value("ERROR"))
                 .andExpect(jsonPath("$.result.errorCode").value("DUPLICATED_NICKNAME"))
-                .andExpect(jsonPath("$.result.message").value("이미 사용중인 닉네임입니다."))
-                .andDo(print());
+                .andExpect(jsonPath("$.result.message").value("이미 사용중인 닉네임입니다."));
 
         verify(userService).join(any(UserJoinRequest.class));
     }
@@ -120,8 +117,7 @@ class UserControllerTest {
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.resultCode").value("SUCCESS"))
-                .andExpect(jsonPath("$.result.jwt").value("token"))
-                .andDo(print());
+                .andExpect(jsonPath("$.result.jwt").value("token"));
 
         verify(userService).login(any(UserLoginRequest.class));
     }
@@ -139,8 +135,7 @@ class UserControllerTest {
                 .andExpect(status().isUnauthorized())
                 .andExpect(jsonPath("$.resultCode").value("ERROR"))
                 .andExpect(jsonPath("$.result.errorCode").value("INVALID_PASSWORD"))
-                .andExpect(jsonPath("$.result.message").value("잘못된 패스워드입니다."))
-                .andDo(print());
+                .andExpect(jsonPath("$.result.message").value("잘못된 패스워드입니다."));
 
         verify(userService).login(any(UserLoginRequest.class));
     }
@@ -158,8 +153,7 @@ class UserControllerTest {
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.resultCode").value("ERROR"))
                 .andExpect(jsonPath("$.result.errorCode").value("USER_NOT_FOUND"))
-                .andExpect(jsonPath("$.result.message").value("해당하는 유저를 찾을 수 없습니다."))
-                .andDo(print());
+                .andExpect(jsonPath("$.result.message").value("해당하는 유저를 찾을 수 없습니다."));
 
         verify(userService).login(any(UserLoginRequest.class));
     }
