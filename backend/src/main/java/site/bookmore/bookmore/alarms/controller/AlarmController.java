@@ -19,15 +19,14 @@ import site.bookmore.bookmore.common.dto.ResultResponse;
 public class AlarmController {
     private final AlarmService alarmService;
 
-    // 팔로잉의 리뷰 등록 알림 - GET /api/v1/alarms/reviews
-    @GetMapping("/reviews")
-    public ResultResponse<Page<AlarmResponse>> getFollowingReview(@PageableDefault(size = 20, sort = "createdDateTime", direction = Sort.Direction.DESC) Pageable pageable, Authentication authentication) {
+    /**
+     * 알림
+     */
+    @GetMapping("")
+    public ResultResponse<Page<AlarmResponse>> getAlarm(@PageableDefault(size = 20, sort = "createdDateTime", direction = Sort.Direction.DESC) Pageable pageable, Authentication authentication) {
         Page<AlarmResponse> alarmResponses = alarmService.findByFollowingReview(pageable, authentication.getName());
 
         return ResultResponse.success(alarmResponses);
     }
 
-    // 나를 팔로잉 하면 알림 - GET /api/v1/alarms/follow
-
-    // 내 리뷰에 좋아요 알림 - GET /api/v1/alarms/likes
 }
