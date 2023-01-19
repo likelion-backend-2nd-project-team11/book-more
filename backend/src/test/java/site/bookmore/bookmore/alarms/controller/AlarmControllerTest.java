@@ -11,6 +11,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.test.context.support.WithAnonymousUser;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
+import site.bookmore.bookmore.alarms.entity.AlarmType;
 import site.bookmore.bookmore.alarms.entity.dto.AlarmResponse;
 import site.bookmore.bookmore.alarms.service.AlarmService;
 
@@ -22,7 +23,6 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -37,7 +37,7 @@ class AlarmControllerTest {
 
     AlarmResponse response = AlarmResponse.builder()
             .id(1L)
-            .alarmType("NEW_REVIEW")
+            .alarmType(AlarmType.NEW_FOLLOW_REVIEW)
             .targetUser(1L)
             .fromUser(2L)
             .source(3L)
@@ -51,15 +51,14 @@ class AlarmControllerTest {
         Page<AlarmResponse> responsePage = new PageImpl<>(List.of(response));
         given(alarmService.findByFollowingReview(any(Pageable.class), eq("user2"))).willReturn(responsePage);
 
-        mockMvc.perform(get("/api/v1/alarms/reviews")
+        mockMvc.perform(get("/api/v1/alarms")
                         .with(csrf()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$..['id']").exists())
                 .andExpect(jsonPath("$..['alarmType']").exists())
                 .andExpect(jsonPath("$..['targetUser']").exists())
                 .andExpect(jsonPath("$..['fromUser']").exists())
-                .andExpect(jsonPath("$..['source']").exists())
-                .andDo(print());
+                .andExpect(jsonPath("$..['source']").exists());
 
         verify(alarmService).findByFollowingReview(any(Pageable.class), eq("user2"));
     }
@@ -68,10 +67,9 @@ class AlarmControllerTest {
     @DisplayName("알람 조회 실패 - 권한 없음")
     @WithAnonymousUser
     void alarm_following_list_fail() throws Exception {
-        mockMvc.perform(get("/api/v1/alarms/reviews")
+        mockMvc.perform(get("/api/v1/alarms")
                         .with(csrf()))
-                .andExpect(status().isUnauthorized())
-                .andDo(print());
+                .andExpect(status().isUnauthorized());
     }
 
 

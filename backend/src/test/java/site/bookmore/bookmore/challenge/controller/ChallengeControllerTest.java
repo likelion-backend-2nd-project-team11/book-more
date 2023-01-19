@@ -11,10 +11,8 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithAnonymousUser;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
-import site.bookmore.bookmore.challenge.dto.ChallengeDetailResponse;
 import site.bookmore.bookmore.challenge.dto.ChallengeRequest;
 import site.bookmore.bookmore.challenge.dto.ChallengeResponse;
-import site.bookmore.bookmore.challenge.entity.Challenge;
 import site.bookmore.bookmore.challenge.service.ChallengeService;
 import site.bookmore.bookmore.common.exception.ErrorCode;
 import site.bookmore.bookmore.common.exception.forbidden.InvalidPermissionException;
@@ -23,13 +21,10 @@ import site.bookmore.bookmore.common.exception.not_found.ReviewNotFoundException
 import site.bookmore.bookmore.common.exception.not_found.UserNotFoundException;
 import site.bookmore.bookmore.common.exception.unauthorized.InvalidPasswordException;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.when;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -49,13 +44,12 @@ class ChallengeControllerTest {
     @WithMockUser
     public void Test() throws Exception {
         ChallengeRequest challengeRequest = ChallengeRequest.builder().title("title").description("description").build();
-        when(challengeService.add("userName",challengeRequest.getDescription(),challengeRequest.getTitle())).thenReturn(new ChallengeResponse("message",1L));
+        when(challengeService.add("userName", challengeRequest.getDescription(), challengeRequest.getTitle())).thenReturn(new ChallengeResponse("message", 1L));
 
-        mockMvc.perform(post("/api/v1/challenge")
-                .with(csrf())
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsBytes(challengeRequest)))
-                .andDo(print())
+        mockMvc.perform(post("/api/v1/challenges")
+                        .with(csrf())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsBytes(challengeRequest)))
                 .andExpect(status().isOk());
     }
 
@@ -64,13 +58,12 @@ class ChallengeControllerTest {
     @WithAnonymousUser
     public void Test2() throws Exception {
         ChallengeRequest challengeRequest = ChallengeRequest.builder().title("title").description("description").build();
-        when(challengeService.add("userName",challengeRequest.getDescription(),challengeRequest.getTitle())).thenThrow(new InvalidPermissionException());
+        when(challengeService.add("userName", challengeRequest.getDescription(), challengeRequest.getTitle())).thenThrow(new InvalidPermissionException());
 
-        mockMvc.perform(post("/api/v1/challenge")
-                .with(csrf())
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsBytes(challengeRequest)))
-                .andDo(print())
+        mockMvc.perform(post("/api/v1/challenges")
+                        .with(csrf())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsBytes(challengeRequest)))
                 .andExpect(status().isUnauthorized());
     }
 
@@ -80,16 +73,16 @@ class ChallengeControllerTest {
     public void Test3() throws Exception {
         ChallengeRequest challengeRequest = ChallengeRequest.builder().title("title").description("description").build();
 
-        when(challengeService.modify(any(),any(),any())).thenReturn(new ChallengeResponse("Message",1L));
+        when(challengeService.modify(any(), any(), any())).thenReturn(new ChallengeResponse("Message", 1L));
 
-        mockMvc.perform(put("/api/v1/challenge/1")
-                .with(csrf())
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsBytes(challengeRequest)))
-                .andDo(print())
+        mockMvc.perform(put("/api/v1/challenges/1")
+                        .with(csrf())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsBytes(challengeRequest)))
                 .andExpect(jsonPath("$.result.message").exists())
                 .andExpect(status().isOk());
     }
+
     @Test
     @WithAnonymousUser // 인증 되지 않은 상태
     @DisplayName("challenge 1개 수정 실패 : 권한 없음")
@@ -99,11 +92,10 @@ class ChallengeControllerTest {
         when(challengeService.modify(any(), any(), any()))
                 .thenThrow(new InvalidPasswordException());
 
-        mockMvc.perform(put("/api/v1/challenge/1")
-                .with(csrf())
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsBytes(challengeRequest)))
-                .andDo(print())
+        mockMvc.perform(put("/api/v1/challenges/1")
+                        .with(csrf())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsBytes(challengeRequest)))
                 .andExpect(status().isUnauthorized());
     }
 
@@ -117,11 +109,10 @@ class ChallengeControllerTest {
         when(challengeService.modify(any(), any(), any()))
                 .thenThrow(new ReviewNotFoundException());
 
-        mockMvc.perform(put("/api/v1/challenge/1")
-                .with(csrf())
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsBytes(challengeRequest)))
-                .andDo(print())
+        mockMvc.perform(put("/api/v1/challenges/1")
+                        .with(csrf())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsBytes(challengeRequest)))
                 .andExpect(status().is(ErrorCode.REVIEW_NOT_FOUND.getHttpStatus().value()));
     }
 
@@ -135,11 +126,10 @@ class ChallengeControllerTest {
         when(challengeService.modify(any(), any(), any()))
                 .thenThrow(new UserNotFoundException());
 
-        mockMvc.perform(put("/api/v1/challenge/1")
-                .with(csrf())
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsBytes(challengeRequest)))
-                .andDo(print())
+        mockMvc.perform(put("/api/v1/challenges/1")
+                        .with(csrf())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsBytes(challengeRequest)))
                 .andExpect(status().is(ErrorCode.USER_NOT_FOUND.getHttpStatus().value()));
     }
 
@@ -153,11 +143,10 @@ class ChallengeControllerTest {
         when(challengeService.modify(any(), any(), any()))
                 .thenThrow(new DatabaseException());
 
-        mockMvc.perform(put("/api/v1/challenge/1")
-                .with(csrf())
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsBytes(challengeRequest)))
-                .andDo(print())
+        mockMvc.perform(put("/api/v1/challenges/1")
+                        .with(csrf())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsBytes(challengeRequest)))
                 .andExpect(status().is(ErrorCode.DATABASE_ERROR.getHttpStatus().value()));
     }
 
@@ -166,12 +155,11 @@ class ChallengeControllerTest {
     @WithMockUser   // 인증된 상태
     @DisplayName("challenge 1개 삭제 성공")
     void delete_success() throws Exception {
-        when(challengeService.delete(any(),any())).thenReturn(new ChallengeResponse("message",1L));
+        when(challengeService.delete(any(), any())).thenReturn(new ChallengeResponse("message", 1L));
 
-        mockMvc.perform(delete("/api/v1/challenge/1")
-                .with(csrf())
-                .contentType(MediaType.APPLICATION_JSON))
-                .andDo(print())
+        mockMvc.perform(delete("/api/v1/challenges/1")
+                        .with(csrf())
+                        .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.result.message").exists())
                 .andExpect(jsonPath("$.resultCode").exists())
                 .andExpect(status().isOk());
@@ -185,10 +173,9 @@ class ChallengeControllerTest {
         when(challengeService.delete(any(), any()))
                 .thenThrow(new InvalidPermissionException());
 
-        mockMvc.perform(delete("/api/v1/challenge/1")
-                .with(csrf())
-                .contentType(MediaType.APPLICATION_JSON))
-                .andDo(print())
+        mockMvc.perform(delete("/api/v1/challenges/1")
+                        .with(csrf())
+                        .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isUnauthorized());
     }
 
@@ -200,10 +187,9 @@ class ChallengeControllerTest {
         when(challengeService.delete(any(), any()))
                 .thenThrow(new ReviewNotFoundException());
 
-        mockMvc.perform(delete("/api/v1/challenge/1")
-                .with(csrf())
-                .contentType(MediaType.APPLICATION_JSON))
-                .andDo(print())
+        mockMvc.perform(delete("/api/v1/challenges/1")
+                        .with(csrf())
+                        .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().is(ErrorCode.REVIEW_NOT_FOUND.getHttpStatus().value()));
     }
 
@@ -216,10 +202,9 @@ class ChallengeControllerTest {
         when(challengeService.delete(any(), any()))
                 .thenThrow(new UserNotFoundException());
 
-        mockMvc.perform(delete("/api/v1/challenge/1")
-                .with(csrf())
-                .contentType(MediaType.APPLICATION_JSON))
-                .andDo(print())
+        mockMvc.perform(delete("/api/v1/challenges/1")
+                        .with(csrf())
+                        .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().is(ErrorCode.USER_NOT_FOUND.getHttpStatus().value()));
     }
 
@@ -232,10 +217,9 @@ class ChallengeControllerTest {
         when(challengeService.delete(any(), any()))
                 .thenThrow(new DatabaseException());
 
-        mockMvc.perform(delete("/api/v1/challenge/1")
-                .with(csrf())
-                .contentType(MediaType.APPLICATION_JSON))
-                .andDo(print())
+        mockMvc.perform(delete("/api/v1/challenges/1")
+                        .with(csrf())
+                        .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().is(ErrorCode.DATABASE_ERROR.getHttpStatus().value()));
     }
 
