@@ -1,6 +1,7 @@
 package site.bookmore.bookmore.common.exception.not_found;
 
 import site.bookmore.bookmore.common.exception.AbstractAppException;
+import site.bookmore.bookmore.common.exception.ErrorCode;
 
 import static site.bookmore.bookmore.common.exception.ErrorCode.USER_NOT_FOUND;
 
