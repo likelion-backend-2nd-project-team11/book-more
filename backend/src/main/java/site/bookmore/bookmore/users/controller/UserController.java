@@ -5,9 +5,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import site.bookmore.bookmore.users.dto.Response;
-import site.bookmore.bookmore.users.dto.UserJoinRequest;
-import site.bookmore.bookmore.users.dto.UserJoinResponse;
+import site.bookmore.bookmore.common.dto.ResultResponse;
+import site.bookmore.bookmore.users.dto.*;
 import site.bookmore.bookmore.users.service.UserService;
 
 @RestController
@@ -18,7 +17,12 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping("/join")
-    public Response<UserJoinResponse> join(@RequestBody UserJoinRequest userJoinRequest) {
-        return Response.success(userService.join(userJoinRequest));
+    public ResultResponse<UserJoinResponse> join(@RequestBody UserJoinRequest userJoinRequest) {
+        return ResultResponse.success(userService.join(userJoinRequest));
+    }
+
+    @PostMapping("/login")
+    public ResultResponse<UserLoginResponse> login(@RequestBody UserLoginRequest userLoginRequest) {
+        return ResultResponse.success(userService.login(userLoginRequest));
     }
 }
