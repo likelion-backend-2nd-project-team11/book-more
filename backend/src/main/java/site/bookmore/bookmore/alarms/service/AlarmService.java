@@ -16,11 +16,14 @@ public class AlarmService {
     private final UserRepository userRepository;
     private final AlarmRepository alarmRepository;
 
+    /**
+     * 팔로잉의 리뷰 등록 알림
+     */
     public Page<AlarmResponse> findByFollowingReview(Pageable pageable, String email) {
         User user = userRepository.findByEmail(email).orElseThrow(UserNotFoundException::new);
         Long targetId = user.getId();
-
-        // 해당 유저id의 alarm만 조회
+        
         return alarmRepository.findByTarget_User(targetId, pageable).map(alarm -> new AlarmResponse(alarm));
     }
+
 }
