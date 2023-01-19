@@ -18,7 +18,7 @@ public class AlarmEventHandler {
     @Async
     @EventListener
     public void createAlarm(AlarmCreate e) {
-        log.info("알람 생성 type:{}, from:{}, target:{}, source:{}", e.getAlarm().getAlarmType(), e.getAlarm().getFrom_User(), e.getAlarm().getTarget_User(), e.getAlarm().getSource());
+        log.info("알람 생성 type:{}, from:{}, target:{}, source:{}", e.getAlarm().getAlarmType(), e.getAlarm().getFromUser(), e.getAlarm().getTargetUser(), e.getAlarm().getSource());
         alarmRepository.save(e.getAlarm());
         log.info("알람 생성 완료.");
     }
