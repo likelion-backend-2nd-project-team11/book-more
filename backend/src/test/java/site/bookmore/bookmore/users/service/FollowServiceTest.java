@@ -16,7 +16,7 @@ import site.bookmore.bookmore.users.repositroy.UserRepository;
 
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
 
 class FollowServiceTest {
@@ -62,9 +62,10 @@ class FollowServiceTest {
         Mockito.when(followRepository.save(follow))
                 .thenReturn(follow);
 
-        Assertions.assertDoesNotThrow(() -> followService.following(targetUser.getId(), user.getEmail()));
+        String result = Assertions.assertDoesNotThrow(() -> followService.following(targetUser.getId(), user.getEmail()));
 
-        //assertNull(follow.getDeletedDatetime());
+        assertEquals(String.format("%s 님을 팔로우 하셨습니다.", targetUser.getId()), result);
+        assertNull(follow.getDeletedDatetime());
     }
 
     @Test
@@ -208,9 +209,10 @@ class FollowServiceTest {
         Mockito.when(followRepository.save(follow))
                 .thenReturn(follow);
 
-        Assertions.assertDoesNotThrow(() -> followService.unfollowing(targetUser.getId(), user.getEmail()));
+        String result = Assertions.assertDoesNotThrow(() -> followService.unfollowing(targetUser.getId(), user.getEmail()));
 
-        //assertNotNull(follow.getDeletedDatetime());
+        assertEquals(String.format("%s 님을 언팔로우 하셨습니다.", targetUser.getId()), result);
+        assertNotNull(follow.getDeletedDatetime());
     }
 
     @Test
