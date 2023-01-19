@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import site.bookmore.bookmore.users.entity.User;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -25,12 +26,6 @@ public class Alarm {
     @Column(nullable = false)
     private String alarmType;
 
-    @Column(name = "target_user", nullable = false)
-    private Long targetUser;
-
-    @Column(name = "from_user", nullable = false)
-    private Long fromUser;
-
     @Column(name = "source_id", nullable = false)
     private Long source;
 
@@ -41,6 +36,11 @@ public class Alarm {
     @Column(name = "created_datetime")
     private LocalDateTime createdDatetime;
 
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    private User target_User;
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    private User from_User;
 
 
 }
