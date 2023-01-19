@@ -12,7 +12,7 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "Alarms")
+@Table(name = "alarm")
 @EntityListeners(AuditingEntityListener.class)
 @Getter
 @Builder
@@ -24,7 +24,8 @@ public class Alarm {
     private Long id;
 
     @Column(nullable = false)
-    private String alarmType;
+    @Enumerated(EnumType.STRING)
+    private AlarmType alarmType;
 
     @Column(name = "source_id", nullable = false)
     private Long source;
@@ -37,10 +38,12 @@ public class Alarm {
     private LocalDateTime createdDatetime;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    private User target_User;
+    @JoinColumn(name = "target_user", nullable = false)
+    private User targetUser;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    private User from_User;
+    @JoinColumn(name = "from_user", nullable = false)
+    private User fromUser;
 
 
 }
