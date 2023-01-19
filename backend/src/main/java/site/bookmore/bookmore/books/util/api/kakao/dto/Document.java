@@ -1,11 +1,17 @@
 package site.bookmore.bookmore.books.util.api.kakao.dto;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.time.OffsetDateTime;
 import java.util.List;
 
 @Getter
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class Document {
     private String title;
     private String contents;
