@@ -2,17 +2,22 @@ package site.bookmore.bookmore.security.config;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import site.bookmore.bookmore.security.entrypoint.CustomAccessDeniedEntryPoint;
 import site.bookmore.bookmore.security.entrypoint.CustomAuthenticationEntryPoint;
+import site.bookmore.bookmore.security.fiter.JwtAuthenticationFilter;
+import site.bookmore.bookmore.security.provider.JwtProvider;
 
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class WebSecurityConfig {
+
+    private final JwtProvider jwtProvider;
+
     public static final String[] GET_AUTHENTICATED_REGEX_LIST = {
     };
 
@@ -46,6 +51,8 @@ public class WebSecurityConfig {
         http.exceptionHandling().accessDeniedHandler(new CustomAccessDeniedEntryPoint())
                 .and()
                 .exceptionHandling().authenticationEntryPoint(new CustomAuthenticationEntryPoint());
+
+        http.addFilterBefore(new JwtAuthenticationFilter(jwtProvider), UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
