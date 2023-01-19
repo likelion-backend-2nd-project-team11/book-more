@@ -12,13 +12,13 @@ import org.springframework.test.web.servlet.MockMvc;
 import site.bookmore.bookmore.books.dto.ReviewRequest;
 import site.bookmore.bookmore.books.service.ReviewService;
 
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
 
 @WebMvcTest(ReviewController.class)
 class ReviewControllerTest {
@@ -41,7 +41,7 @@ class ReviewControllerTest {
         ReviewRequest reviewRequest = new ReviewRequest("body", false, 5, 5, 5, 5, 5);
 
         // when
-        when(reviewService.create(reviewRequest, "9791158393083", "wkdtjgus0319@naver.com"))
+        when(reviewService.create(any(ReviewRequest.class), eq("9791158393083"), anyString()))
                 .thenReturn(1L);
 
         // then
@@ -49,9 +49,11 @@ class ReviewControllerTest {
                         .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsBytes(reviewRequest)))
-                .andDo(print())
-                .andExpect(jsonPath("$.result.id").exists())
-                .andExpect(jsonPath("$.result.message").exists())
-                .andExpect(status().isOk());
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.resultCode").value("SUCCESS"))
+                .andExpect(jsonPath("$.result.id").value(1))
+                .andExpect(jsonPath("$.result.message").value("리뷰 등록 완료"));
+
+        verify(reviewService).create(any(ReviewRequest.class), eq("9791158393083"), anyString());
     }
 }
