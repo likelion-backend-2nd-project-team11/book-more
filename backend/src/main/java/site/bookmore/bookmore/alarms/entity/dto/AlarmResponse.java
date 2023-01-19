@@ -15,7 +15,7 @@ import java.time.format.DateTimeFormatter;
 public class AlarmResponse {
 
     private Long id;
-    private String alarmType;
+    private Enum alarmType;
     private Long targetUser;
     private Long fromUser;
     private Long source;
@@ -25,8 +25,8 @@ public class AlarmResponse {
     public AlarmResponse(Alarm alarm) {
         this.id = alarm.getId();
         this.alarmType = alarm.getAlarmType();
-        this.targetUser = alarm.getTarget_User().getId();
-        this.fromUser = alarm.getFrom_User().getId();
+        this.targetUser = alarm.getTargetUser().getId();
+        this.fromUser = alarm.getFromUser().getId();
         this.source = alarm.getSource();
         this.createdDatetime = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss").format(alarm.getCreatedDatetime());
     }
