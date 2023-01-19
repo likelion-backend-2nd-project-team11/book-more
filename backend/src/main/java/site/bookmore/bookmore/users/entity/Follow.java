@@ -25,10 +25,10 @@ public class Follow extends BaseEntity {
     private User following;
 
     @ManyToOne
-    @JoinColumn(name = "follower",nullable = false)
+    @JoinColumn(name = "follower", nullable = false)
     private User follower;
 
-    public FollowerResponse toFollowerResponse(){
+    public FollowerResponse toFollowerResponse() {
         return FollowerResponse.builder()
                 .id(this.id)
                 .follower(this.follower.getId())
@@ -37,7 +37,7 @@ public class Follow extends BaseEntity {
                 .build();
     }
 
-    public FollowingResponse toFollowingResponse(){
+    public FollowingResponse toFollowingResponse() {
         return FollowingResponse.builder()
                 .id(this.id)
                 .following(this.following.getId())
