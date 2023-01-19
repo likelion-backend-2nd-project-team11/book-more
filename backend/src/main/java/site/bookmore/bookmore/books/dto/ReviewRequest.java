@@ -21,6 +21,8 @@ public class ReviewRequest {
 
     public Review toEntity(User user, Book book) {
         return Review.builder()
+                .author(user)
+                .book(book)
                 .body(body)
                 .spoiler(spoiler)
                 .professionalism(professionalism)
@@ -28,6 +30,7 @@ public class ReviewRequest {
                 .readability(readability)
                 .collectible(collectible)
                 .difficulty(difficulty)
+                .likesCount(0)
                 .build();
     }
 }
