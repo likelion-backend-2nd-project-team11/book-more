@@ -11,8 +11,12 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import site.bookmore.bookmore.common.exception.conflict.DuplicateEmailException;
 import site.bookmore.bookmore.common.exception.conflict.DuplicateNicknameException;
+import site.bookmore.bookmore.common.exception.not_found.UserNotFoundException;
+import site.bookmore.bookmore.common.exception.unauthorized.InvalidPasswordException;
 import site.bookmore.bookmore.users.dto.UserJoinRequest;
 import site.bookmore.bookmore.users.dto.UserJoinResponse;
+import site.bookmore.bookmore.users.dto.UserLoginRequest;
+import site.bookmore.bookmore.users.dto.UserLoginResponse;
 import site.bookmore.bookmore.users.service.UserService;
 
 import java.time.LocalDate;
@@ -40,6 +44,7 @@ class UserControllerTest {
     @Autowired
     private MockMvc mockMvc;
     UserJoinRequest userJoinRequest = new UserJoinRequest("email@gmail.com", "password", "nickname", testDate);
+    UserLoginRequest userLoginRequest = new UserLoginRequest("email@gmail.com", "password");
 
 
     @Test
@@ -100,4 +105,63 @@ class UserControllerTest {
 
         verify(userService).join(any(UserJoinRequest.class));
     }
+
+    @Test
+    @DisplayName("로그인 - 성공")
+    void login_success() throws Exception {
+
+        UserLoginResponse userLoginResponse = new UserLoginResponse("token");
+
+        given(userService.login(any(UserLoginRequest.class))).willReturn(userLoginResponse);
+
+        mockMvc.perform(post("/api/v1/users/login")
+                        .with(csrf())
+                        .content(objectMapper.writeValueAsBytes(userLoginRequest))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.resultCode").value("SUCCESS"))
+                .andExpect(jsonPath("$.result.jwt").value("token"))
+                .andDo(print());
+
+        verify(userService).login(any(UserLoginRequest.class));
+    }
+
+    @Test
+    @DisplayName("로그인 - 실패(패스워드 틀림)")
+    void login_fail_1() throws Exception {
+
+        given(userService.login(any(UserLoginRequest.class))).willThrow(new InvalidPasswordException());
+
+        mockMvc.perform(post("/api/v1/users/login")
+                        .with(csrf())
+                        .content(objectMapper.writeValueAsBytes(userLoginRequest))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isUnauthorized())
+                .andExpect(jsonPath("$.resultCode").value("ERROR"))
+                .andExpect(jsonPath("$.result.errorCode").value("INVALID_PASSWORD"))
+                .andExpect(jsonPath("$.result.message").value("잘못된 패스워드입니다."))
+                .andDo(print());
+
+        verify(userService).login(any(UserLoginRequest.class));
+    }
+
+    @Test
+    @DisplayName("로그인 - 실패(이메일 틀림)")
+    void login_fail_2() throws Exception {
+
+        given(userService.login(any(UserLoginRequest.class))).willThrow(new UserNotFoundException());
+
+        mockMvc.perform(post("/api/v1/users/login")
+                        .with(csrf())
+                        .content(objectMapper.writeValueAsBytes(userLoginRequest))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.resultCode").value("ERROR"))
+                .andExpect(jsonPath("$.result.errorCode").value("USER_NOT_FOUND"))
+                .andExpect(jsonPath("$.result.message").value("해당하는 유저를 찾을 수 없습니다."))
+                .andDo(print());
+
+        verify(userService).login(any(UserLoginRequest.class));
+    }
+
 }
