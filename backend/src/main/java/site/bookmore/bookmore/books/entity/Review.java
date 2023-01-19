@@ -34,4 +34,14 @@ public class Review extends BaseEntity {
     private int collectible;
     private int difficulty;
     private int likesCount;
+
+    public synchronized void likes() {
+        likesCount++;
+    }
+
+    public synchronized void unlikes() {
+        if (likesCount > 0) {
+            likesCount--;
+        }
+    }
 }
