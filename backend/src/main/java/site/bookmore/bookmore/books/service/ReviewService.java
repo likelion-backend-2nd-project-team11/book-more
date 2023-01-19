@@ -7,8 +7,8 @@ import site.bookmore.bookmore.books.entity.Book;
 import site.bookmore.bookmore.books.entity.Review;
 import site.bookmore.bookmore.books.repository.BookRepository;
 import site.bookmore.bookmore.books.repository.ReviewRepository;
-import site.bookmore.bookmore.common.exception.AbstractAppException;
-import site.bookmore.bookmore.common.exception.ErrorCode;
+import site.bookmore.bookmore.common.exception.not_found.BookNotFoundException;
+import site.bookmore.bookmore.common.exception.not_found.UserNotFoundException;
 import site.bookmore.bookmore.users.entity.User;
 import site.bookmore.bookmore.users.repositroy.UserRepository;
 
@@ -23,15 +23,15 @@ public class ReviewService {
     // 도서 리뷰 등록
     public Long create(ReviewRequest reviewRequest, String isbn, String email) {
         User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new AbstractAppException(ErrorCode.EMAIL_NOT_FOUND) {
-                });
+                .orElseThrow(UserNotFoundException::new);
 
         Book book = bookRepository.findById(isbn)
-                .orElseThrow(() -> new AbstractAppException(ErrorCode.BOOK_NOT_FOUND) {
-                });
+                .orElseThrow(BookNotFoundException::new);
 
         Review review = reviewRequest.toEntity(user, book);
         Review savedReview = reviewRepository.save(review);
+
+        // 나의 팔로잉이 리뷰를 등록했을 때의 알림 발생 추가해야 함
 
         return savedReview.getId();
     }
