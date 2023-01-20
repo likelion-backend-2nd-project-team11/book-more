@@ -12,7 +12,6 @@ import site.bookmore.bookmore.books.repository.BookRepository;
 import site.bookmore.bookmore.books.repository.LikesRepository;
 import site.bookmore.bookmore.books.repository.ReviewRepository;
 import site.bookmore.bookmore.common.exception.not_found.BookNotFoundException;
-import site.bookmore.bookmore.common.exception.not_found.FollowNotFoundException;
 import site.bookmore.bookmore.common.exception.not_found.ReviewNotFoundException;
 import site.bookmore.bookmore.common.exception.not_found.UserNotFoundException;
 import site.bookmore.bookmore.observer.event.alarm.AlarmCreate;
