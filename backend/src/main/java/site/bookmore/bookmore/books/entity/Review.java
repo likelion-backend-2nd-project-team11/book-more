@@ -27,11 +27,11 @@ public class Review extends BaseEntity {
 
     private String body;
     private boolean spoiler;
-    private int professionalism;
-    private int fun;
-    private int readability;
-    private int collectible;
-    private int difficulty;
+
+    @OneToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "chart_id")
+    private Chart chart;
+
     private int likesCount;
 
     public synchronized void likes() {

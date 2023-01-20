@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import site.bookmore.bookmore.books.entity.Book;
+import site.bookmore.bookmore.books.entity.Chart;
 import site.bookmore.bookmore.books.entity.Review;
 import site.bookmore.bookmore.users.entity.User;
 
@@ -13,11 +14,7 @@ import site.bookmore.bookmore.users.entity.User;
 public class ReviewRequest {
     private String body;
     private boolean spoiler;
-    private int professionalism;
-    private int fun;
-    private int readability;
-    private int collectible;
-    private int difficulty;
+    private Chart chart;
 
     public Review toEntity(User user, Book book) {
         return Review.builder()
@@ -25,11 +22,13 @@ public class ReviewRequest {
                 .book(book)
                 .body(body)
                 .spoiler(spoiler)
-                .professionalism(professionalism)
-                .fun(fun)
-                .readability(readability)
-                .collectible(collectible)
-                .difficulty(difficulty)
+                .chart(Chart.builder()
+                        .professionalism(chart.getProfessionalism())
+                        .fun(chart.getFun())
+                        .readability(chart.getReadability())
+                        .collectible(chart.getCollectible())
+                        .difficulty(chart.getDifficulty())
+                        .build())
                 .likesCount(0)
                 .build();
     }

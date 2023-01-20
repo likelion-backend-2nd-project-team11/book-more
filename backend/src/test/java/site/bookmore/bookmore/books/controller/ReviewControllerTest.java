@@ -10,6 +10,7 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import site.bookmore.bookmore.books.dto.ReviewRequest;
+import site.bookmore.bookmore.books.entity.Chart;
 import site.bookmore.bookmore.books.service.ReviewService;
 
 import static org.mockito.ArgumentMatchers.*;
@@ -38,7 +39,7 @@ class ReviewControllerTest {
     @WithMockUser
     void create_success() throws Exception {
         // given
-        ReviewRequest reviewRequest = new ReviewRequest("body", false, 5, 5, 5, 5, 5);
+        ReviewRequest reviewRequest = new ReviewRequest("body", false, Chart.builder().build());
 
         // when
         when(reviewService.create(any(ReviewRequest.class), eq("9791158393083"), anyString()))
