@@ -7,7 +7,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import site.bookmore.bookmore.common.exception.bad_request.FollowNotMeException;
 import site.bookmore.bookmore.common.exception.conflict.DuplicateFollowException;
-import site.bookmore.bookmore.common.exception.conflict.DuplicateUnfollowException;
 import site.bookmore.bookmore.common.exception.not_found.FollowNotFoundException;
 import site.bookmore.bookmore.common.exception.not_found.UserNotFoundException;
 import site.bookmore.bookmore.users.dto.FollowerResponse;
@@ -76,7 +75,7 @@ public class FollowService {
 
         //언팔로우를 이미 한 경우
         if (targetFollow.getDeletedDatetime() != null) {
-            throw new DuplicateUnfollowException();
+            throw new FollowNotFoundException();
         }
 
         targetFollow.delete();
