@@ -26,30 +26,23 @@ public class ChallengeService {
     private final ChallengeRepository challengeRepository;
     private final UserRepository userRepository;
 
-    public ChallengeResponse add(String email, String title, String description) {
+    public ChallengeResponse add(String email, ChallengeRequest challengeRequest) {
         //  토큰으로 로그인한 아이디 비교
         User user = userRepository.findByEmail(email)
                 .orElseThrow(UserNotFoundException::new);
-        Challenge savedChallenge = Challenge.builder()
-                .title(title)
-                .description(description)
-                .owner(user)
-                .build();
+        Challenge savedChallenge = challengeRequest.toEntity(user);
         challengeRepository.save(savedChallenge);
-        ChallengeResponse challengeResponse = ChallengeResponse.builder()
-                .postId(savedChallenge.getId())
-                .message("게시글 작성완료")
-                .build();
-        return challengeResponse;
+
+        return ChallengeResponse.of(savedChallenge,"challenge 등록");
     }
 
     @Transactional
-    public ChallengeResponse modify(String userName, Long postId, ChallengeRequest challengeRequest) {
+    public ChallengeResponse modify(String email, Long challengeId, ChallengeRequest challengeRequest) {
         // #1 토큰으로 로그인한 아이디 없을 경우
-        User user = userRepository.findByNickname(userName)
+        User user = userRepository.findByEmail(email)
                 .orElseThrow(UserNotFoundException::new);
         // #2 수정할 포스트가 없을 경우
-        Challenge challenge = challengeRepository.findById(postId).orElseThrow(ReviewNotFoundException::new);
+        Challenge challenge = challengeRepository.findById(challengeId).orElseThrow(ReviewNotFoundException::new);
         // #3 사용자와 수정할 포스트의 작성자가 다를 경우 + 계정이 ADMIN 이 아닐 경우
         if (!Objects.equals(challenge.getOwner().getNickname(), user.getNickname()) && !user.getRole().equals(Role.ROLE_ADMIN)) {
             throw new UserNotFoundException();
@@ -57,48 +50,38 @@ public class ChallengeService {
         //JPA 의 영속성 컨텍스트 덕분에 entity 객체의 값만 변경하면 자동으로 변경사항 반영함!
         //따라서 repository.update 를 쓰지 않아도 됨.
         challenge.update(challengeRequest.toEntity());
-        ChallengeResponse challengeResponse = ChallengeResponse.builder().postId(postId).message("게시글 수정완료").build();
-        return challengeResponse;
+        return ChallengeResponse.of(challenge,"challenge 수정 완료");
     }
 
-    public ChallengeResponse delete(String userName, Long postId) {
+    public ChallengeResponse delete(String email, Long challengeId) {
         // #1 토큰으로 로그인한 아이디가 없을 경우
-        User user = userRepository.findByNickname(userName)
+        User user = userRepository.findByEmail(email)
                 .orElseThrow(UserNotFoundException::new);
         // #2 삭제할 포스트가 없을 경우
-        Challenge challenge = challengeRepository.findById(postId).orElseThrow(ReviewNotFoundException::new);
+        Challenge challenge = challengeRepository.findById(challengeId).orElseThrow(ReviewNotFoundException::new);
         // #3 사용자와 삭제할 포스트의 작성자가 다를 경우
         if (!Objects.equals(challenge.getOwner().getNickname(), user.getNickname()) && !user.getRole().equals(Role.ROLE_ADMIN)) {
             throw new UserNotFoundException();
         }
 
         challengeRepository.delete(challenge);
-        ChallengeResponse challengeResponse = ChallengeResponse.builder().message("게시글 삭제완료").build();
-        return challengeResponse;
+        return ChallengeResponse.of(challenge,"challenge 삭제 완료");
     }
 
-    public ChallengeDetailResponse get(String userName, Long postId) {
+    public ChallengeDetailResponse get(String email, Long challengeId) {
         // #1 토큰으로 로그인한 아이디가 없을 경우
-        User user = userRepository.findByNickname(userName)
+        User user = userRepository.findByEmail(email)
                 .orElseThrow(UserNotFoundException::new);
         // #2 해당 게시글이 존재하지 않을 경우
-        Challenge challenge = challengeRepository.findById(postId).orElseThrow(ReviewNotFoundException::new);
+        Challenge challenge = challengeRepository.findById(challengeId).orElseThrow(ReviewNotFoundException::new);
 
-        ChallengeDetailResponse postDetailResponse = ChallengeDetailResponse.builder()
-                .id(postId)
-                .owner(challenge.getOwner())
-                .title(challenge.getTitle())
-                .description(challenge.getDescription())
-                .LastModifiedDatetime(challenge.getLastModifiedDatetime().format(DateTimeFormatter.ofPattern("yyyy-mm-dd hh:mm:ss")))
-                .deletedDatetime(challenge.getDeletedDatetime().format(DateTimeFormatter.ofPattern("yyyy-mm-dd hh:mm:ss")))
-                .build();
-        return postDetailResponse;
+
+        return ChallengeDetailResponse.of(challenge);
     }
 
 
     public Page<ChallengeDetailResponse> list(Pageable pageable) {
         Page<Challenge> page = challengeRepository.findAll(pageable);
-        Page<ChallengeDetailResponse> challengeDetailResponsePage = ChallengeDetailResponse.toDtoList(page);
-        return challengeDetailResponsePage;
+        return page.map(ChallengeDetailResponse::of);
     }
 }

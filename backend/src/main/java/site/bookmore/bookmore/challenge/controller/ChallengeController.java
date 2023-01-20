@@ -23,7 +23,7 @@ public class ChallengeController {
     @PostMapping()
     public ResultResponse<ChallengeResponse> addChallenge(Authentication authentication, @RequestBody ChallengeRequest challengeRequest) {
         String email = authentication.getName();
-        ChallengeResponse challengeResponse = challengeService.add(email, challengeRequest.getTitle(), challengeRequest.getDescription());
+        ChallengeResponse challengeResponse = challengeService.add(email, challengeRequest);
         return ResultResponse.success(challengeResponse);
     }
 
@@ -49,7 +49,7 @@ public class ChallengeController {
     }
 
     @GetMapping
-    public ResultResponse<Page<ChallengeDetailResponse>> listChallenge(@PageableDefault(size = 20, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
+    public ResultResponse<Page<ChallengeDetailResponse>> listChallenge(@PageableDefault(size = 20, sort = "createdDatetime", direction = Sort.Direction.DESC) Pageable pageable) {
         Page<ChallengeDetailResponse> challengeListResponses = challengeService.list(pageable);
         return ResultResponse.success(challengeListResponses);
     }
