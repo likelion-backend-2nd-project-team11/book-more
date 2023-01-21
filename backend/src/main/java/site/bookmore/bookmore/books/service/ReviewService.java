@@ -2,8 +2,11 @@ package site.bookmore.bookmore.books.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import site.bookmore.bookmore.alarms.entity.AlarmType;
+import site.bookmore.bookmore.books.dto.ReviewDto;
 import site.bookmore.bookmore.books.dto.ReviewRequest;
 import site.bookmore.bookmore.books.entity.Book;
 import site.bookmore.bookmore.books.entity.Likes;
@@ -43,6 +46,14 @@ public class ReviewService {
         // 나의 팔로잉이 리뷰를 등록했을 때의 알림 발생 추가해야 함
 
         return savedReview.getId();
+    }
+
+    // 도서 리뷰 조회
+    public Page<ReviewDto> read(Pageable pageable, String isbn) {
+        Book book = bookRepository.findById(isbn)
+                .orElseThrow(BookNotFoundException::new);
+
+        return reviewRepository.findAllByBook(pageable, book).map(ReviewDto::of);
     }
 
     // 도서 리뷰에 좋아요 | 취소
