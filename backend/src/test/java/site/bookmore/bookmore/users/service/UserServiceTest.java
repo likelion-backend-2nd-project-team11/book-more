@@ -174,4 +174,30 @@ class UserServiceTest {
         assertThat(abstractAppException.getErrorCode()).isEqualTo(DUPLICATED_NICKNAME);
     }
 
+
+    @Test
+    @DisplayName("회원 정보 수정 - 성공")
+    void userDelete_success() {
+
+        when(userRepository.findByEmail(user.getEmail()))
+                .thenReturn(Optional.of(user));
+
+
+        Assertions.assertDoesNotThrow(() -> userService.delete(user.getEmail(), 0L));
+    }
+
+    @Test
+    @DisplayName("회원 정보 수정 - 실패(잘못된 토큰)")
+    void userDelete_fail() {
+
+        when(userRepository.findByEmail(user.getEmail()))
+                .thenReturn(Optional.of(user));
+
+
+        AbstractAppException abstractAppException = assertThrows(InvalidTokenException.class, () -> {
+            userService.delete(user.getEmail(), 1L);
+        });
+
+        assertThat(abstractAppException.getErrorCode()).isEqualTo(INVALID_TOKEN);
+    }
 }
