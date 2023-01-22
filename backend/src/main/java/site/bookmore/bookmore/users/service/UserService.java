@@ -14,6 +14,7 @@ import site.bookmore.bookmore.common.exception.unauthorized.InvalidPasswordExcep
 import site.bookmore.bookmore.common.exception.unauthorized.InvalidTokenException;
 import site.bookmore.bookmore.security.provider.JwtProvider;
 import site.bookmore.bookmore.users.dto.*;
+import site.bookmore.bookmore.users.entity.Role;
 import site.bookmore.bookmore.users.entity.User;
 import site.bookmore.bookmore.users.repositroy.UserRepository;
 
@@ -63,12 +64,12 @@ public class UserService implements UserDetailsService {
      */
 
     @Transactional
-    public UserUpdateResponse infoUpdate(String email, Long userId, UserUpdateRequest userUpdateRequest) {
+    public UserResponse infoUpdate(String email, Long userId, UserUpdateRequest userUpdateRequest) {
 
         User user = userRepository.findByEmail(email).orElseThrow(UserNotFoundException::new);
 
         // id, 토큰 아이디 확인
-        if (!user.getId().equals(userId)) throw new InvalidTokenException();
+        if (!user.getId().equals(userId) && user.getRole() != Role.ROLE_ADMIN) throw new InvalidTokenException();
 
         // 중복 이름 예외처리
         if (userUpdateRequest.getNickname() != null) {
@@ -87,7 +88,23 @@ public class UserService implements UserDetailsService {
 
         user.update(userUpdateRequest.toEntity(encodedPw));
 
-        return UserUpdateResponse.of(user);
+        return UserResponse.of(user, "수정 완료 했습니다.");
+    }
+
+    /**
+     * 회원 탈퇴
+     */
+    @Transactional
+    public UserResponse delete(String email, Long userId) {
+        User user = userRepository.findByEmail(email).orElseThrow(UserNotFoundException::new);
+
+        if (!user.getId().equals(userId) && user.getRole() != Role.ROLE_ADMIN) throw new InvalidTokenException();
+
+        User userFindId = userRepository.findByIdAndDeletedDatetimeIsNull(userId).orElseThrow(UserNotFoundException::new);
+
+        userFindId.delete();
+
+        return UserResponse.of(user, "회원 탈퇴 완료.");
     }
 
 }
