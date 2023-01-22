@@ -7,8 +7,6 @@ import site.bookmore.bookmore.common.dto.ResultResponse;
 import site.bookmore.bookmore.users.dto.*;
 import site.bookmore.bookmore.users.service.UserService;
 
-import javax.validation.Valid;
-
 @RestController
 @RequestMapping("/api/v1/users")
 @RequiredArgsConstructor
@@ -27,8 +25,15 @@ public class UserController {
     }
 
     @PatchMapping("/{id}")
-    public ResultResponse<UserUpdateResponse> update(@RequestBody UserUpdateRequest userUpdateRequest, @PathVariable Long id, Authentication authentication) {
+    public ResultResponse<UserResponse> update(@RequestBody UserUpdateRequest userUpdateRequest, @PathVariable Long id, Authentication authentication) {
         String email = authentication.getName();
         return ResultResponse.success(userService.infoUpdate(email, id, userUpdateRequest));
+    }
+
+
+    @DeleteMapping("/{id}")
+    public ResultResponse<UserResponse> delete(@PathVariable Long id, Authentication authentication) {
+        String email = authentication.getName();
+        return ResultResponse.success(userService.delete(email, id));
     }
 }
