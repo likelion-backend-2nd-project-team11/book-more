@@ -10,15 +10,15 @@ import site.bookmore.bookmore.users.entity.User;
 @Getter
 @AllArgsConstructor
 @Builder
-public class UserUpdateResponse {
+public class UserResponse {
 
     private Long id;
     private String message;
 
-    public static UserUpdateResponse of(User user) {
-        return UserUpdateResponse.builder()
+    public static UserResponse of(User user, String message) {
+        return UserResponse.builder()
                 .id(user.getId())
-                .message("수정 완료 했습니다.")
+                .message(message)
                 .build();
     }
 }
