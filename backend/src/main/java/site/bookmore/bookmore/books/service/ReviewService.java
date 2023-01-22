@@ -6,7 +6,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import site.bookmore.bookmore.alarms.entity.AlarmType;
-import site.bookmore.bookmore.books.dto.ReviewDto;
+import site.bookmore.bookmore.books.dto.ReviewPageResponse;
 import site.bookmore.bookmore.books.dto.ReviewRequest;
 import site.bookmore.bookmore.books.entity.Book;
 import site.bookmore.bookmore.books.entity.Likes;
@@ -49,11 +49,11 @@ public class ReviewService {
     }
 
     // 도서 리뷰 조회
-    public Page<ReviewDto> read(Pageable pageable, String isbn) {
+    public Page<ReviewPageResponse> read(Pageable pageable, String isbn) {
         Book book = bookRepository.findById(isbn)
                 .orElseThrow(BookNotFoundException::new);
 
-        return reviewRepository.findAllByBook(pageable, book).map(ReviewDto::of);
+        return reviewRepository.findByBook(pageable, book).map(ReviewPageResponse::new);
     }
 
     // 도서 리뷰에 좋아요 | 취소

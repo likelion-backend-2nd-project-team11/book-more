@@ -22,7 +22,7 @@ public class ReviewRequest {
                 .book(book)
                 .body(body)
                 .spoiler(spoiler)
-                .chart(Chart.builder().build())
+                .chart(chart)
                 .likesCount(0)
                 .build();
     }

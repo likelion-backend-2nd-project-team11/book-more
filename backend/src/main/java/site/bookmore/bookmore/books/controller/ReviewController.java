@@ -7,7 +7,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
-import site.bookmore.bookmore.books.dto.ReviewDto;
+import site.bookmore.bookmore.books.dto.ReviewPageResponse;
 import site.bookmore.bookmore.books.dto.ReviewRequest;
 import site.bookmore.bookmore.books.dto.ReviewResponse;
 import site.bookmore.bookmore.books.service.ReviewService;
@@ -29,8 +29,8 @@ public class ReviewController {
 
     // 도서 리뷰 조회
     @GetMapping("/{isbn}/reviews")
-    public ResultResponse<Page<ReviewDto>> read(@PageableDefault(size = 5, sort = "createdDatetime", direction = Sort.Direction.DESC) Pageable pageable, @PathVariable String isbn) {
-        Page<ReviewDto> reviewPage = reviewService.read(pageable, isbn);
+    public ResultResponse<Page<ReviewPageResponse>> read(@PageableDefault(size = 5, sort = "createdDatetime", direction = Sort.Direction.DESC) Pageable pageable, @PathVariable String isbn) {
+        Page<ReviewPageResponse> reviewPage = reviewService.read(pageable, isbn);
         return ResultResponse.success(reviewPage);
     }
 
