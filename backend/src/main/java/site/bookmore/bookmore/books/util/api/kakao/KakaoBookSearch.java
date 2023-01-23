@@ -1,19 +1,26 @@
 package site.bookmore.bookmore.books.util.api.kakao;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StopWatch;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.util.UriBuilder;
 import reactor.core.publisher.Mono;
+import site.bookmore.bookmore.books.entity.Book;
+import site.bookmore.bookmore.books.util.api.kakao.dto.Document;
 import site.bookmore.bookmore.books.util.api.kakao.dto.KakaoSearchParams;
 import site.bookmore.bookmore.books.util.api.kakao.dto.KakaoSearchResponse;
+import site.bookmore.bookmore.books.util.mapper.BookMapper;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.URI;
+import java.util.List;
 
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
+@Slf4j
 @Component
 public class KakaoBookSearch {
     private static final String BASE_URL = "http://dapi.kakao.com";
@@ -33,6 +40,33 @@ public class KakaoBookSearch {
                 .header(AUTHORIZATION, token)
                 .retrieve()
                 .bodyToMono(KakaoSearchResponse.class);
+    }
+
+    public Mono<Book> searchByISBN(String isbn) {
+        StopWatch stopWatch = new StopWatch();
+        KakaoSearchParams kakaoSearchParams = KakaoSearchParams.builder()
+                .query(isbn)
+                .target("isbn")
+                .build();
+
+        return webClient.get()
+                .uri(uriBuilder -> buildUri(uriBuilder, kakaoSearchParams))
+                .header(AUTHORIZATION, token)
+                .retrieve()
+                .bodyToMono(KakaoSearchResponse.class)
+                .map(kakaoSearchResponse -> {
+                    List<Document> documents = kakaoSearchResponse.getDocuments();
+                    if (documents == null || documents.size() != 1) return new Book();
+                    return BookMapper.of(documents.get(0));
+                })
+                .doOnSubscribe(subscription -> {
+                    log.info("카카오 도서 상세조회");
+                    stopWatch.start();
+                })
+                .doOnSuccess((book) -> {
+                    stopWatch.stop();
+                    log.info("카카오 도서 상세조회 완료 [{}ms]", stopWatch.getTotalTimeMillis());
+                });
     }
 
     private URI buildUri(UriBuilder uriBuilder, KakaoSearchParams kakaoSearchParams) {
