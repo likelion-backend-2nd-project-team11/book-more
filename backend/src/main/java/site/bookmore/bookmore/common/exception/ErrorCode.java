@@ -18,6 +18,8 @@ public enum ErrorCode {
     API_REQUEST_TIMEOUT(REQUEST_TIMEOUT, "요청 시간이 초과되었습니다."),
     DUPLICATED_NICKNAME(CONFLICT, "이미 사용중인 닉네임입니다."),
     DUPLICATED_EMAIL(CONFLICT, "이미 사용중인 이메일입니다."),
+    DUPLICATED_FOLLOW(CONFLICT, "이미 팔로우 중입니다."),
+    DUPLICATED_UNFOLLOW(CONFLICT, "이미 언팔로우 중입니다."),
     FOLLOW_NOT_ME(BAD_REQUEST, "나를 팔로우 할 수 없습니다."),
     DATABASE_ERROR(INTERNAL_SERVER_ERROR, "데이터베이스 에러");
 
