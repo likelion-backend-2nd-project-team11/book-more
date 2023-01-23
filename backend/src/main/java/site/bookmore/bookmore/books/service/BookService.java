@@ -8,7 +8,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StopWatch;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+import reactor.core.scheduler.Schedulers;
 import site.bookmore.bookmore.books.dto.BookResponse;
 import site.bookmore.bookmore.books.entity.Book;
 import site.bookmore.bookmore.books.repository.BookRepository;
@@ -59,10 +61,10 @@ public class BookService {
         requests.add(kolisBookSearch.searchByISBN(isbn));
 
         // api 병렬 요청
-        Book book = requests.stream()
-                .parallel()
-                .map(Mono::block)
-                .reduce(new Book(), Book::merge);
+        Flux<Book> bookFlux = Flux.merge(requests);
+        Book book = bookFlux.subscribeOn(Schedulers.parallel())
+                .reduce(new Book(), Book::merge)
+                .block();
 
         bookRepository.save(book);
 
