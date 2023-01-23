@@ -9,6 +9,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
+import site.bookmore.bookmore.common.exception.bad_request.InvalidEmailFormatException;
 import site.bookmore.bookmore.common.exception.conflict.DuplicateEmailException;
 import site.bookmore.bookmore.common.exception.conflict.DuplicateNicknameException;
 import site.bookmore.bookmore.common.exception.not_found.UserNotFoundException;
@@ -26,7 +27,6 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -39,7 +39,7 @@ class UserControllerTest {
     @Autowired
     ObjectMapper objectMapper;
 
-    private LocalDate testDate = LocalDate.of(2022,01,01);
+    private LocalDate testDate = LocalDate.of(2022, 01, 01);
 
     @Autowired
     private MockMvc mockMvc;
@@ -99,6 +99,23 @@ class UserControllerTest {
                 .andExpect(jsonPath("$.resultCode").value("ERROR"))
                 .andExpect(jsonPath("$.result.errorCode").value("DUPLICATED_NICKNAME"))
                 .andExpect(jsonPath("$.result.message").value("이미 사용중인 닉네임입니다."));
+
+        verify(userService).join(any(UserJoinRequest.class));
+    }
+
+    @Test
+    @DisplayName("회원가입 - 실패(잘못된 이메일 형식)")
+    void join_fail_3() throws Exception {
+        given(userService.join(any(UserJoinRequest.class))).willThrow(new InvalidEmailFormatException());
+
+        mockMvc.perform(post("/api/v1/users/join")
+                        .with(csrf())
+                        .content(objectMapper.writeValueAsBytes(userJoinRequest))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.resultCode").value("ERROR"))
+                .andExpect(jsonPath("$.result.errorCode").value("INVALID_EMAIL_FORMAT"))
+                .andExpect(jsonPath("$.result.message").value("올바르지 않는 이메일 형식입니다."));
 
         verify(userService).join(any(UserJoinRequest.class));
     }
