@@ -9,15 +9,15 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
-@Entity
 @Getter
-@EntityListeners(AuditingEntityListener.class)
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@Entity
+@EntityListeners(AuditingEntityListener.class)
 public class Book {
     @Id
     private String id;
@@ -26,35 +26,54 @@ public class Book {
     private String title;
 
     @Builder.Default
-    @OneToMany(mappedBy = "book", fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST})
-    private List<Author> authors = new ArrayList<>();
+    @OneToMany(mappedBy = "book", fetch = FetchType.LAZY, cascade = {CascadeType.MERGE})
+    private Set<Author> authors = new HashSet<>();
 
     @Builder.Default
-    @OneToMany(mappedBy = "book", fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST})
-    private List<Translator> translators = new ArrayList<>();
+    @OneToMany(mappedBy = "book", fetch = FetchType.LAZY, cascade = {CascadeType.MERGE})
+    private Set<Translator> translators = new HashSet<>();
 
-    @Column(nullable = false)
-    private String kdc;
+    private Subject subject;
 
-    @Column(nullable = false)
     private String publisher;
 
-    private int pages;
+    private Integer pages;
 
     private String image;
 
-    @Column(nullable = false)
     private String chapter;
 
-    @Column(nullable = false)
+    @Column(length = 300)
     private String introduce;
 
-    @Column(nullable = false)
-    private String summary;
+    private int price;
 
     @Column(nullable = false)
-    private int price;
+    private boolean cached;
 
     @CreatedDate
     private LocalDateTime createdDatetime;
+
+    public Book merge(Book book) {
+        if (id == null) id = book.getId();
+        if (title == null) title = book.getTitle();
+        if (authors.isEmpty()) authors = book.getAuthors();
+        if (translators.isEmpty()) translators = book.getTranslators();
+        if (subject == null) subject = book.getSubject();
+        if (publisher == null) publisher = book.getPublisher();
+        if (pages == null) pages = book.getPages();
+        if (image == null) image = book.getImage();
+        if (chapter == null) chapter = book.getChapter();
+        if (introduce == null) introduce = book.getIntroduce();
+        if (price == 0) price = book.getPrice();
+        return this;
+    }
+
+    public void addAuthors(Set<Author> authors) {
+        this.authors.addAll(authors);
+    }
+
+    public void addTranslators(Set<Translator> translators) {
+        this.translators.addAll(translators);
+    }
 }
