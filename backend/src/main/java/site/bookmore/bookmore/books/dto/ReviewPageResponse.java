@@ -14,7 +14,7 @@ import java.time.format.DateTimeFormatter;
 @Getter
 public class ReviewPageResponse {
     private Long id;
-    private String author;
+    private String nickname;
     private String body;
     private boolean spoiler;
     private int professionalism;
@@ -22,18 +22,22 @@ public class ReviewPageResponse {
     private int readability;
     private int collectible;
     private int difficulty;
+    private int likesCount;
     private String createdDatetime;
 
-    public ReviewPageResponse(Review review) {
-        this.id = review.getId();
-        this.author = review.getAuthor().getNickname();
-        this.body = review.getBody();
-        this.spoiler = review.isSpoiler();
-        this.professionalism = review.getChart().getProfessionalism();
-        this.fun = review.getChart().getFun();
-        this.readability = review.getChart().getReadability();
-        this.collectible = review.getChart().getCollectible();
-        this.difficulty = review.getChart().getDifficulty();
-        this.createdDatetime = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss").format(review.getCreatedDatetime());
+    public static ReviewPageResponse of(Review review) {
+        return ReviewPageResponse.builder()
+                .id(review.getId())
+                .nickname(review.getAuthor().getNickname())
+                .body(review.getBody())
+                .spoiler(review.isSpoiler())
+                .professionalism(review.getChart().getProfessionalism())
+                .fun(review.getChart().getFun())
+                .readability(review.getChart().getReadability())
+                .collectible(review.getChart().getCollectible())
+                .difficulty(review.getChart().getDifficulty())
+                .likesCount(review.getLikesCount())
+                .createdDatetime(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss").format(review.getCreatedDatetime()))
+                .build();
     }
 }
