@@ -21,7 +21,8 @@ public enum ErrorCode {
     DUPLICATED_FOLLOW(CONFLICT, "이미 팔로우 중입니다."),
     DUPLICATED_UNFOLLOW(CONFLICT, "이미 언팔로우 중입니다."),
     FOLLOW_NOT_ME(BAD_REQUEST, "나를 팔로우 할 수 없습니다."),
-    DATABASE_ERROR(INTERNAL_SERVER_ERROR, "데이터베이스 에러");
+    DATABASE_ERROR(INTERNAL_SERVER_ERROR, "데이터베이스 에러"),
+    INVALID_EMAIL_FORMAT(BAD_REQUEST, "올바르지 않는 이메일 형식입니다.");
 
     private final HttpStatus httpStatus;
     private final String message;
