@@ -9,6 +9,8 @@ import site.bookmore.bookmore.common.dto.ResultResponse;
 import site.bookmore.bookmore.users.dto.*;
 import site.bookmore.bookmore.users.service.UserService;
 
+import javax.validation.Valid;
+
 @RestController
 @RequestMapping("/api/v1/users")
 @RequiredArgsConstructor
@@ -17,12 +19,12 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping("/join")
-    public ResultResponse<UserJoinResponse> join(@RequestBody UserJoinRequest userJoinRequest) {
+    public ResultResponse<UserJoinResponse> join(@RequestBody @Valid UserJoinRequest userJoinRequest) {
         return ResultResponse.success(userService.join(userJoinRequest));
     }
 
     @PostMapping("/login")
-    public ResultResponse<UserLoginResponse> login(@RequestBody UserLoginRequest userLoginRequest) {
+    public ResultResponse<UserLoginResponse> login(@RequestBody @Valid UserLoginRequest userLoginRequest) {
         return ResultResponse.success(userService.login(userLoginRequest));
     }
 }
