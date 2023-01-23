@@ -5,7 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import site.bookmore.bookmore.books.util.api.kakao.dto.Document;
+import site.bookmore.bookmore.books.entity.Subject;
 
 import java.util.List;
 
@@ -20,20 +20,11 @@ public class BookResponse {
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private List<String> translators;
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    private String kdc;
+    private Subject subject;
     private String publisher;
+    private Integer pages;
     private String image;
+    private String chapter;
+    private String introduce;
     private int price;
-
-    public static BookResponse of(Document kakaoDocument){
-        return BookResponse.builder()
-                .isbn(kakaoDocument.getIsbn())
-                .title(kakaoDocument.getTitle())
-                .authors(kakaoDocument.getAuthors())
-                .translators(kakaoDocument.getTranslators())
-                .publisher(kakaoDocument.getPublisher())
-                .image(kakaoDocument.getThumbnail())
-                .price(kakaoDocument.getPrice())
-                .build();
-    }
 }
