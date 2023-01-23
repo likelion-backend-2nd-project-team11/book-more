@@ -48,7 +48,11 @@ public class BookService {
         timer.start();
 
         Optional<Book> bookOptional = bookRepository.findById(isbn);
-        if (bookOptional.isPresent()) return BookResponseMapper.of(bookOptional.get());
+        if (bookOptional.isPresent()) {
+            timer.stop();
+            log.info("총 응답 시간 : {}ms", timer.getTotalTimeMillis());
+            return BookResponseMapper.of(bookOptional.get());
+        };
 
         log.info("DB 내 도서 정보 없음");
         log.info("API 호출");
