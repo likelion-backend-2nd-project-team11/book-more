@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import site.bookmore.bookmore.users.entity.User;
 
 
+import javax.validation.constraints.Email;
 import java.time.LocalDate;
 
 @AllArgsConstructor
@@ -13,6 +14,7 @@ import java.time.LocalDate;
 @Getter
 public class UserJoinRequest {
 
+    @Email
     private String email;
     private String password;
     private String nickname;
