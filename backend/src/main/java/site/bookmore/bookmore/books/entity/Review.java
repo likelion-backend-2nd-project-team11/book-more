@@ -34,6 +34,23 @@ public class Review extends BaseEntity {
 
     private int likesCount;
 
+    // 도서 리뷰 수정
+    public void update(Review review) {
+        updateBody(review.getBody());
+        updateSpoiler(review.isSpoiler());
+        chart.update(review.getChart());
+    }
+
+    private void updateBody(String body) {
+        if (body != null) {
+            this.body = body;
+        }
+    }
+
+    private void updateSpoiler(boolean spoiler) {
+        this.spoiler = spoiler;
+    }
+
     public synchronized void likes() {
         likesCount++;
     }
