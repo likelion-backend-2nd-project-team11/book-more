@@ -60,6 +60,9 @@ class FollowServiceTest {
         Mockito.when(userRepository.findById(targetUser.getId()))
                 .thenReturn(Optional.of(targetUser));
 
+        Mockito.when(followRepository.findByFollowerAndFollowing(user, targetUser))
+                .thenReturn(Optional.of(follow));
+
         Mockito.when(followRepository.save(follow))
                 .thenReturn(follow);
 
@@ -88,12 +91,15 @@ class FollowServiceTest {
 
         Follow follow = Follow.builder()
                 .id(1L)
-                .following(user)
+                .following(targetUser)
                 .follower(user)
                 .build();
 
         Mockito.when(userRepository.findById(targetUser.getId()))
                 .thenReturn(Optional.of(targetUser));
+
+        Mockito.when(followRepository.findByFollowerAndFollowing(user, targetUser))
+                .thenReturn(Optional.of(follow));
 
         Mockito.when(followRepository.save(follow))
                 .thenReturn(follow);
@@ -124,12 +130,15 @@ class FollowServiceTest {
 
         Follow follow = Follow.builder()
                 .id(1L)
-                .following(user)
+                .following(targetUser)
                 .follower(user)
                 .build();
 
         Mockito.when(userRepository.findByEmail(user.getEmail()))
                 .thenReturn(Optional.of(user));
+
+        Mockito.when(followRepository.findByFollowerAndFollowing(user, targetUser))
+                .thenReturn(Optional.of(follow));
 
         Mockito.when(followRepository.save(follow))
                 .thenReturn(follow);
@@ -162,6 +171,9 @@ class FollowServiceTest {
 
         Mockito.when(userRepository.findById(user.getId()))
                 .thenReturn(Optional.of(user));
+
+        Mockito.when(followRepository.findByFollowerAndFollowing(user, user))
+                .thenReturn(Optional.of(follow));
 
         Mockito.when(followRepository.save(follow))
                 .thenReturn(follow);
@@ -196,8 +208,6 @@ class FollowServiceTest {
                 .follower(user)
                 .build();
 
-        follow.delete();
-
         Mockito.when(userRepository.findByEmail(user.getEmail()))
                 .thenReturn(Optional.of(user));
 
@@ -206,9 +216,6 @@ class FollowServiceTest {
 
         Mockito.when(followRepository.findByFollowerAndFollowing(any(User.class), any(User.class)))
                 .thenReturn(Optional.of(follow));
-
-        Mockito.when(followRepository.save(follow))
-                .thenReturn(follow);
 
         String result = Assertions.assertDoesNotThrow(() -> followService.unfollowing(targetUser.getId(), user.getEmail()));
 
@@ -239,16 +246,11 @@ class FollowServiceTest {
                 .follower(user)
                 .build();
 
-        follow.delete();
-
         Mockito.when(userRepository.findById(targetUser.getId()))
                 .thenReturn(Optional.of(targetUser));
 
         Mockito.when(followRepository.findByFollowerAndFollowing(any(User.class), any(User.class)))
                 .thenReturn(Optional.of(follow));
-
-        Mockito.when(followRepository.save(follow))
-                .thenReturn(follow);
 
         UserNotFoundException exception = Assertions.assertThrows(UserNotFoundException.class, () -> {
             followService.unfollowing(targetUser.getId(), user.getEmail());
@@ -280,16 +282,11 @@ class FollowServiceTest {
                 .follower(user)
                 .build();
 
-        follow.delete();
-
         Mockito.when(userRepository.findByEmail(user.getEmail()))
                 .thenReturn(Optional.of(user));
 
         Mockito.when(followRepository.findByFollowerAndFollowing(any(User.class), any(User.class)))
                 .thenReturn(Optional.of(follow));
-
-        Mockito.when(followRepository.save(follow))
-                .thenReturn(follow);
 
         UserNotFoundException exception = Assertions.assertThrows(UserNotFoundException.class, () -> {
             followService.unfollowing(targetUser.getId(), user.getEmail());
@@ -315,22 +312,11 @@ class FollowServiceTest {
                 .nickname("BB")
                 .build();
 
-        Follow follow = Follow.builder()
-                .id(1L)
-                .following(targetUser)
-                .follower(user)
-                .build();
-
-        follow.delete();
-
         Mockito.when(userRepository.findByEmail(user.getEmail()))
                 .thenReturn(Optional.of(user));
 
         Mockito.when(userRepository.findById(targetUser.getId()))
                 .thenReturn(Optional.of(targetUser));
-
-        Mockito.when(followRepository.save(follow))
-                .thenReturn(follow);
 
         FollowNotFoundException exception = Assertions.assertThrows(FollowNotFoundException.class, () -> {
             followService.unfollowing(targetUser.getId(), user.getEmail());
