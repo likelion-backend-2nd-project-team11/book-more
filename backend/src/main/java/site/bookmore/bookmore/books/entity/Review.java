@@ -28,7 +28,7 @@ public class Review extends BaseEntity {
     private String body;
     private boolean spoiler;
 
-    @OneToOne(fetch = FetchType.LAZY, optional = false)
+    @OneToOne(fetch = FetchType.LAZY, optional = false, cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     @JoinColumn(name = "chart_id")
     private Chart chart;
 

@@ -22,13 +22,7 @@ public class ReviewRequest {
                 .book(book)
                 .body(body)
                 .spoiler(spoiler)
-                .chart(Chart.builder()
-                        .professionalism(chart.getProfessionalism())
-                        .fun(chart.getFun())
-                        .readability(chart.getReadability())
-                        .collectible(chart.getCollectible())
-                        .difficulty(chart.getDifficulty())
-                        .build())
+                .chart(chart)
                 .likesCount(0)
                 .build();
     }

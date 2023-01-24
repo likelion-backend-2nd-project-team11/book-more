@@ -2,8 +2,12 @@ package site.bookmore.bookmore.books.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import site.bookmore.bookmore.alarms.entity.AlarmType;
+import site.bookmore.bookmore.books.dto.ReviewPageResponse;
 import site.bookmore.bookmore.books.dto.ReviewRequest;
 import site.bookmore.bookmore.books.entity.Book;
 import site.bookmore.bookmore.books.entity.Likes;
@@ -52,6 +56,15 @@ public class ReviewService {
         }
 
         return savedReview.getId();
+    }
+
+    // 도서 리뷰 조회
+    @Transactional
+    public Page<ReviewPageResponse> read(Pageable pageable, String isbn) {
+        Book book = bookRepository.findById(isbn)
+                .orElseThrow(BookNotFoundException::new);
+
+        return reviewRepository.findByBook(pageable, book).map(ReviewPageResponse::of);
     }
 
     // 도서 리뷰에 좋아요 | 취소

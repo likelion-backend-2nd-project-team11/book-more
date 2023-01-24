@@ -1,8 +1,13 @@
 package site.bookmore.bookmore.books.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+import site.bookmore.bookmore.books.dto.ReviewPageResponse;
 import site.bookmore.bookmore.books.dto.ReviewRequest;
 import site.bookmore.bookmore.books.dto.ReviewResponse;
 import site.bookmore.bookmore.books.service.ReviewService;
@@ -20,6 +25,13 @@ public class ReviewController {
         String email = authentication.getName();
         Long id = reviewService.create(reviewRequest, isbn, email);
         return ResultResponse.success(new ReviewResponse(id, "리뷰 등록 완료"));
+    }
+
+    // 도서 리뷰 조회
+    @GetMapping("/{isbn}/reviews")
+    public ResultResponse<Page<ReviewPageResponse>> read(@PageableDefault(size = 5, sort = "createdDatetime", direction = Sort.Direction.DESC) Pageable pageable, @PathVariable String isbn) {
+        Page<ReviewPageResponse> reviewPage = reviewService.read(pageable, isbn);
+        return ResultResponse.success(reviewPage);
     }
 
     // 도서 리뷰에 좋아요 | 취소
