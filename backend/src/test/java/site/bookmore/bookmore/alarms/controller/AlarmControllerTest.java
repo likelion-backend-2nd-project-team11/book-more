@@ -12,7 +12,7 @@ import org.springframework.security.test.context.support.WithAnonymousUser;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import site.bookmore.bookmore.alarms.entity.AlarmType;
-import site.bookmore.bookmore.alarms.entity.dto.AlarmResponse;
+import site.bookmore.bookmore.alarms.dto.AlarmResponse;
 import site.bookmore.bookmore.alarms.service.AlarmService;
 
 import java.util.List;

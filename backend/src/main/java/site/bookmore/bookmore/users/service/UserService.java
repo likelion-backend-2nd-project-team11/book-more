@@ -6,15 +6,15 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import site.bookmore.bookmore.common.exception.conflict.DuplicateEmailException;
 import site.bookmore.bookmore.common.exception.conflict.DuplicateNicknameException;
 import site.bookmore.bookmore.common.exception.not_found.UserNotFoundException;
 import site.bookmore.bookmore.common.exception.unauthorized.InvalidPasswordException;
+import site.bookmore.bookmore.common.exception.unauthorized.InvalidTokenException;
 import site.bookmore.bookmore.security.provider.JwtProvider;
-import site.bookmore.bookmore.users.dto.UserJoinRequest;
-import site.bookmore.bookmore.users.dto.UserJoinResponse;
-import site.bookmore.bookmore.users.dto.UserLoginRequest;
-import site.bookmore.bookmore.users.dto.UserLoginResponse;
+import site.bookmore.bookmore.users.dto.*;
+import site.bookmore.bookmore.users.entity.Role;
 import site.bookmore.bookmore.users.entity.User;
 import site.bookmore.bookmore.users.repositroy.UserRepository;
 
@@ -58,5 +58,53 @@ public class UserService implements UserDetailsService {
         return new UserLoginResponse(jwtProvider.generateToken(user));
     }
 
+
+    /**
+     * 회원 정보 수정
+     */
+
+    @Transactional
+    public UserResponse infoUpdate(String email, Long userId, UserUpdateRequest userUpdateRequest) {
+
+        User user = userRepository.findByEmail(email).orElseThrow(UserNotFoundException::new);
+
+        // id, 토큰 아이디 확인
+        if (!user.getId().equals(userId) && user.getRole() != Role.ROLE_ADMIN) throw new InvalidTokenException();
+
+        // 중복 이름 예외처리
+        if (userUpdateRequest.getNickname() != null) {
+            userRepository.findByNickname(userUpdateRequest.getNickname())
+                    .ifPresent(user1 -> {
+                        throw new DuplicateNicknameException();
+                    });
+        }
+
+        // password encode
+        String encoded = userUpdateRequest.getPassword();
+        if (encoded == null) {
+            encoded = user.getPassword();
+        }
+        String encodedPw = passwordEncoder.encode(encoded);
+
+        user.update(userUpdateRequest.toEntity(encodedPw));
+
+        return UserResponse.of(user, "수정 완료 했습니다.");
+    }
+
+    /**
+     * 회원 탈퇴
+     */
+    @Transactional
+    public UserResponse delete(String email, Long userId) {
+        User user = userRepository.findByEmail(email).orElseThrow(UserNotFoundException::new);
+
+        if (!user.getId().equals(userId) && user.getRole() != Role.ROLE_ADMIN) throw new InvalidTokenException();
+
+        User userFindId = userRepository.findByIdAndDeletedDatetimeIsNull(userId).orElseThrow(UserNotFoundException::new);
+
+        userFindId.delete();
+
+        return UserResponse.of(user, "회원 탈퇴 완료.");
+    }
 
 }

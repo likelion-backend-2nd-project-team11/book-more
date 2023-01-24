@@ -1,11 +1,14 @@
 package site.bookmore.bookmore.books.entity;
 
-import lombok.Getter;
+import lombok.*;
 
 import javax.persistence.*;
 
-@Entity
 @Getter
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
+@Entity
 @Table(name = "book_translator")
 public class Translator {
     @Id
@@ -15,6 +18,17 @@ public class Translator {
     @Column(nullable = false)
     private String name;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.LAZY)
     private Book book;
+
+    public void setBook(Book book) {
+        this.book = book;
+    }
+
+    public static Translator of(String name, Book book) {
+        return Translator.builder()
+                .name(name)
+                .book(book)
+                .build();
+    }
 }

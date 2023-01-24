@@ -17,7 +17,7 @@ import java.time.format.DateTimeFormatter;
 public class ChallengeDetailResponse {
     private Long id;
 
-    private User owner;
+    private String nickname;
 
     private String title;
 
@@ -27,14 +27,13 @@ public class ChallengeDetailResponse {
 
     private boolean completed;
 
-    private LocalDate deadline;
+    private String deadline;
 
 
-    private LocalDateTime createdDateTime;
+    private String createdDatetime;
 
     private String LastModifiedDatetime;
 
-    private String deletedDatetime;
 
     public static Page<ChallengeDetailResponse> toDtoList(Page<Challenge> postEntities) {
         Page<ChallengeDetailResponse> postDetailResponses = postEntities.map(m -> ChallengeDetailResponse.builder()
@@ -43,12 +42,24 @@ public class ChallengeDetailResponse {
                 .description(m.getDescription())
                 .progress(m.getProgress())
                 .completed(m.isCompleted())
-                .deadline(m.getDeadline())
-                .createdDateTime(m.getCreatedDatetime())
+                .deadline(m.getDeadline().format(DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss")))
+                .createdDatetime(m.getCreatedDatetime().format(DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss")))
                 .LastModifiedDatetime(m.getLastModifiedDatetime().format(DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss")))
-                .deletedDatetime(m.getDeletedDatetime().format(DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss")))
                 .build());
         return postDetailResponses;
     }
 
+    public static ChallengeDetailResponse of(Challenge challenge){
+        return ChallengeDetailResponse.builder()
+                .id(challenge.getId())
+                .nickname(challenge.getOwner().getNickname())
+                .title(challenge.getTitle())
+                .description(challenge.getDescription())
+                .progress(challenge.getProgress())
+                .completed(challenge.isCompleted())
+                .deadline(challenge.getDeadline().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")))
+                .createdDatetime(challenge.getCreatedDatetime().format(DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss")))
+                .LastModifiedDatetime(challenge.getLastModifiedDatetime().format(DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss")))
+                .build();
+    }
 }

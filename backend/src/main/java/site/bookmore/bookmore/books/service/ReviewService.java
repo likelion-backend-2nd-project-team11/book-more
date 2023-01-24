@@ -2,8 +2,12 @@ package site.bookmore.bookmore.books.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import site.bookmore.bookmore.alarms.entity.AlarmType;
+import site.bookmore.bookmore.books.dto.ReviewPageResponse;
 import site.bookmore.bookmore.books.dto.ReviewRequest;
 import site.bookmore.bookmore.books.entity.Book;
 import site.bookmore.bookmore.books.entity.Likes;
@@ -15,14 +19,19 @@ import site.bookmore.bookmore.common.exception.not_found.BookNotFoundException;
 import site.bookmore.bookmore.common.exception.not_found.ReviewNotFoundException;
 import site.bookmore.bookmore.common.exception.not_found.UserNotFoundException;
 import site.bookmore.bookmore.observer.event.alarm.AlarmCreate;
+import site.bookmore.bookmore.users.entity.Follow;
 import site.bookmore.bookmore.users.entity.User;
+import site.bookmore.bookmore.users.repositroy.FollowRepository;
 import site.bookmore.bookmore.users.repositroy.UserRepository;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class ReviewService {
 
     private final BookRepository bookRepository;
+    private final FollowRepository followRepository;
     private final LikesRepository likesRepository;
 
     private final ReviewRepository reviewRepository;
@@ -40,9 +49,22 @@ public class ReviewService {
         Review review = reviewRequest.toEntity(user, book);
         Review savedReview = reviewRepository.save(review);
 
-        // 나의 팔로잉이 리뷰를 등록했을 때의 알림 발생 추가해야 함
+        // 나의 팔로잉이 리뷰를 등록했을 때의 알림 발생
+        List<Follow> followers = followRepository.findAllByFollowingAndDeletedDatetimeIsNull(user);
+        for (Follow follower : followers) {
+            publisher.publishEvent(AlarmCreate.of(AlarmType.NEW_FOLLOW_REVIEW, follower.getFollower(), user, review.getId()));
+        }
 
         return savedReview.getId();
+    }
+
+    // 도서 리뷰 조회
+    @Transactional
+    public Page<ReviewPageResponse> read(Pageable pageable, String isbn) {
+        Book book = bookRepository.findById(isbn)
+                .orElseThrow(BookNotFoundException::new);
+
+        return reviewRepository.findByBook(pageable, book).map(ReviewPageResponse::of);
     }
 
     // 도서 리뷰에 좋아요 | 취소
@@ -60,9 +82,10 @@ public class ReviewService {
 
         likesRepository.save(likes);
 
-        // 내가 작성한 리뷰에 좋아요가 달렸을 때의 알림 발생 추가해야 함
-        if (likes.isLiked())
+        // 내가 작성한 리뷰에 좋아요가 달렸을 때의 알림 발생
+        if (likes.isLiked()) {
             publisher.publishEvent(AlarmCreate.of(AlarmType.NEW_LIKE_ON_REVIEW, review.getAuthor(), user, likes.getId()));
+        }
 
         return result;
     }

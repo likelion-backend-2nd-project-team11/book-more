@@ -1,4 +1,4 @@
-package site.bookmore.bookmore.alarms.entity.dto;
+package site.bookmore.bookmore.alarms.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
