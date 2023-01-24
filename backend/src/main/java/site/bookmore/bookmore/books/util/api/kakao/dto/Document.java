@@ -24,4 +24,14 @@ public class Document {
     private int price;
     private String thumbnail;
     private String status;
+
+    public String getISBN() {
+        String[] isbnArray = isbn.trim().split(" ");
+        if (isbnArray.length == 0) return "";
+        if (isbnArray.length < 2) return isbnArray[0];
+        for (String s : isbnArray) {
+            if (s.length() == 13) return s;
+        }
+        throw new IllegalArgumentException("잘못된 isbn입니다.");
+    }
 }
