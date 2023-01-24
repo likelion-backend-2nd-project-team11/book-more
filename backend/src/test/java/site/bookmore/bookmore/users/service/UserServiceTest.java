@@ -176,18 +176,21 @@ class UserServiceTest {
 
 
     @Test
-    @DisplayName("회원 정보 수정 - 성공")
+    @DisplayName("회원 정보 삭제 - 성공")
     void userDelete_success() {
 
         when(userRepository.findByEmail(user.getEmail()))
                 .thenReturn(Optional.of(user));
+        when(userRepository.findByIdAndDeletedDatetimeIsNull(0L))
+                .thenReturn(Optional.of(user));
+
 
 
         Assertions.assertDoesNotThrow(() -> userService.delete(user.getEmail(), 0L));
     }
 
     @Test
-    @DisplayName("회원 정보 수정 - 실패(잘못된 토큰)")
+    @DisplayName("회원 정보 삭제 - 실패(잘못된 토큰)")
     void userDelete_fail() {
 
         when(userRepository.findByEmail(user.getEmail()))
