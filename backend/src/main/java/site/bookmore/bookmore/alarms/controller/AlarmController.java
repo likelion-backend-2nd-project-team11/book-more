@@ -9,7 +9,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import site.bookmore.bookmore.alarms.entity.dto.AlarmResponse;
+import site.bookmore.bookmore.alarms.dto.AlarmResponse;
 import site.bookmore.bookmore.alarms.service.AlarmService;
 import site.bookmore.bookmore.common.dto.ResultResponse;
 
@@ -23,7 +23,7 @@ public class AlarmController {
      * 알림
      */
     @GetMapping("")
-    public ResultResponse<Page<AlarmResponse>> getAlarm(@PageableDefault(size = 20, sort = "createdDateTime", direction = Sort.Direction.DESC) Pageable pageable, Authentication authentication) {
+    public ResultResponse<Page<AlarmResponse>> getAlarm(@PageableDefault(size = 20, sort = "createdDatetime", direction = Sort.Direction.DESC) Pageable pageable, Authentication authentication) {
         Page<AlarmResponse> alarmResponses = alarmService.findByFollowingReview(pageable, authentication.getName());
 
         return ResultResponse.success(alarmResponses);

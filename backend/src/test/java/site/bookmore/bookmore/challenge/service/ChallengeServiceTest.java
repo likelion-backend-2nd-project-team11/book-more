@@ -15,6 +15,7 @@ import site.bookmore.bookmore.users.entity.User;
 import site.bookmore.bookmore.users.repositroy.UserRepository;
 
 import java.time.LocalDate;
+import java.util.Optional;
 
 import static java.util.Optional.of;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -65,10 +66,10 @@ class ChallengeServiceTest {
                 .deadline(LocalDate.of(2023,01,20))
                 .build();
         //db에서 회원이 없다면 UserNotFoundException
-        when(userRepository.findByNickname(any()))
-                .thenThrow(new UserNotFoundException());
+        when(userRepository.findByEmail(anyString()))
+                .thenReturn(Optional.empty());
 
-        UserNotFoundException userNotFoundException = Assertions.assertThrows(UserNotFoundException.class, () -> challengeService.add(anyString(), any(ChallengeRequest.class)));
+        UserNotFoundException userNotFoundException = Assertions.assertThrows(UserNotFoundException.class, () -> challengeService.add("test@test.com", challengeRequest));
 
         assertThat(userNotFoundException.getErrorCode().getHttpStatus()).isEqualTo(HttpStatus.NOT_FOUND);
         assertThat(userNotFoundException.getErrorCode().getMessage());
@@ -78,15 +79,19 @@ class ChallengeServiceTest {
     @DisplayName("challenge 수정 에러 (포스트가 존재하지 않음)")
     void challengeModifyError1() {
 
-        User mockUser = mock(User.class);
+        User mockUser = User.builder()
+                .id(1L)
+                .email("test@tes.com")
+                .nickname("nickname")
+                .build();
 
-        when(userRepository.findByNickname(any()))
-                .thenReturn(of(mockUser));
+        when(userRepository.findByEmail(anyString()))
+                .thenReturn(Optional.of(mockUser));
 
-        when(challengeRepository.findById(any()))
-                .thenThrow(new ReviewNotFoundException());
+        when(challengeRepository.findById(anyLong()))
+                .thenReturn(Optional.empty());
 
-        ReviewNotFoundException reviewNotFoundException = Assertions.assertThrows(ReviewNotFoundException.class, () -> challengeService.modify(any(), eq(1L), any(ChallengeRequest.class)));
+        ReviewNotFoundException reviewNotFoundException = Assertions.assertThrows(ReviewNotFoundException.class, () -> challengeService.modify("test@test.com", 1L, ChallengeRequest.builder().build()));
 
         assertThat(reviewNotFoundException.getErrorCode().getHttpStatus()).isEqualTo(HttpStatus.NOT_FOUND);
         assertThat(reviewNotFoundException.getErrorCode().getMessage());
@@ -96,26 +101,30 @@ class ChallengeServiceTest {
     @DisplayName("challenge 수정 에러 (유저가 존재하지 않음)")
     void challengeModifyError2() {
 
-        when(userRepository.findByNickname("userName"))
-                .thenThrow(new UserNotFoundException());
+        when(userRepository.findByEmail(anyString()))
+                .thenReturn(Optional.empty());
 
-        UserNotFoundException userNotFoundException = Assertions.assertThrows(UserNotFoundException.class, () -> challengeService.modify(any(), eq(1L), any(ChallengeRequest.class)));
+        UserNotFoundException userNotFoundException = Assertions.assertThrows(UserNotFoundException.class, () -> challengeService.modify("test@test.com", 1L, ChallengeRequest.builder().build()));
 
         assertThat(userNotFoundException.getErrorCode().getHttpStatus());
         assertThat(userNotFoundException.getErrorCode().getMessage());
     }
 
     @Test
-    @DisplayName("challenge 삭제 에러 (포스트가 존재하지 않음)")
+    @DisplayName("challenge 삭제 에러 (챌린지가 존재하지 않음)")
     void challengeDeleteError1() {
 
-        User mockUser = mock(User.class);
+        User mockUser = User.builder()
+                            .id(1L)
+                            .email("test@tes.com")
+                            .nickname("nickname")
+                            .build();
 
-        when(userRepository.findByNickname(any()))
-                .thenReturn(of(mockUser));
+        when(userRepository.findByEmail(anyString()))
+                .thenReturn(Optional.of(mockUser));
 
-        when(challengeRepository.findById(any()))
-                .thenThrow(new ReviewNotFoundException());
+        when(challengeRepository.findById(anyLong()))
+                .thenReturn(Optional.empty());
 
         ReviewNotFoundException reviewNotFoundException = Assertions.assertThrows(ReviewNotFoundException.class, () -> challengeService.delete("userName",1L));
 
