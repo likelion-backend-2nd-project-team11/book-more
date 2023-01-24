@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import site.bookmore.bookmore.users.entity.Follow;
 import site.bookmore.bookmore.users.entity.User;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface FollowRepository extends JpaRepository<Follow, Long> {
@@ -16,4 +17,6 @@ public interface FollowRepository extends JpaRepository<Follow, Long> {
     Page<Follow> findByFollowerAndDeletedDatetimeIsNull(Pageable pageable, User follower);
 
     Page<Follow> findByFollowingAndDeletedDatetimeIsNull(Pageable pageable, User following);
+
+    List<Follow> findAllByFollowingAndDeletedDatetimeIsNull(User following);
 }

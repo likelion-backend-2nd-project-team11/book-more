@@ -15,6 +15,7 @@ import site.bookmore.bookmore.books.repository.ReviewRepository;
 import site.bookmore.bookmore.common.exception.AbstractAppException;
 import site.bookmore.bookmore.common.exception.ErrorCode;
 import site.bookmore.bookmore.users.entity.User;
+import site.bookmore.bookmore.users.repositroy.FollowRepository;
 import site.bookmore.bookmore.users.repositroy.UserRepository;
 
 import java.util.Optional;
@@ -26,11 +27,12 @@ import static org.mockito.Mockito.when;
 class ReviewServiceTest {
 
     private final BookRepository bookRepository = Mockito.mock(BookRepository.class);
+    private final FollowRepository followRepository = Mockito.mock(FollowRepository.class);
     private final LikesRepository likesRepository = Mockito.mock(LikesRepository.class);
     private final ReviewRepository reviewRepository = Mockito.mock(ReviewRepository.class);
     private final UserRepository userRepository = Mockito.mock(UserRepository.class);
     private final ApplicationEventPublisher publisher = Mockito.mock(ApplicationEventPublisher.class);
-    private final ReviewService reviewService = new ReviewService(bookRepository, likesRepository, reviewRepository, userRepository, publisher);
+    private final ReviewService reviewService = new ReviewService(bookRepository, followRepository, likesRepository, reviewRepository, userRepository, publisher);
 
     private final User user = User.builder()
             .email("email")
