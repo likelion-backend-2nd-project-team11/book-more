@@ -22,6 +22,7 @@ import site.bookmore.bookmore.common.exception.not_found.UserNotFoundException;
 import site.bookmore.bookmore.common.exception.unauthorized.InvalidPasswordException;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -44,7 +45,7 @@ class ChallengeControllerTest {
     @WithMockUser
     public void Test() throws Exception {
         ChallengeRequest challengeRequest = ChallengeRequest.builder().title("title").description("description").build();
-        when(challengeService.add("userName", challengeRequest.getDescription(), challengeRequest.getTitle())).thenReturn(new ChallengeResponse("message", 1L));
+        when(challengeService.add(anyString(),any(ChallengeRequest.class))).thenReturn(new ChallengeResponse("message", 1L));
 
         mockMvc.perform(post("/api/v1/challenges")
                         .with(csrf())
@@ -58,7 +59,7 @@ class ChallengeControllerTest {
     @WithAnonymousUser
     public void Test2() throws Exception {
         ChallengeRequest challengeRequest = ChallengeRequest.builder().title("title").description("description").build();
-        when(challengeService.add("userName", challengeRequest.getDescription(), challengeRequest.getTitle())).thenThrow(new InvalidPermissionException());
+        when(challengeService.add(anyString(),any(ChallengeRequest.class))).thenThrow(new InvalidPermissionException());
 
         mockMvc.perform(post("/api/v1/challenges")
                         .with(csrf())
