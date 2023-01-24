@@ -1,15 +1,19 @@
 package site.bookmore.bookmore.users.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import site.bookmore.bookmore.alarms.entity.AlarmType;
 import site.bookmore.bookmore.common.exception.bad_request.FollowNotMeException;
 import site.bookmore.bookmore.common.exception.conflict.DuplicateFollowException;
 import site.bookmore.bookmore.common.exception.conflict.DuplicateUnfollowException;
 import site.bookmore.bookmore.common.exception.not_found.FollowNotFoundException;
 import site.bookmore.bookmore.common.exception.not_found.UserNotFoundException;
+import site.bookmore.bookmore.observer.event.alarm.AlarmCreate;
 import site.bookmore.bookmore.users.dto.FollowerResponse;
 import site.bookmore.bookmore.users.dto.FollowingResponse;
 import site.bookmore.bookmore.users.entity.Follow;
@@ -18,12 +22,15 @@ import site.bookmore.bookmore.users.repositroy.FollowRepository;
 import site.bookmore.bookmore.users.repositroy.UserRepository;
 
 import java.util.Objects;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class FollowService {
     private final FollowRepository followRepository;
     private final UserRepository userRepository;
+    private final ApplicationEventPublisher publisher;
 
     public String following(Long id, String email) {
 
@@ -54,8 +61,9 @@ public class FollowService {
                         .build());
 
         follow.undelete();
-
         followRepository.save(follow);
+
+        publisher.publishEvent(AlarmCreate.of(AlarmType.NEW_FOLLOW, follow.getFollowing(), user, follow.getId()));
 
         return String.format("%s 님을 팔로우 하셨습니다.", id);
     }
