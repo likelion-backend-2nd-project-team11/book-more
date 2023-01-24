@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import site.bookmore.bookmore.alarms.entity.dto.AlarmResponse;
+import site.bookmore.bookmore.alarms.dto.AlarmResponse;
 import site.bookmore.bookmore.alarms.repository.AlarmRepository;
 import site.bookmore.bookmore.common.exception.not_found.UserNotFoundException;
 import site.bookmore.bookmore.users.entity.User;
