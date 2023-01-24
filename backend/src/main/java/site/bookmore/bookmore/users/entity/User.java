@@ -1,7 +1,5 @@
 package site.bookmore.bookmore.users.entity;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -62,6 +60,29 @@ public class User extends BaseEntity implements UserDetails {
         this.role = role == null ? Role.ROLE_USER : role;
     }
 
+    public void update(User user) {
+        updatePassword(user.getPassword());
+        updateNickname(user.getNickname());
+        updateBirth(user.getBirth());
+    }
+
+    private void updatePassword(String password) {
+        if (password != null) {
+            this.password = password;
+        }
+    }
+
+    private void updateNickname(String nickname) {
+        if (nickname != null) {
+            this.nickname = nickname;
+        }
+    }
+
+    private void updateBirth(LocalDate birth) {
+        if (birth != null) {
+            this.birth = birth;
+        }
+    }
 
 
     //권한을 리턴
@@ -76,6 +97,7 @@ public class User extends BaseEntity implements UserDetails {
     public String getPassword() {
         return this.password;
     }
+
     // 사용자의 id를 반환
     @Override
     public String getUsername() {

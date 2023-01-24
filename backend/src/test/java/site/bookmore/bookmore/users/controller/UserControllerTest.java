@@ -13,10 +13,8 @@ import site.bookmore.bookmore.common.exception.conflict.DuplicateEmailException;
 import site.bookmore.bookmore.common.exception.conflict.DuplicateNicknameException;
 import site.bookmore.bookmore.common.exception.not_found.UserNotFoundException;
 import site.bookmore.bookmore.common.exception.unauthorized.InvalidPasswordException;
-import site.bookmore.bookmore.users.dto.UserJoinRequest;
-import site.bookmore.bookmore.users.dto.UserJoinResponse;
-import site.bookmore.bookmore.users.dto.UserLoginRequest;
-import site.bookmore.bookmore.users.dto.UserLoginResponse;
+import site.bookmore.bookmore.common.exception.unauthorized.InvalidTokenException;
+import site.bookmore.bookmore.users.dto.*;
 import site.bookmore.bookmore.users.service.UserService;
 
 import java.time.LocalDate;
@@ -25,8 +23,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -39,12 +36,13 @@ class UserControllerTest {
     @Autowired
     ObjectMapper objectMapper;
 
-    private LocalDate testDate = LocalDate.of(2022,01,01);
+    private LocalDate testDate = LocalDate.of(2022, 01, 01);
 
     @Autowired
     private MockMvc mockMvc;
-    UserJoinRequest userJoinRequest = new UserJoinRequest("email@gmail.com", "password", "nickname", testDate);
-    UserLoginRequest userLoginRequest = new UserLoginRequest("email@gmail.com", "password");
+    UserJoinRequest userJoinRequest = new UserJoinRequest("email", "password", "nickname", testDate);
+    UserLoginRequest userLoginRequest = new UserLoginRequest("email", "password");
+    UserUpdateRequest userUpdateRequest = new UserUpdateRequest("password1", null, null);
 
 
     @Test
@@ -158,4 +156,80 @@ class UserControllerTest {
         verify(userService).login(any(UserLoginRequest.class));
     }
 
+    @Test
+    @DisplayName("회원 정보 수정 - 성공")
+    void infoUpdate_success() throws Exception {
+
+        UserResponse userResponse = new UserResponse(0L, "수정 완료 했습니다.");
+
+        given(userService.infoUpdate(any(), any(), any(UserUpdateRequest.class))).willReturn(userResponse);
+
+        mockMvc.perform(patch("/api/v1/users/0")
+                        .with(csrf())
+                        .content(objectMapper.writeValueAsBytes(userUpdateRequest))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.resultCode").value("SUCCESS"))
+                .andExpect(jsonPath("$.result.id").value(0L))
+                .andExpect(jsonPath("$.result.message").value("수정 완료 했습니다."));
+
+        verify(userService).infoUpdate(any(), any(), any(UserUpdateRequest.class));
+    }
+
+    @Test
+    @DisplayName("회원 정보 수정 - 실패(nickname 중복)")
+    void infoUpdate_fail() throws Exception {
+
+
+        given(userService.infoUpdate(any(), any(), any(UserUpdateRequest.class))).willThrow(new DuplicateNicknameException());
+
+        mockMvc.perform(patch("/api/v1/users/0")
+                        .with(csrf())
+                        .content(objectMapper.writeValueAsBytes(userUpdateRequest))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isConflict())
+                .andExpect(jsonPath("$.resultCode").value("ERROR"))
+                .andExpect(jsonPath("$.result.errorCode").value("DUPLICATED_NICKNAME"))
+                .andExpect(jsonPath("$.result.message").value("이미 사용중인 닉네임입니다."));
+
+        verify(userService).infoUpdate(any(), any(), any(UserUpdateRequest.class));
+    }
+
+
+    @Test
+    @DisplayName("회원 탈퇴 - 성공")
+    void userDelete_success() throws Exception {
+
+        UserResponse userDeleteResponse = new UserResponse(0L, "회원 탈퇴 완료.");
+
+        given(userService.delete(any(), any())).willReturn(userDeleteResponse);
+
+        mockMvc.perform(delete("/api/v1/users/0")
+                        .with(csrf())
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.resultCode").value("SUCCESS"))
+                .andExpect(jsonPath("$.result.id").value(0L))
+                .andExpect(jsonPath("$.result.message").value("회원 탈퇴 완료."));
+
+        verify(userService).delete(any(), any());
+    }
+
+    @Test
+    @DisplayName("회원 탈퇴 - 실패(토큰이 다를경우)")
+    void userDelete_fail() throws Exception {
+
+        given(userService.delete(any(), any())).willThrow(new InvalidTokenException());
+
+        mockMvc.perform(delete("/api/v1/users/0")
+                        .with(csrf())
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isUnauthorized())
+                .andExpect(jsonPath("$.resultCode").value("ERROR"))
+                .andExpect(jsonPath("$.result.errorCode").value("INVALID_TOKEN"))
+                .andExpect(jsonPath("$.result.message").value("잘못된 토큰입니다."));
+
+
+        verify(userService).delete(any(), any());
+    }
 }
