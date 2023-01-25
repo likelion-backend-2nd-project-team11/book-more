@@ -26,4 +26,8 @@ public class ResultResponse<T> {
     public static ResultResponse<ErrorResponse> error(AbstractAppException e) {
         return new ResultResponse<>(ERROR, ErrorResponse.of(e.getErrorCode()));
     }
+
+    public static ResultResponse<String> requestError(String message) {
+        return new ResultResponse<>(ERROR, message);
+    }
 }

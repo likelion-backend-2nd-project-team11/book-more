@@ -1,7 +1,11 @@
 package site.bookmore.bookmore.common.exception;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import site.bookmore.bookmore.common.dto.ErrorResponse;
@@ -26,5 +30,21 @@ public class GlobalExceptionHandler {
         log.error("{} {}", e.getErrorCode().name(), e.getMessage());
         return ResponseEntity.status(e.getErrorCode().getHttpStatus())
                 .body(ResultResponse.error(e));
+    }
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<ResultResponse<String>> handleValidationExceptions(MethodArgumentNotValidException e) {
+        BindingResult bindingResult = e.getBindingResult();
+
+        StringBuilder builder = new StringBuilder();
+        for (FieldError fieldError : bindingResult.getFieldErrors()) {
+            builder.append("[");
+            builder.append(fieldError.getField()); // badRequest 한 컬럼 명
+            builder.append("] ");
+            builder.append(fieldError.getDefaultMessage());  // default 메세지
+//            builder.append(fieldError.getRejectedValue()); // 입력한 값
+        }
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(ResultResponse.requestError(builder.toString()));
     }
 }
