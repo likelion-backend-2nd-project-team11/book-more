@@ -66,7 +66,7 @@ public class ReviewService {
         Book book = bookRepository.findById(isbn)
                 .orElseThrow(BookNotFoundException::new);
 
-        return reviewRepository.findByBook(pageable, book).map(ReviewPageResponse::of);
+        return reviewRepository.findByBookAndDeletedDatetimeIsNull(pageable, book).map(ReviewPageResponse::of);
     }
 
     // 도서 리뷰 수정
@@ -83,6 +83,24 @@ public class ReviewService {
         }
 
         review.update(reviewRequest.toEntity());
+
+        return review.getId();
+    }
+
+    // 도서 리뷰 삭제
+    @Transactional
+    public Long delete(Long id, String email) {
+        Review review = reviewRepository.findById(id)
+                .orElseThrow(ReviewNotFoundException::new);
+
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(UserNotFoundException::new);
+
+        if (!Objects.equals(review.getAuthor().getId(), user.getId())) {
+            throw new InvalidPermissionException();
+        }
+
+        review.delete();
 
         return review.getId();
     }
