@@ -9,15 +9,12 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
-import reactor.core.publisher.Mono;
 import site.bookmore.bookmore.books.dto.BookResponse;
 import site.bookmore.bookmore.books.service.BookService;
-import site.bookmore.bookmore.books.util.api.kakao.KakaoBookSearch;
 import site.bookmore.bookmore.books.util.api.kakao.dto.Document;
 import site.bookmore.bookmore.books.util.api.kakao.dto.KakaoSearchParams;
 import site.bookmore.bookmore.books.util.api.kakao.dto.KakaoSearchResponse;
 import site.bookmore.bookmore.books.util.api.kakao.dto.Meta;
-import site.bookmore.bookmore.books.util.api.kolis.KolisBookSearch;
 import site.bookmore.bookmore.books.util.mapper.BookResponseMapper;
 
 import java.util.ArrayList;
@@ -71,7 +68,7 @@ class BookControllerTest {
         KakaoSearchResponse kakaoSearchResponse = new KakaoSearchResponse(meta, documents);
         List<BookResponse> bookResponses = kakaoSearchResponse.getDocuments().stream().map(BookResponseMapper::of).collect(Collectors.toList());
 
-        given(bookService.searchAtKakao(any(KakaoSearchParams.class))).willReturn(new PageImpl<>(bookResponses, Pageable.unpaged(),kakaoSearchResponse.getMeta().getPageable_count()));
+        given(bookService.search(any(KakaoSearchParams.class))).willReturn(new PageImpl<>(bookResponses, Pageable.unpaged(),kakaoSearchResponse.getMeta().getPageable_count()));
 
         mockMvc.perform(get("/api/v1/books?query=정의란 무엇인가")
                         .with(csrf()))
@@ -80,7 +77,7 @@ class BookControllerTest {
                 .andExpect(jsonPath("$.result.content").isArray())
                 .andExpect(jsonPath("$.result.totalElements").value(meta.getPageable_count()));
 
-        verify(bookService).searchAtKakao(any(KakaoSearchParams.class));
+        verify(bookService).search(any(KakaoSearchParams.class));
     }
 
     @Test
@@ -99,7 +96,7 @@ class BookControllerTest {
 
         List<BookResponse> bookResponses = kakaoSearchResponse.getDocuments().stream().map(BookResponseMapper::of).collect(Collectors.toList());
 
-        given(bookService.searchAtKakao(any(KakaoSearchParams.class))).willReturn(new PageImpl<>(bookResponses));
+        given(bookService.search(any(KakaoSearchParams.class))).willReturn(new PageImpl<>(bookResponses));
 
         mockMvc.perform(get("/api/v1/books?query=책이름")
                         .with(csrf()))
@@ -109,6 +106,6 @@ class BookControllerTest {
                 .andExpect(jsonPath("$.result.content").isArray())
                 .andExpect(jsonPath("$.result.totalElements").value(meta.getPageable_count()));
 
-        verify(bookService).searchAtKakao(any(KakaoSearchParams.class));
+        verify(bookService).search(any(KakaoSearchParams.class));
     }
 }
