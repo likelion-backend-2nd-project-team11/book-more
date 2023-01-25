@@ -7,6 +7,7 @@ import org.mockito.Mockito;
 import org.springframework.context.ApplicationEventPublisher;
 import site.bookmore.bookmore.books.dto.ReviewRequest;
 import site.bookmore.bookmore.books.entity.Book;
+import site.bookmore.bookmore.books.entity.Chart;
 import site.bookmore.bookmore.books.entity.Likes;
 import site.bookmore.bookmore.books.entity.Review;
 import site.bookmore.bookmore.books.repository.BookRepository;
@@ -36,6 +37,10 @@ class ReviewServiceTest {
 
     private final User user = User.builder()
             .email("email")
+            .build();
+
+    private final User user2 = User.builder()
+            .email("email2")
             .build();
 
     private final Book book = Book.builder()
@@ -93,6 +98,80 @@ class ReviewServiceTest {
 
         AbstractAppException abstractAppException = Assertions.assertThrows(AbstractAppException.class, () -> reviewService.create(new ReviewRequest(), book.getId(), user.getEmail()));
         assertEquals(ErrorCode.BOOK_NOT_FOUND, abstractAppException.getErrorCode());
+    }
+
+    /* ========== 도서 리뷰 수정 ========== */
+    @Test
+    @DisplayName("도서 리뷰 수정 실패 - 해당 리뷰가 없는 경우")
+    void update_review_not_found() {
+        when(reviewRepository.findById(review.getId()))
+                .thenReturn(Optional.empty());
+
+        AbstractAppException abstractAppException = Assertions.assertThrows(AbstractAppException.class, () -> reviewService.update(new ReviewRequest(), review.getId(), user.getEmail()));
+        assertEquals(ErrorCode.REVIEW_NOT_FOUND, abstractAppException.getErrorCode());
+    }
+
+    @Test
+    @DisplayName("도서 리뷰 수정 실패 - 해당 유저가 없는 경우")
+    void update__user_not_found() {
+        when(reviewRepository.findById(review.getId()))
+                .thenReturn(Optional.of(review));
+        when(userRepository.findByEmail(user.getEmail()))
+                .thenReturn(Optional.empty());
+
+        AbstractAppException abstractAppException = Assertions.assertThrows(AbstractAppException.class, () -> reviewService.update(new ReviewRequest(), review.getId(), user.getEmail()));
+        assertEquals(ErrorCode.USER_NOT_FOUND, abstractAppException.getErrorCode());
+    }
+
+    @Test
+    @DisplayName("도서 리뷰 수정 실패 - 작성자와 유저가 일치하지 않는 경우")
+    void update_invalid_permission() {
+        when(reviewRepository.findById(review.getId()))
+                .thenReturn(Optional.of(review));
+        when(userRepository.findByEmail(user.getEmail()))
+                .thenReturn(Optional.of(user));
+        when(userRepository.findByEmail(user2.getEmail()))
+                .thenReturn(Optional.of(user2));
+
+        AbstractAppException abstractAppException = Assertions.assertThrows(AbstractAppException.class, () -> reviewService.update(new ReviewRequest("new body", true, new Chart()), review.getId(), user2.getEmail()));
+        assertEquals(ErrorCode.INVALID_PERMISSION, abstractAppException.getErrorCode());
+    }
+
+    /* ========== 도서 리뷰 삭제 ========== */
+    @Test
+    @DisplayName("도서 리뷰 삭제 실패 - 해당 리뷰가 없는 경우")
+    void delete_review_not_found() {
+        when(reviewRepository.findById(review.getId()))
+                .thenReturn(Optional.empty());
+
+        AbstractAppException abstractAppException = Assertions.assertThrows(AbstractAppException.class, () -> reviewService.delete(review.getId(), user.getEmail()));
+        assertEquals(ErrorCode.REVIEW_NOT_FOUND, abstractAppException.getErrorCode());
+    }
+
+    @Test
+    @DisplayName("도서 리뷰 삭제 실패 - 해당 유저가 없는 경우")
+    void delete__user_not_found() {
+        when(reviewRepository.findById(review.getId()))
+                .thenReturn(Optional.of(review));
+        when(userRepository.findByEmail(user.getEmail()))
+                .thenReturn(Optional.empty());
+
+        AbstractAppException abstractAppException = Assertions.assertThrows(AbstractAppException.class, () -> reviewService.delete(review.getId(), user.getEmail()));
+        assertEquals(ErrorCode.USER_NOT_FOUND, abstractAppException.getErrorCode());
+    }
+
+    @Test
+    @DisplayName("도서 리뷰 삭제 실패 - 작성자와 유저가 일치하지 않는 경우")
+    void delete_invalid_permission() {
+        when(reviewRepository.findById(review.getId()))
+                .thenReturn(Optional.of(review));
+        when(userRepository.findByEmail(user.getEmail()))
+                .thenReturn(Optional.of(user));
+        when(userRepository.findByEmail(user2.getEmail()))
+                .thenReturn(Optional.of(user2));
+
+        AbstractAppException abstractAppException = Assertions.assertThrows(AbstractAppException.class, () -> reviewService.delete(review.getId(), user2.getEmail()));
+        assertEquals(ErrorCode.INVALID_PERMISSION, abstractAppException.getErrorCode());
     }
 
     /* ========== 도서 리뷰 좋아요 | 취소 ========== */
