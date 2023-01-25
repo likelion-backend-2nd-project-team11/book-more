@@ -40,6 +40,7 @@ public class Doc {
     }
 
     public Integer getPage() {
+        page = page.replaceAll("[\\sa-zA-Z.]", "");
         return "".equals(page) ? null : Integer.parseInt(page);
     }
 }
