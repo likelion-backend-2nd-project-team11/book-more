@@ -19,4 +19,8 @@ public interface FollowRepository extends JpaRepository<Follow, Long> {
     Page<Follow> findByFollowingAndDeletedDatetimeIsNull(Pageable pageable, User following);
 
     List<Follow> findAllByFollowingAndDeletedDatetimeIsNull(User following);
+
+    Long countByFollower(User user);
+
+    Long countByFollowing(User user);
 }
