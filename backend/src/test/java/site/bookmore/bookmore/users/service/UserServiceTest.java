@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import site.bookmore.bookmore.books.repository.ReviewRepository;
 import site.bookmore.bookmore.common.exception.AbstractAppException;
 import site.bookmore.bookmore.common.exception.conflict.DuplicateEmailException;
 import site.bookmore.bookmore.common.exception.conflict.DuplicateNicknameException;
@@ -15,6 +16,7 @@ import site.bookmore.bookmore.users.dto.UserJoinRequest;
 import site.bookmore.bookmore.users.dto.UserLoginRequest;
 import site.bookmore.bookmore.users.dto.UserUpdateRequest;
 import site.bookmore.bookmore.users.entity.User;
+import site.bookmore.bookmore.users.repositroy.FollowRepository;
 import site.bookmore.bookmore.users.repositroy.UserRepository;
 
 import java.time.LocalDate;
@@ -30,13 +32,15 @@ import static site.bookmore.bookmore.common.exception.ErrorCode.*;
 
 class UserServiceTest {
 
+    private final FollowRepository followRepository = mock(FollowRepository.class);
+    private final ReviewRepository reviewRepository = mock(ReviewRepository.class);
     private final UserRepository userRepository = mock(UserRepository.class);
 
     private final JwtProvider jwtProvider = mock(JwtProvider.class);
 
     private final PasswordEncoder passwordEncoder = mock(PasswordEncoder.class);
 
-    private final UserService userService = new UserService(passwordEncoder, jwtProvider, userRepository);
+    private final UserService userService = new UserService(passwordEncoder, jwtProvider, followRepository, reviewRepository, userRepository);
 
     private final User user = User.builder()
             .id(0L)
