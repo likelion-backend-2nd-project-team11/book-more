@@ -1,0 +1,35 @@
+@import url(https://fonts.googleapis.com/css?family=Righteous);
+
+body {
+    /*background-color: var(--bs-light);*/
+    font-family: "Montserrat";
+    /*background-size: cover;*/
+}
+
+.logo {
+    color: hsla(230, 40%, 50%, 1);
+    text-transform: uppercase;
+    letter-spacing: 5px;
+    white-space: nowrap;
+    /*color: white;*/
+    font-family: "Righteous", serif;
+    font-size: 7em;
+}
+
+:root {
+    --bs-family-color: #4D5DB3;
+}
+
+.bg-family-color {
+    background: var(--bs-family-color);
+}
+
+.search-btn {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+}
+
+.search-btn:hover {
+    background: var(--bs-family-color);
+}
