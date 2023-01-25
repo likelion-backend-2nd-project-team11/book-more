@@ -78,7 +78,7 @@ public class ReviewService {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(UserNotFoundException::new);
 
-        if (!Objects.equals(review.getAuthor().getId(), user.getId())) {
+        if (!Objects.equals(review.getAuthor().getEmail(), user.getEmail())) {
             throw new InvalidPermissionException();
         }
 
@@ -96,7 +96,7 @@ public class ReviewService {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(UserNotFoundException::new);
 
-        if (!Objects.equals(review.getAuthor().getId(), user.getId())) {
+        if (!Objects.equals(review.getAuthor().getEmail(), user.getEmail())) {
             throw new InvalidPermissionException();
         }
 
