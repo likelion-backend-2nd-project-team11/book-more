@@ -7,6 +7,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import site.bookmore.bookmore.books.repository.ReviewRepository;
 import site.bookmore.bookmore.common.exception.conflict.DuplicateEmailException;
 import site.bookmore.bookmore.common.exception.conflict.DuplicateNicknameException;
 import site.bookmore.bookmore.common.exception.not_found.UserNotFoundException;
@@ -16,6 +17,7 @@ import site.bookmore.bookmore.security.provider.JwtProvider;
 import site.bookmore.bookmore.users.dto.*;
 import site.bookmore.bookmore.users.entity.Role;
 import site.bookmore.bookmore.users.entity.User;
+import site.bookmore.bookmore.users.repositroy.FollowRepository;
 import site.bookmore.bookmore.users.repositroy.UserRepository;
 
 
@@ -25,6 +27,8 @@ public class UserService implements UserDetailsService {
 
     private final PasswordEncoder passwordEncoder;
     private final JwtProvider jwtProvider;
+    private final FollowRepository followRepository;
+    private final ReviewRepository reviewRepository;
     private final UserRepository userRepository;
 
     @Override
@@ -107,4 +111,19 @@ public class UserService implements UserDetailsService {
         return UserResponse.of(user, "회원 탈퇴 완료.");
     }
 
+    // 유저 아이디로 팔로워 수, 팔로잉 수, 리뷰 수 조회
+    public UserDetailResponse getDetail(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(UserNotFoundException::new);
+
+        Long followers = followRepository.countByFollower(user);
+        Long followings = followRepository.countByFollowing(user);
+        Long reviews = reviewRepository.countByAuthor(user);
+
+        return UserDetailResponse.builder()
+                .followers(followers)
+                .followings(followings)
+                .reviews(reviews)
+                .build();
+    }
 }

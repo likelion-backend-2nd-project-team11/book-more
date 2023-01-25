@@ -36,4 +36,11 @@ public class UserController {
         String email = authentication.getName();
         return ResultResponse.success(userService.delete(email, id));
     }
+
+    // 유저 아이디로 팔로워 수, 팔로잉 수, 리뷰 수 조회
+    @GetMapping("/{id}")
+    public ResultResponse<UserDetailResponse> getDetail(@PathVariable Long id) {
+        UserDetailResponse response = userService.getDetail(id);
+        return ResultResponse.success(response);
+    }
 }
