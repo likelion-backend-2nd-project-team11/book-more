@@ -1,10 +1,16 @@
 package site.bookmore.bookmore.books.util.api.kolis.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import site.bookmore.bookmore.books.entity.Subject;
 
 @Getter
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class Doc {
     @JsonProperty(value = "TITLE")
     private String title;
