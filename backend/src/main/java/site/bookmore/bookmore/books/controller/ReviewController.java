@@ -41,4 +41,11 @@ public class ReviewController {
         boolean result = reviewService.doLikes(email, id);
         return ResultResponse.success(result ? "좋아요를 눌렀습니다." : "좋아요가 취소되었습니다.");
     }
+
+    // 유저로 도서 리뷰 조회
+    @GetMapping("/reviews/{id}")
+    public ResultResponse<Page<ReviewPageResponse>> readByUser(@PageableDefault(size = 5, sort = "createdDatetime", direction = Sort.Direction.DESC) Pageable pageable, @PathVariable Long id) {
+        Page<ReviewPageResponse> reviewPage = reviewService.readByUser(pageable, id);
+        return ResultResponse.success(reviewPage);
+    }
 }

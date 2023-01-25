@@ -89,4 +89,13 @@ public class ReviewService {
 
         return result;
     }
+
+    // 유저로 도서 리뷰 조회
+    @Transactional
+    public Page<ReviewPageResponse> readByUser(Pageable pageable, Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(UserNotFoundException::new);
+
+        return reviewRepository.findByAuthor(pageable, user).map(ReviewPageResponse::of);
+    }
 }
