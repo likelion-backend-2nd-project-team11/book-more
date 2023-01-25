@@ -49,4 +49,8 @@ public class Doc {
         page = page.replaceAll("[\\sa-zA-Z.]", "");
         return "".equals(page) ? null : Integer.parseInt(page);
     }
+
+    public Integer getPrice() {
+        return Integer.parseInt(price.replace(",", ""));
+    }
 }

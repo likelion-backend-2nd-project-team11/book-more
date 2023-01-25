@@ -43,7 +43,7 @@ public class BookMapper {
                 .publisher(doc.getPublisher())
                 .image(doc.getImage_url())
                 .pages(doc.getPage())
-                .price(Integer.parseInt(doc.getPrice().replace(",", "")))
+                .price(doc.getPrice())
                 .build();
 
         Set<Author> authors = Arrays.stream(doc.getAuthor()
