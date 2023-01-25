@@ -79,6 +79,24 @@ class ReviewControllerTest {
         verify(reviewService).read(any(), eq("9791158393083"));
     }
 
+    @Test
+    @DisplayName("유저로 도서 리뷰 조회 성공")
+    @WithMockUser
+    void readByUser_success() throws Exception {
+        // when
+        when(reviewService.readByUser(any(), eq(1L)))
+                .thenReturn(Page.empty());
+
+        // then
+        mockMvc.perform(get("/api/v1/books/reviews/1")
+                        .with(csrf()))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.resultCode").value("SUCCESS"))
+                .andExpect(jsonPath("$.result").exists());
+
+        verify(reviewService).readByUser(any(), eq(1L));
+    }
+
     /* ========== 도서 리뷰 좋아요 | 취소 ========== */
     @Test
     @DisplayName("도서 리뷰 좋아요 성공")
