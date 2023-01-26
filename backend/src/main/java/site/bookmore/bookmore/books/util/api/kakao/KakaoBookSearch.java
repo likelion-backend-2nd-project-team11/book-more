@@ -2,27 +2,34 @@ package site.bookmore.bookmore.books.util.api.kakao;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StopWatch;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.util.UriBuilder;
 import reactor.core.publisher.Mono;
 import site.bookmore.bookmore.books.entity.Book;
+import site.bookmore.bookmore.books.util.api.BookSearch;
 import site.bookmore.bookmore.books.util.api.kakao.dto.Document;
 import site.bookmore.bookmore.books.util.api.kakao.dto.KakaoSearchParams;
 import site.bookmore.bookmore.books.util.api.kakao.dto.KakaoSearchResponse;
+import site.bookmore.bookmore.books.util.api.kakao.dto.Meta;
 import site.bookmore.bookmore.books.util.mapper.BookMapper;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.URI;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
 @Slf4j
 @Component
-public class KakaoBookSearch {
+public class KakaoBookSearch implements BookSearch<KakaoSearchParams> {
     private static final String BASE_URL = "http://dapi.kakao.com";
     private static final String SEARCH_ENDPOINT = "/v3/search/book";
     private final String token;
@@ -34,12 +41,19 @@ public class KakaoBookSearch {
     }
 
     // Todo. 타임아웃 시간 설정
-    public Mono<KakaoSearchResponse> search(KakaoSearchParams kakaoSearchParams) {
+    public Mono<Page<Book>> search(KakaoSearchParams kakaoSearchParams) {
         return webClient.get()
                 .uri(uriBuilder -> buildUri(uriBuilder, kakaoSearchParams))
                 .header(AUTHORIZATION, token)
                 .retrieve()
-                .bodyToMono(KakaoSearchResponse.class);
+                .bodyToMono(KakaoSearchResponse.class)
+                .map(kakaoSearchResponse -> {
+                    Meta meta = kakaoSearchResponse.getMeta();
+                    Pageable pageable = PageRequest.of(kakaoSearchParams.getPage(), kakaoSearchParams.getSize());
+                    List<Book> books = kakaoSearchResponse.getDocuments().stream()
+                            .map(BookMapper::of).collect(Collectors.toList());
+                    return new PageImpl<>(books, pageable, meta.getPageable_count());
+                });
     }
 
     public Mono<Book> searchByISBN(String isbn) {

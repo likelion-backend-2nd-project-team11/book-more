@@ -12,4 +12,8 @@ public class KolisSearchResponse {
     @JsonProperty(value = "TOTAL_COUNT")
     private String totalCount;
     private List<Doc> docs;
+
+    public long getTotalCount() {
+        return Long.parseLong(totalCount);
+    }
 }

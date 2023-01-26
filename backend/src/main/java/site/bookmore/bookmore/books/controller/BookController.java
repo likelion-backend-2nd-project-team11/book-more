@@ -20,7 +20,7 @@ public class BookController {
     @GetMapping("")
     public ResultResponse<Page<BookResponse>> search(KakaoSearchParams kakaoSearchParams) {
         // 카카오 도서 검색 요청
-        return ResultResponse.success(bookService.searchAtKakao(kakaoSearchParams));
+        return ResultResponse.success(bookService.search(kakaoSearchParams));
     }
 
     @GetMapping("/{isbn}")
