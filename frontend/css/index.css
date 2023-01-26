@@ -1,9 +1,8 @@
 @import url(https://fonts.googleapis.com/css?family=Righteous);
+@import url(https://fonts.googleapis.com/css?family=Montserrat);
 
 body {
-    /*background-color: var(--bs-light);*/
     font-family: "Montserrat";
-    /*background-size: cover;*/
 }
 
 .logo {

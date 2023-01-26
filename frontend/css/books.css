@@ -5,12 +5,13 @@
     margin: 32px 0px;
     border-radius: 16px;
     background: #ffffff;
-    box-shadow: 2px 2px 15px 10px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
 }
 
 .book-item img {
     margin-right: 16px;
-    box-shadow: 2px 2px 15px 10px rgba(0, 0, 0, 0.2);
+    /*box-shadow: 2px 2px 15px 10px rgba(0, 0, 0, 0.2);*/
+    /*box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);*/
 }
 
 .book-item hr {
