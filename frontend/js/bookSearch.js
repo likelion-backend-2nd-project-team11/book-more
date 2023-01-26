@@ -18,7 +18,8 @@ function setQueryInputVal(value) {
 }
 
 function fetchSearchBooks(query, page, size) {
-    fetch(`${BASE_URL}/api/v1/books?${query}&page=1&size=20`)
+    if (query === '' || query === undefined) return;
+    fetch(`${BASE_URL}/api/v1/books?query=${query}&page=1&size=20`)
         .then(res => {
             if (res.ok) return res.json();
             else alert(res.json()['result']['message']);
