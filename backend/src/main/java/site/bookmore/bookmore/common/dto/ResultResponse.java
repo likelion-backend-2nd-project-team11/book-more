@@ -27,7 +27,7 @@ public class ResultResponse<T> {
         return new ResultResponse<>(ERROR, ErrorResponse.of(e.getErrorCode()));
     }
 
-    public static ResultResponse<String> requestError(String message) {
+    public static ResultResponse<String> error(String message) {
         return new ResultResponse<>(ERROR, message);
     }
 }

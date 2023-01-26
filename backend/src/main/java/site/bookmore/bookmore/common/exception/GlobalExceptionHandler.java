@@ -45,6 +45,6 @@ public class GlobalExceptionHandler {
         }
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                .body(ResultResponse.requestError(builder.toString()));
+                .body(ResultResponse.error(builder.toString()));
     }
 }
