@@ -19,11 +19,11 @@ public class Chart {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private int professionalism;
-    private int fun;
-    private int readability;
-    private int collectible;
-    private int difficulty;
+    private Integer professionalism;
+    private Integer fun;
+    private Integer readability;
+    private Integer collectible;
+    private Integer difficulty;
 
     // 도서 리뷰 수정
     public void update(Chart chart) {
@@ -34,23 +34,33 @@ public class Chart {
         updateDifficulty(chart.getDifficulty());
     }
 
-    private void updateProfessionalism(int professionalism) {
-        this.professionalism = professionalism;
+    private void updateProfessionalism(Integer professionalism) {
+        if (professionalism != null) {
+            this.professionalism = professionalism;
+        }
     }
 
-    private void updateFun(int fun) {
-        this.fun = fun;
+    private void updateFun(Integer fun) {
+        if (fun != null) {
+            this.fun = fun;
+        }
     }
 
-    private void updateReadability(int readability) {
-        this.readability = readability;
+    private void updateReadability(Integer readability) {
+        if (readability != null) {
+            this.readability = readability;
+        }
     }
 
-    private void updateCollectible(int collectible) {
-        this.collectible = collectible;
+    private void updateCollectible(Integer collectible) {
+        if (collectible != null) {
+            this.collectible = collectible;
+        }
     }
 
-    private void updateDifficulty(int difficulty) {
-        this.difficulty = difficulty;
+    private void updateDifficulty(Integer difficulty) {
+        if (difficulty != null) {
+            this.difficulty = difficulty;
+        }
     }
 }

@@ -26,7 +26,7 @@ public class Review extends BaseEntity {
     private Book book;
 
     private String body;
-    private boolean spoiler;
+    private Boolean spoiler;
 
     @OneToOne(fetch = FetchType.LAZY, optional = false, cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     @JoinColumn(name = "chart_id")
@@ -37,7 +37,7 @@ public class Review extends BaseEntity {
     // 도서 리뷰 수정
     public void update(Review review) {
         updateBody(review.getBody());
-        updateSpoiler(review.isSpoiler());
+        updateSpoiler(review.getSpoiler());
         chart.update(review.getChart());
     }
 
@@ -47,8 +47,10 @@ public class Review extends BaseEntity {
         }
     }
 
-    private void updateSpoiler(boolean spoiler) {
-        this.spoiler = spoiler;
+    private void updateSpoiler(Boolean spoiler) {
+        if (spoiler != null) {
+            this.spoiler = spoiler;
+        }
     }
 
     public synchronized void likes() {
