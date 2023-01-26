@@ -19,7 +19,7 @@ function setQueryInputVal(value) {
 }
 
 function fetchSearchBooks(query, page, size) {
-    if (query == '' || query == undefined) return;
+    if (query === '' || query === undefined) return;
     fetch(`${BASE_URL}/api/v1/books?query=${query}&page=${page}&size=${size}`)
         .then(res => {
             if (res.ok) return res.json();
@@ -27,27 +27,21 @@ function fetchSearchBooks(query, page, size) {
         }).then(data => {
             console.log(data)
             const books = data.result.content;
-            const contentWrapper = document.querySelector('.contents-wrapper');
+            const contentWrapper = document.querySelector('.books-shelf');
             contentWrapper.innerHTML = books.map(book => {
                 return `
-                <a class="text-decoration-none text-black" onclick="window.location.href='./book.html?isbn=${book.isbn}'">
-                    <div class="book-item">
-                        <img width="130px" src="${book.image}"/>
-                        <div class="info w-100">
-                            <h2>${book.title}</h2>
-                            <hr>
-                            <p>저자 : ${book.authors}</p>
-                            <p>가격 : ${book.price}</p>
-                            <p>출판사 : ${book.publisher}</p>
+                    <a class="p-3 text-decoration-none text-black" href="./book.html?isbn=${book.isbn}">
+                        <div class="book-item col h-100 p-4 rounded-4 shadow">
+                            <img class="mx-auto mb-3 w-100 d-block shadow" src="${book.image}"/>
+                            <div class="text-center fw-bold text-wrap">${book.title}</div>
                         </div>
-                    </div>
-                </a class="text-decoration-none text-black">`;
+                    </a>`;
             }).join('\n');
     })
 }
 
 function fetchSearchBookDetail(isbn) {
-    if (isbn == '' || isbn == undefined) return;
+    if (isbn === '' || isbn === undefined) return;
     fetch(`${BASE_URL}/api/v1/books/${isbn}`)
         .then(res => {
             if (res.ok) return res.json();
