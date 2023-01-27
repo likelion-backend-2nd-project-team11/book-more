@@ -20,7 +20,7 @@ public interface FollowRepository extends JpaRepository<Follow, Long> {
 
     List<Follow> findAllByFollowingAndDeletedDatetimeIsNull(User following);
 
-    Long countByFollower(User user);
+    Long countByFollowerAndDeletedDatetimeIsNull(User user);
 
-    Long countByFollowing(User user);
+    Long countByFollowingAndDeletedDatetimeIsNull(User user);
 }

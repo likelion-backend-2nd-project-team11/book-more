@@ -8,6 +8,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import site.bookmore.bookmore.alarms.entity.AlarmType;
+import site.bookmore.bookmore.books.repository.ReviewRepository;
 import site.bookmore.bookmore.common.exception.bad_request.FollowNotMeException;
 import site.bookmore.bookmore.common.exception.conflict.DuplicateFollowException;
 import site.bookmore.bookmore.common.exception.not_found.FollowNotFoundException;
@@ -15,19 +16,20 @@ import site.bookmore.bookmore.common.exception.not_found.UserNotFoundException;
 import site.bookmore.bookmore.observer.event.alarm.AlarmCreate;
 import site.bookmore.bookmore.users.dto.FollowerResponse;
 import site.bookmore.bookmore.users.dto.FollowingResponse;
+import site.bookmore.bookmore.users.dto.UserDetailResponse;
 import site.bookmore.bookmore.users.entity.Follow;
 import site.bookmore.bookmore.users.entity.User;
 import site.bookmore.bookmore.users.repositroy.FollowRepository;
 import site.bookmore.bookmore.users.repositroy.UserRepository;
 
 import java.util.Objects;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 @Slf4j
 public class FollowService {
     private final FollowRepository followRepository;
+    private final ReviewRepository reviewRepository;
     private final UserRepository userRepository;
     private final ApplicationEventPublisher publisher;
 
@@ -101,5 +103,21 @@ public class FollowService {
 
         User user = userRepository.findById(id).orElseThrow(UserNotFoundException::new);
         return followRepository.findByFollowingAndDeletedDatetimeIsNull(pageable, user).map(FollowerResponse::new);
+    }
+
+    // 유저 아이디로 팔로워 수, 팔로잉 수, 리뷰 수 조회
+    public UserDetailResponse getDetail(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(UserNotFoundException::new);
+
+        Long followers = followRepository.countByFollowerAndDeletedDatetimeIsNull(user);
+        Long followings = followRepository.countByFollowingAndDeletedDatetimeIsNull(user);
+        Long reviews = reviewRepository.countByAuthorAndDeletedDatetimeIsNull(user);
+
+        return UserDetailResponse.builder()
+                .followers(followers)
+                .followings(followings)
+                .reviews(reviews)
+                .build();
     }
 }

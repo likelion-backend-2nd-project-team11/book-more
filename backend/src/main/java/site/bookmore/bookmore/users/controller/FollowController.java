@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import site.bookmore.bookmore.common.dto.ResultResponse;
 import site.bookmore.bookmore.users.dto.FollowerResponse;
 import site.bookmore.bookmore.users.dto.FollowingResponse;
+import site.bookmore.bookmore.users.dto.UserDetailResponse;
 import site.bookmore.bookmore.users.service.FollowService;
 
 @RestController
@@ -37,5 +38,12 @@ public class FollowController {
     @GetMapping("/{id}/follower")
     public ResultResponse<Page<FollowerResponse>> findAllFollower(@PathVariable Long id, Pageable pageable) {
         return ResultResponse.success(followService.findAllFollower(id, pageable));
+    }
+
+    // 유저 아이디로 팔로워 수, 팔로잉 수, 리뷰 수 조회
+    @GetMapping("/{id}")
+    public ResultResponse<UserDetailResponse> getDetail(@PathVariable Long id) {
+        UserDetailResponse response = followService.getDetail(id);
+        return ResultResponse.success(response);
     }
 }

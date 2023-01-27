@@ -96,6 +96,6 @@ public class ReviewService {
         User user = userRepository.findById(userId)
                 .orElseThrow(UserNotFoundException::new);
 
-        return reviewRepository.findByAuthor(pageable, user).map(ReviewPageResponse::of);
+        return reviewRepository.findByAuthorAndDeletedDatetimeIsNull(pageable, user).map(ReviewPageResponse::of);
     }
 }

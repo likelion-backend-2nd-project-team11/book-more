@@ -11,7 +11,7 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
 
     Page<Review> findByBook(Pageable pageable, Book book);
 
-    Long countByAuthor(User user);
+    Long countByAuthorAndDeletedDatetimeIsNull(User user);
 
-    Page<Review> findByAuthor(Pageable pageable, User user);
+    Page<Review> findByAuthorAndDeletedDatetimeIsNull(Pageable pageable, User user);
 }

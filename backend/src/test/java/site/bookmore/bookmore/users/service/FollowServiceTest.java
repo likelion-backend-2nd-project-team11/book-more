@@ -6,6 +6,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.context.ApplicationEventPublisher;
+import site.bookmore.bookmore.books.repository.ReviewRepository;
 import site.bookmore.bookmore.common.exception.ErrorCode;
 import site.bookmore.bookmore.common.exception.bad_request.FollowNotMeException;
 import site.bookmore.bookmore.common.exception.not_found.FollowNotFoundException;
@@ -25,12 +26,13 @@ class FollowServiceTest {
 
     FollowService followService;
     FollowRepository followRepository = mock(FollowRepository.class);
+    ReviewRepository reviewRepository = mock(ReviewRepository.class);
     UserRepository userRepository = mock(UserRepository.class);
     private final ApplicationEventPublisher publisher = mock(ApplicationEventPublisher.class);
 
     @BeforeEach
     void setUp() {
-        followService = new FollowService(followRepository, userRepository, publisher);
+        followService = new FollowService(followRepository, reviewRepository, userRepository, publisher);
     }
 
     @Test
