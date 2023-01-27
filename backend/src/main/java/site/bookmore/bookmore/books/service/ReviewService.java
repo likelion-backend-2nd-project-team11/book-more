@@ -15,6 +15,7 @@ import site.bookmore.bookmore.books.entity.Review;
 import site.bookmore.bookmore.books.repository.BookRepository;
 import site.bookmore.bookmore.books.repository.LikesRepository;
 import site.bookmore.bookmore.books.repository.ReviewRepository;
+import site.bookmore.bookmore.common.exception.forbidden.InvalidPermissionException;
 import site.bookmore.bookmore.common.exception.not_found.BookNotFoundException;
 import site.bookmore.bookmore.common.exception.not_found.ReviewNotFoundException;
 import site.bookmore.bookmore.common.exception.not_found.UserNotFoundException;
@@ -25,6 +26,7 @@ import site.bookmore.bookmore.users.repositroy.FollowRepository;
 import site.bookmore.bookmore.users.repositroy.UserRepository;
 
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -64,7 +66,43 @@ public class ReviewService {
         Book book = bookRepository.findById(isbn)
                 .orElseThrow(BookNotFoundException::new);
 
-        return reviewRepository.findByBook(pageable, book).map(ReviewPageResponse::of);
+        return reviewRepository.findByBookAndDeletedDatetimeIsNull(pageable, book).map(ReviewPageResponse::of);
+    }
+
+    // 도서 리뷰 수정
+    @Transactional
+    public Long update(ReviewRequest reviewRequest, Long id, String email) {
+        Review review = reviewRepository.findById(id)
+                .orElseThrow(ReviewNotFoundException::new);
+
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(UserNotFoundException::new);
+
+        if (!Objects.equals(review.getAuthor().getEmail(), user.getEmail())) {
+            throw new InvalidPermissionException();
+        }
+
+        review.update(reviewRequest.toEntity());
+
+        return review.getId();
+    }
+
+    // 도서 리뷰 삭제
+    @Transactional
+    public Long delete(Long id, String email) {
+        Review review = reviewRepository.findById(id)
+                .orElseThrow(ReviewNotFoundException::new);
+
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(UserNotFoundException::new);
+
+        if (!Objects.equals(review.getAuthor().getEmail(), user.getEmail())) {
+            throw new InvalidPermissionException();
+        }
+
+        review.delete();
+
+        return review.getId();
     }
 
     // 도서 리뷰에 좋아요 | 취소

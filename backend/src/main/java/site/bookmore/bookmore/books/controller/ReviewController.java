@@ -34,6 +34,22 @@ public class ReviewController {
         return ResultResponse.success(reviewPage);
     }
 
+    // 도서 리뷰 수정
+    @PatchMapping("/reviews/{id}")
+    public ResultResponse<ReviewResponse> update(@RequestBody ReviewRequest reviewRequest, @PathVariable Long id, Authentication authentication) {
+        String email = authentication.getName();
+        Long result = reviewService.update(reviewRequest, id, email);
+        return ResultResponse.success(new ReviewResponse(result, "리뷰 수정 완료"));
+    }
+
+    // 도서 리뷰 삭제
+    @DeleteMapping("/reviews/{id}")
+    public ResultResponse<ReviewResponse> delete(@PathVariable Long id, Authentication authentication) {
+        String email = authentication.getName();
+        Long result = reviewService.delete(id, email);
+        return ResultResponse.success(new ReviewResponse(result, "리뷰 삭제 완료"));
+    }
+
     // 도서 리뷰에 좋아요 | 취소
     @PostMapping("/reviews/{id}/likes")
     public ResultResponse<String> likes(@PathVariable Long id, Authentication authentication) {

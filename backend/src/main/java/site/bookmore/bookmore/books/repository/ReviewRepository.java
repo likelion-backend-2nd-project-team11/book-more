@@ -8,5 +8,5 @@ import site.bookmore.bookmore.books.entity.Review;
 
 public interface ReviewRepository extends JpaRepository<Review, Long> {
 
-    Page<Review> findByBook(Pageable pageable, Book book);
+    Page<Review> findByBookAndDeletedDatetimeIsNull(Pageable pageable, Book book);
 }
