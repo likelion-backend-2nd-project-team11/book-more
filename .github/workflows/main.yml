@@ -52,6 +52,8 @@ jobs:
         token: ${{ secrets.GITHUB_TOKEN }}
         min-coverage-overall: 40
         min-coverage-changed-files: 60
+        title: Code Coverage
+        update-comment: true
 
     - name: Upload Gradle Build Artifact
       uses: actions/upload-artifact@v3.1.2
