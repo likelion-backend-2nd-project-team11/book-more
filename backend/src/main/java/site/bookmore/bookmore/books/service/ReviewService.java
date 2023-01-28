@@ -104,6 +104,7 @@ public class ReviewService {
         }
 
         review.delete();
+        user.minusReviewCount(user.getReviewCount());
 
         return review.getId();
     }
