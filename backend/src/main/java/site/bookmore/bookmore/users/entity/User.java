@@ -49,14 +49,26 @@ public class User extends BaseEntity implements UserDetails {
     @Column(nullable = false)
     private boolean enabled = true;
 
+    @Column
+    private int followerCount = 0;
+
+    @Column
+    private int followingCount = 0;
+
+    @Column
+    private int reviewCount = 0;
+
     @Builder
-    public User(Long id, String email, String password, Role role, String nickname, Tier tier, LocalDate birth) {
+    public User(Long id, String email, String password, Role role, String nickname, Tier tier, LocalDate birth, int followerCount, int followingCount, int reviewCount) {
         this.id = id;
         this.email = email;
         this.password = password;
         this.nickname = nickname;
         this.tier = tier;
         this.birth = birth;
+        this.followerCount = followerCount;
+        this.followingCount = followingCount;
+        this.reviewCount = reviewCount;
         this.role = role == null ? Role.ROLE_USER : role;
     }
 
@@ -82,6 +94,30 @@ public class User extends BaseEntity implements UserDetails {
         if (birth != null) {
             this.birth = birth;
         }
+    }
+
+    public void plusFollowerCount(int followerCount) {
+        this.followerCount = followerCount + 1;
+    }
+
+    public void minusFollowerCount(int followerCount) {
+        this.followerCount = followerCount - 1;
+    }
+
+    public void plusFollowingCount(int followingCount) {
+        this.followingCount = followingCount + 1;
+    }
+
+    public void minusFollowingCount(int followingCount) {
+        this.followingCount = followingCount - 1;
+    }
+
+    public void plusReviewCount(int reviewCount) {
+        this.reviewCount = reviewCount + 1;
+    }
+
+    public void minusReviewCount(int reviewCount) {
+        this.reviewCount = reviewCount - 1;
     }
 
 
