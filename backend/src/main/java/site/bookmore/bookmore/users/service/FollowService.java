@@ -21,7 +21,6 @@ import site.bookmore.bookmore.users.repositroy.FollowRepository;
 import site.bookmore.bookmore.users.repositroy.UserRepository;
 
 import java.util.Objects;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -31,6 +30,7 @@ public class FollowService {
     private final UserRepository userRepository;
     private final ApplicationEventPublisher publisher;
 
+    @Transactional
     public String following(Long id, String email) {
 
         //나
@@ -60,7 +60,11 @@ public class FollowService {
                         .build());
 
         follow.undelete();
+
         followRepository.save(follow);
+
+        user.plusFollowingCount(user.getFollowingCount());
+        targetUser.plusFollowerCount(targetUser.getFollowerCount());
 
         publisher.publishEvent(AlarmCreate.of(AlarmType.NEW_FOLLOW, follow.getFollowing(), user, follow.getId()));
 
@@ -87,18 +91,18 @@ public class FollowService {
         }
 
         targetFollow.delete();
+        user.minusFollowingCount(user.getFollowingCount());
+        targetUser.minusFollowerCount(targetUser.getFollowerCount());
 
         return String.format("%s 님을 언팔로우 하셨습니다.", id);
     }
 
     public Page<FollowingResponse> findAllFollowing(Long id, Pageable pageable) {
-
         User user = userRepository.findById(id).orElseThrow(UserNotFoundException::new);
         return followRepository.findByFollowerAndDeletedDatetimeIsNull(pageable, user).map(FollowingResponse::new);
     }
 
     public Page<FollowerResponse> findAllFollower(Long id, Pageable pageable) {
-
         User user = userRepository.findById(id).orElseThrow(UserNotFoundException::new);
         return followRepository.findByFollowingAndDeletedDatetimeIsNull(pageable, user).map(FollowerResponse::new);
     }
