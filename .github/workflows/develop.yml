@@ -19,6 +19,9 @@ on:
 # 해당 Workflow의 하나 이상의 Job 목록
 jobs:
   jacoco-test:
+
+    runs-on: ubuntu-latest
+
     permissions:
       checks: write
       pull-requests: write
