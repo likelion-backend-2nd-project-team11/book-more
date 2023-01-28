@@ -40,6 +40,7 @@ public class ReviewService {
     private final UserRepository userRepository;
     private final ApplicationEventPublisher publisher;
 
+    @Transactional
     // 도서 리뷰 등록
     public Long create(ReviewRequest reviewRequest, String isbn, String email) {
         User user = userRepository.findByEmail(email)
@@ -50,6 +51,8 @@ public class ReviewService {
 
         Review review = reviewRequest.toEntity(user, book);
         Review savedReview = reviewRepository.save(review);
+
+        user.plusReviewCount(user.getReviewCount());
 
         // 나의 팔로잉이 리뷰를 등록했을 때의 알림 발생
         List<Follow> followers = followRepository.findAllByFollowingAndDeletedDatetimeIsNull(user);
