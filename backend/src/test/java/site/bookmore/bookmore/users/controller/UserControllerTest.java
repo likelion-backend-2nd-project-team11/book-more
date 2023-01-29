@@ -102,6 +102,22 @@ class UserControllerTest {
     }
 
     @Test
+    @DisplayName("회원가입 - 실패(잘못된 이메일 형식)")
+    void join_fail_3() throws Exception {
+
+        UserJoinRequest errorEmailFormat = new UserJoinRequest("email", "password","nickname",testDate);
+
+        mockMvc.perform(post("/api/v1/users/join")
+                        .with(csrf())
+                        .content(objectMapper.writeValueAsBytes(errorEmailFormat))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.resultCode").value("ERROR"))
+                .andExpect(jsonPath("$.result").value("[email] 올바른 형식의 이메일 주소여야 합니다"));
+
+//        verify(userService).join(any(UserJoinRequest.class));
+    }
+    @Test
     @DisplayName("로그인 - 성공")
     void login_success() throws Exception {
 
