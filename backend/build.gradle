@@ -2,6 +2,7 @@ plugins {
     id 'java'
     id 'org.springframework.boot' version '2.7.5'
     id 'io.spring.dependency-management' version '1.0.15.RELEASE'
+    id 'jacoco'
 }
 
 group = 'site.bookmore'
@@ -37,6 +38,32 @@ dependencies {
     implementation 'io.jsonwebtoken:jjwt:0.9.1'
 }
 
+jacoco {
+    toolVersion = '0.8.8'
+}
+
+jacocoTestReport {
+    dependsOn test
+    reports {
+        html.enabled true
+        xml.enabled true
+    }
+    afterEvaluate {
+        classDirectories.setFrom(files(classDirectories.files.collect {
+            fileTree(
+                    dir: it,
+                    includes: [
+                        'site/bookmore/bookmore/**/controller/*',
+                        'site/bookmore/bookmore/**/service/*',
+                    ],
+                    excludes: [
+                        'site/bookmore/bookmore/common/*'
+            ])
+        }))
+    }
+}
+
 tasks.named('test') {
     useJUnitPlatform()
+    finalizedBy 'jacocoTestReport'
 }
