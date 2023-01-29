@@ -2,12 +2,17 @@ package site.bookmore.bookmore.books.util.api.kolis;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StopWatch;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.util.UriBuilder;
 import reactor.core.publisher.Mono;
 import site.bookmore.bookmore.books.entity.Book;
+import site.bookmore.bookmore.books.util.api.BookSearch;
 import site.bookmore.bookmore.books.util.api.kolis.dto.Doc;
 import site.bookmore.bookmore.books.util.api.kolis.dto.KolisSearchParams;
 import site.bookmore.bookmore.books.util.api.kolis.dto.KolisSearchResponse;
@@ -17,12 +22,13 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.URI;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
 @Slf4j
 @Component
-public class KolisBookSearch {
+public class KolisBookSearch implements BookSearch<KolisSearchParams> {
     private static final String BASE_URL = "https://www.nl.go.kr";
     private static final String SEARCH_ENDPOINT = "/seoji/SearchApi.do";
     private final String token;
@@ -33,11 +39,17 @@ public class KolisBookSearch {
         this.token = kolisToken;
     }
 
-    public Mono<KolisSearchResponse> search(KolisSearchParams kolisSearchParams) {
+    public Mono<Page<Book>> search(KolisSearchParams kolisSearchParams) {
         return webClient.get()
                 .uri(uriBuilder -> buildUri(uriBuilder, kolisSearchParams))
                 .retrieve()
-                .bodyToMono(KolisSearchResponse.class);
+                .bodyToMono(KolisSearchResponse.class)
+                .map(kolisSearchResponse -> {
+                    Pageable pageable = PageRequest.of(kolisSearchParams.getPage_no(), kolisSearchParams.getPage_size());
+                    List<Book> books = kolisSearchResponse.getDocs().stream()
+                            .map(BookMapper::of).collect(Collectors.toList());
+                    return new PageImpl<>(books, pageable, kolisSearchResponse.getTotalCount());
+                });
     }
 
     public Mono<Book> searchByISBN(String isbn) {

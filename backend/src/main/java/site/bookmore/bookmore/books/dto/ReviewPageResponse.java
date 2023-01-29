@@ -30,7 +30,7 @@ public class ReviewPageResponse {
                 .id(review.getId())
                 .nickname(review.getAuthor().getNickname())
                 .body(review.getBody())
-                .spoiler(review.isSpoiler())
+                .spoiler(review.getSpoiler())
                 .professionalism(review.getChart().getProfessionalism())
                 .fun(review.getChart().getFun())
                 .readability(review.getChart().getReadability())

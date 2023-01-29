@@ -18,8 +18,7 @@ import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -77,6 +76,51 @@ class ReviewControllerTest {
                 .andExpect(jsonPath("$.result").exists());
 
         verify(reviewService).read(any(), eq("9791158393083"));
+    }
+
+    /* ========== 도서 리뷰 수정 ========== */
+    @Test
+    @DisplayName("도서 리뷰 수정 성공")
+    @WithMockUser
+    void update_success() throws Exception {
+        // given
+        ReviewRequest reviewRequest = new ReviewRequest("new body", true, Chart.builder().build());
+
+        // when
+        when(reviewService.update(any(ReviewRequest.class), eq(1L), anyString()))
+                .thenReturn(1L);
+
+        // then
+        mockMvc.perform(patch("/api/v1/books//reviews/1")
+                        .with(csrf())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsBytes(reviewRequest)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.resultCode").value("SUCCESS"))
+                .andExpect(jsonPath("$.result.id").value(1))
+                .andExpect(jsonPath("$.result.message").value("리뷰 수정 완료"));
+
+        verify(reviewService).update(any(ReviewRequest.class), eq(1L), anyString());
+    }
+
+    /* ========== 도서 리뷰 삭제 ========== */
+    @Test
+    @DisplayName("도서 리뷰 삭제 성공")
+    @WithMockUser
+    void delete_success() throws Exception {
+        // when
+        when(reviewService.delete(eq(1L), anyString()))
+                .thenReturn(1L);
+
+        // then
+        mockMvc.perform(delete("/api/v1/books//reviews/1")
+                        .with(csrf()))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.resultCode").value("SUCCESS"))
+                .andExpect(jsonPath("$.result.id").value(1))
+                .andExpect(jsonPath("$.result.message").value("리뷰 삭제 완료"));
+
+        verify(reviewService).delete(eq(1L), anyString());
     }
 
     /* ========== 도서 리뷰 좋아요 | 취소 ========== */

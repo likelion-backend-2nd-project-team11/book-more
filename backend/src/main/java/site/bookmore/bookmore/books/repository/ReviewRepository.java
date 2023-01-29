@@ -6,7 +6,11 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import site.bookmore.bookmore.books.entity.Book;
 import site.bookmore.bookmore.books.entity.Review;
 
+import java.util.Optional;
+
 public interface ReviewRepository extends JpaRepository<Review, Long> {
 
-    Page<Review> findByBook(Pageable pageable, Book book);
+    Page<Review> findByBookAndDeletedDatetimeIsNull(Pageable pageable, Book book);
+
+    Optional<Review> findByIdAndDeletedDatetimeIsNull(Long id);
 }
