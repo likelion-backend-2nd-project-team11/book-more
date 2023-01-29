@@ -71,8 +71,8 @@ public class ReviewService {
 
     // 도서 리뷰 수정
     @Transactional
-    public Long update(ReviewRequest reviewRequest, Long id, String email) {
-        Review review = reviewRepository.findById(id)
+    public Long update(ReviewRequest reviewRequest, Long reviewId, String email) {
+        Review review = reviewRepository.findByIdAndDeletedDatetimeIsNull(reviewId)
                 .orElseThrow(ReviewNotFoundException::new);
 
         User user = userRepository.findByEmail(email)
@@ -89,8 +89,8 @@ public class ReviewService {
 
     // 도서 리뷰 삭제
     @Transactional
-    public Long delete(Long id, String email) {
-        Review review = reviewRepository.findById(id)
+    public Long delete(Long reviewId, String email) {
+        Review review = reviewRepository.findByIdAndDeletedDatetimeIsNull(reviewId)
                 .orElseThrow(ReviewNotFoundException::new);
 
         User user = userRepository.findByEmail(email)
@@ -106,11 +106,12 @@ public class ReviewService {
     }
 
     // 도서 리뷰에 좋아요 | 취소
+    @Transactional
     public boolean doLikes(String email, Long reviewId) {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(UserNotFoundException::new);
 
-        Review review = reviewRepository.findById(reviewId)
+        Review review = reviewRepository.findByIdAndDeletedDatetimeIsNull(reviewId)
                 .orElseThrow(ReviewNotFoundException::new);
 
         Likes likes = likesRepository.findByUserAndReview(user, review)

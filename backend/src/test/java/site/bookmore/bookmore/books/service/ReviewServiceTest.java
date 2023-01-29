@@ -114,7 +114,7 @@ class ReviewServiceTest {
     @Test
     @DisplayName("도서 리뷰 수정 실패 - 해당 유저가 없는 경우")
     void update__user_not_found() {
-        when(reviewRepository.findById(review.getId()))
+        when(reviewRepository.findByIdAndDeletedDatetimeIsNull(review.getId()))
                 .thenReturn(Optional.of(review));
         when(userRepository.findByEmail(user.getEmail()))
                 .thenReturn(Optional.empty());
@@ -126,7 +126,7 @@ class ReviewServiceTest {
     @Test
     @DisplayName("도서 리뷰 수정 실패 - 작성자와 유저가 일치하지 않는 경우")
     void update_invalid_permission() {
-        when(reviewRepository.findById(review.getId()))
+        when(reviewRepository.findByIdAndDeletedDatetimeIsNull(review.getId()))
                 .thenReturn(Optional.of(review));
         when(userRepository.findByEmail(user.getEmail()))
                 .thenReturn(Optional.of(user));
@@ -151,7 +151,7 @@ class ReviewServiceTest {
     @Test
     @DisplayName("도서 리뷰 삭제 실패 - 해당 유저가 없는 경우")
     void delete__user_not_found() {
-        when(reviewRepository.findById(review.getId()))
+        when(reviewRepository.findByIdAndDeletedDatetimeIsNull(review.getId()))
                 .thenReturn(Optional.of(review));
         when(userRepository.findByEmail(user.getEmail()))
                 .thenReturn(Optional.empty());
@@ -163,7 +163,7 @@ class ReviewServiceTest {
     @Test
     @DisplayName("도서 리뷰 삭제 실패 - 작성자와 유저가 일치하지 않는 경우")
     void delete_invalid_permission() {
-        when(reviewRepository.findById(review.getId()))
+        when(reviewRepository.findByIdAndDeletedDatetimeIsNull(review.getId()))
                 .thenReturn(Optional.of(review));
         when(userRepository.findByEmail(user.getEmail()))
                 .thenReturn(Optional.of(user));
@@ -180,7 +180,7 @@ class ReviewServiceTest {
     void doLikes_success() {
         when(userRepository.findByEmail(user.getEmail()))
                 .thenReturn(Optional.of(user));
-        when(reviewRepository.findById(review.getId()))
+        when(reviewRepository.findByIdAndDeletedDatetimeIsNull(review.getId()))
                 .thenReturn(Optional.of(review));
         when(likesRepository.findByUserAndReview(user, review))
                 .thenReturn(Optional.empty());
@@ -196,7 +196,7 @@ class ReviewServiceTest {
     void doLikes_cancel_success() {
         when(userRepository.findByEmail(user.getEmail()))
                 .thenReturn(Optional.of(user));
-        when(reviewRepository.findById(review.getId()))
+        when(reviewRepository.findByIdAndDeletedDatetimeIsNull(review.getId()))
                 .thenReturn(Optional.of(review));
         when(likesRepository.findByUserAndReview(user, review))
                 .thenReturn(Optional.of(likes));
