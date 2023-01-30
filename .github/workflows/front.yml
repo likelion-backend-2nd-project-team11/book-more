@@ -2,12 +2,9 @@ name: FrontEnd CI PipeLine
 
 # Workflow를 실행시키기 위한 Event 목록
 on:
-  # 하단 코드에 따라 develop 브랜치에 Push 또는 Pull Request 이벤트가 발생한 경우에 Workflow가 실행
-  # 만약 브랜치 구분 없이 이벤트를 지정하고 싶을 경우에는 단순히 아래와 같이 작성도 가능함
-  # on: [push, pull_request]
-  pull_request:
+  push:
     branches:
-      - main
+      - develop
     paths:
       - 'frontend/**'
 
