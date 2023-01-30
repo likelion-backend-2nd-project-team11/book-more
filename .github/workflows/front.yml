@@ -2,9 +2,9 @@ name: FrontEnd CI PipeLine
 
 # Workflow를 실행시키기 위한 Event 목록
 on:
-  push:
+  pull_request:
     branches:
-      - develop/frontend
+      - develop
     paths:
       - 'frontend/**'
 
