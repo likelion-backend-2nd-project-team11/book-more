@@ -1,15 +1,25 @@
 const urlSearchParams = new URLSearchParams(location.search);
 const input = document.querySelector('.search-box input');
+const queryInput = document.querySelector(".bm-query");
 const query = urlSearchParams.get('query');
 const page = urlSearchParams.get('page');
 const size = urlSearchParams.get('size');
 const isbn = urlSearchParams.get('isbn');
-const BASE_URL = 'http://localhost:8080';
+const BASE_URL = 'http://www.bookmore.site:8080';
 
-function search(query, page, size) {
-    if (query.length > 1) window.location.href=`./books.html?query=${query}&page=${page | 1}&size=${size | 20}`;
+function search({query, page, size}) {
+    if (query.length > 1) window.location.href=`./books.html?query=${query}&page=${page || 1}&size=${size || 20}`;
     else alert('검색어를 확인해주세요. [최소 두 글자]');
 }
+
+function submitQueryHandler(e) {
+    let key = e.key || e.keyCode;
+
+    if (key === 'Enter' || key === 13) {
+        search({query:e.target.value});
+    }
+}
+
 function getQuery() {
     return input.value;
 }
