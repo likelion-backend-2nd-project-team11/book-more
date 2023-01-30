@@ -3,6 +3,8 @@ package site.bookmore.bookmore.common.dto;
 import lombok.Getter;
 import site.bookmore.bookmore.common.exception.AbstractAppException;
 
+import java.util.Map;
+
 @Getter
 public class ResultResponse<T> {
     private static final String SUCCESS = "SUCCESS";
@@ -27,7 +29,7 @@ public class ResultResponse<T> {
         return new ResultResponse<>(ERROR, ErrorResponse.of(e.getErrorCode()));
     }
 
-    public static ResultResponse<String> error(String message) {
-        return new ResultResponse<>(ERROR, message);
+    public static ResultResponse<Map> error(Map result) {
+        return new ResultResponse<>(ERROR, result);
     }
 }
