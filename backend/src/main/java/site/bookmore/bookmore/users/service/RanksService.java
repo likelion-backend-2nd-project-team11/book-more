@@ -10,7 +10,7 @@ import site.bookmore.bookmore.books.repository.LikesRepository;
 import site.bookmore.bookmore.books.repository.ReviewRepository;
 import site.bookmore.bookmore.common.exception.not_found.UserNotFoundException;
 import site.bookmore.bookmore.users.dto.RanksResponse;
-import site.bookmore.bookmore.users.entity.PointSave;
+import site.bookmore.bookmore.users.vo.PointSave;
 import site.bookmore.bookmore.users.entity.Ranks;
 import site.bookmore.bookmore.users.entity.User;
 import site.bookmore.bookmore.users.repositroy.RanksRepository;
