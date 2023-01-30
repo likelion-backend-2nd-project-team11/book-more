@@ -18,7 +18,7 @@ body {
 
 /* 탭 스타일 */
 .tab_item {
-    width: calc(100%/3);
+    width: calc(100%/2);
     height: 50px;
     border-bottom: 3px solid #333333;
     background-color: #f8f8f8;
