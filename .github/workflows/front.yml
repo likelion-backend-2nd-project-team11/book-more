@@ -12,7 +12,7 @@ on:
       - 'frontend/**'
 
   # 해당 옵션을 통해 사용자가 직접 Actions 탭에서 Workflow를 실행시킬 수 있음
-workflow_dispatch:
+  workflow_dispatch:
 
 jobs:
   deploy:
