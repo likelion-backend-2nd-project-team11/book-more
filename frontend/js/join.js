@@ -1,6 +1,4 @@
-
-const BASE_URL = 'http://localhost:8080';
-
+const BASE_URL = 'http://api.bookmore.site:8080';
 
 /**
  *  1. 회원가입 시 비밀번호 더블 체크 에러
@@ -16,7 +14,7 @@ function join() {
     const nickname = document.getElementById('name').value;
     const birth = document.getElementById('birth').value;
     // request api
-    fetch(`http://localhost:8080/api/v1/users/join`, {
+    fetch(`${BASE_URL}/api/v1/users/join`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
@@ -25,13 +23,14 @@ function join() {
             email, password, nickname, birth,
         }),
     }).then((response) => response.json())
-        .then((response) => {
-            console.log(response);
-            if (response.resultCode === 'SUCCESS') {
-                alert("회원가입 완료")
-                window.location.href = "./login.html";
-            }
-        });
-
+    .then((response) => {
+        console.log(response);
+        if (response.resultCode === 'SUCCESS') {
+            alert("회원가입 완료")
+            window.location.href = "./login.html";
+        } else if (response.resultCode === 'ERROR') {
+            alert(response.result.message);
+        }
+    });
 }
 

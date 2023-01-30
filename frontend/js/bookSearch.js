@@ -1,11 +1,6 @@
+const BASE_URL = 'http://api.bookmore.site:8080';
+
 const urlSearchParams = new URLSearchParams(location.search);
-const input = document.querySelector('.search-box input');
-const queryInput = document.querySelector(".bm-query");
-const query = urlSearchParams.get('query');
-const page = urlSearchParams.get('page');
-const size = urlSearchParams.get('size');
-const isbn = urlSearchParams.get('isbn');
-const BASE_URL = 'http://www.bookmore.site:8080';
 
 function search({query, page, size}) {
     if (query.length > 1) window.location.href=`./books.html?query=${query}&page=${page || 1}&size=${size || 20}`;
@@ -21,11 +16,11 @@ function submitQueryHandler(e) {
 }
 
 function getQuery() {
-    return input.value;
+    return document.querySelector('.search-box input').value;
 }
 
 function setQueryInputVal(value) {
-    input.value = value;
+    document.querySelector('.search-box input').value = value;
 }
 
 function fetchSearchBooks(query, page, size) {
@@ -41,7 +36,7 @@ function fetchSearchBooks(query, page, size) {
             contentWrapper.innerHTML = books.map(book => {
                 return `
                     <a class="p-3 text-decoration-none text-black" href="./book.html?isbn=${book.isbn}">
-                        <div class="book-item col h-100 p-4 rounded-4 shadow">
+                        <div class="book-item bg-white col h-100 p-4 rounded-4 shadow">
                             <img class="mx-auto mb-3 w-100 d-block shadow" src="${book.image}"/>
                             <div class="text-center fw-bold text-wrap">${book.title}</div>
                         </div>

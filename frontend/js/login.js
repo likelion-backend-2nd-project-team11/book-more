@@ -1,5 +1,4 @@
-
-const BASE_URL = 'http://localhost:8080';
+const BASE_URL = 'http://api.bookmore.site:8080';
 
 /**
  *  1. password 틀림
@@ -14,7 +13,7 @@ function login() {
     const email = document.getElementById('email').value;
     const password = document.getElementById('password').value;
     // request api
-    fetch(`http://localhost:8080/api/v1/users/login`, {
+    fetch(`${BASE_URL}/api/v1/users/login`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
@@ -26,9 +25,20 @@ function login() {
         .then((response) => {
             console.log(response);
             if (response.resultCode === 'SUCCESS') {
+                window.localStorage.setItem("token", response.result.jwt);
                 alert("로그인 완료")
-                window.location.href = "./home.html";
+                window.location.href = "index.html";
+            } else if (response.resultCode === 'ERROR') {
+                alert(response.result.message);
             }
         });
 
+}
+
+function submitLoginHandler(e) {
+    let key = e.key || e.keyCode;
+
+    if (key === 'Enter' || key === 13) {
+        login();
+    }
 }
