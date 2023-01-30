@@ -9,6 +9,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 import site.bookmore.bookmore.books.dto.BookDetailResponse;
 import site.bookmore.bookmore.books.dto.BookResponse;
 import site.bookmore.bookmore.books.dto.BookSearchParams;
@@ -23,7 +24,6 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -34,6 +34,10 @@ class BookControllerTest {
 
     @MockBean
     private BookService bookService;
+
+    // Todo. 테스트에 validate도 포함 할 것.
+    @MockBean
+    private LocalValidatorFactoryBean validatorFactoryBean;
 
     private static final String SUCCESS = "SUCCESS";
 
@@ -73,7 +77,6 @@ class BookControllerTest {
 
         mockMvc.perform(get("/api/v1/books?query=책이름")
                         .with(csrf()))
-                .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.resultCode").value(SUCCESS))
                 .andExpect(jsonPath("$.result.content").isArray())
@@ -101,7 +104,6 @@ class BookControllerTest {
 
         mockMvc.perform(get("/api/v1/books/10001")
                         .with(csrf()))
-                .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.resultCode").value(SUCCESS))
                 .andExpect(jsonPath("$.result.isbn").value(bookDetailResponse.getIsbn()))
