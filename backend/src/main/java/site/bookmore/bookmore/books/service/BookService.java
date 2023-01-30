@@ -18,6 +18,7 @@ import site.bookmore.bookmore.books.util.api.kakao.KakaoBookSearch;
 import site.bookmore.bookmore.books.util.api.kolis.KolisBookSearch;
 import site.bookmore.bookmore.books.util.api.naver.NaverBooksearch;
 import site.bookmore.bookmore.books.util.api.naver.dto.NaverSearchParams;
+import site.bookmore.bookmore.common.exception.not_found.BookNotFoundException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -62,6 +63,12 @@ public class BookService {
         Book book = bookFlux.subscribeOn(Schedulers.parallel())
                 .reduce(new Book(), Book::merge)
                 .block();
+
+        if (book.getId() == null) {
+            timer.stop();
+            log.info("총 응답 시간 : {}ms", timer.getTotalTimeMillis());
+            throw new BookNotFoundException();
+        }
 
         bookRepository.save(book);
 
