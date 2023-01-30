@@ -1,0 +1,226 @@
+@import url(https://fonts.googleapis.com/css?family=Righteous);
+
+/*!* 맥 *!*/
+/*@font-face {*/
+/*    font-family: "HannahO";*/
+/*    src: url("../fonts/BMHANNAAir_otf.otf");*/
+/*}*/
+
+/* 윈도우 */
+/*@font-face {*/
+/*    font-family: "HannahW";*/
+/*    src: url("../fonts/BMHANNAAir_ttf.ttf");*/
+/*}*/
+
+.navbar-brand {
+    text-transform: uppercase;
+    letter-spacing: 0px;
+    font-weight: bold;
+    color: #FFFFFF !important;
+    white-space: nowrap;
+}
+
+:root {
+    --bs-family-color: #4D5DB3;
+}
+
+.bg-family-color {
+    background: var(--bs-family-color);
+}
+
+/* HannahO or HannahW: 운영체제에 맞춰 삽입 */
+.body-font {
+    font-family: "HannahO";
+}
+
+/* 영문 폰트 */
+.en-font {
+    font-family: "Righteous", serif;
+}
+
+#offcanvasRight {
+    width: 300px;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+body {
+    font: 13px/20px "Lucida Grande", Tahoma, Verdana, sans-serif;
+    /*background-color: hsla(230, 40%, 50%, 1);*/
+    width: 100vw;
+    height: 100vh;
+    margin: 0;
+    padding: 0;
+    background-size: cover;
+    overflow: scroll;
+    z-index: 1;
+    overflow-x: hidden;
+}
+body::-webkit-scrollbar {
+    width: 10px; /* 스크롤바의 너비 */
+}
+body::-webkit-scrollbar-thumb {
+    height: 30%; /* 스크롤바의 길이 */
+    background: #217af4; /* 스크롤바의 색상 */
+    border-radius: 10px;
+}
+
+body::-webkit-scrollbar-track {
+    background: rgba(33, 122, 244, 0.1); /*스크롤바 뒷 배경 색상*/
+}
+/*label {*/
+/*    color: black;*/
+/*}*/
+.bm-plus {
+    float: right;
+    margin-top: 100px;
+    margin-right: 100px;
+    position: absolute;
+    width: 100%;
+}
+.bm-challenge {
+    color: black;
+    margin-bottom: 15px;
+}
+
+body{
+    display: flex;
+    flex-direction: column;
+}
+
+.bm-wrapper{
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(40%, auto));
+    column-gap: 100px;
+    row-gap: 70px;
+    margin-top: 150px;
+    margin-left: 85px;
+    margin-right: 85px;
+}
+
+#challenge{
+    padding: 5px;
+    border-radius: 0.5em;
+}
+
+#box-shadow{
+    padding: 8px;
+    border-radius: 0.5em;
+    box-shadow: 10px 10px 3px -3px hsla(230, 40%, 50%, 0.2);
+}
+
+#box-shadow:hover{
+    transition: all 0.2s linear;
+    transform: scale(1.1);
+}
+
+.progress{
+    margin-bottom: 10px;
+}
+
+.bm-icon {
+    float: right;
+    margin-right: 30px;
+}
+
+.bm-container{
+    margin-top: 70px;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(40%, auto));
+    column-gap: 100px;
+    row-gap: 70px;
+    margin-left: 85px;
+    margin-right: 85px;
+}
+
+#challenge{
+    text-align: center;
+    box-shadow: 10px 10px 3px -3px hsla(230, 40%, 50%, 0.2);
+}
+
+#title{
+    width: 300px;
+    margin-bottom: 10px;
+}
+
+#description{
+    width: 300px;
+    margin-bottom: 10px;
+    margin-left: 5px;
+}
+
+input:focus{
+    outline: none;
+}
+
+textarea:focus{
+    outline: none;
+}
+
+.bm-description{
+    display: flex;
+    justify-content: center;
+}
+
+#deadline{
+    width: 300px;
+    margin-bottom: 10px;
+    margin-left: 5px;
+}
+
+.bm-button{
+    margin-bottom: 10px;
+    text-align: end;
+    margin-right: 83px;
+}
+
+.bm-radio{
+    margin-bottom: 10px;
+}
+
+#btn-edit{
+    background-color: hsla(230, 40%, 50%, 1);
+    color: white;
+    border:none;
+    border-radius: 0.5em;
+    width: 45px;
+    height: 30px;
+}
+
+#btn-delete{
+    background-color: hsla(230, 40%, 50%, 1);
+    color: white;
+    border:none;
+    border-radius: 0.5em;
+    width: 45px;
+    height: 30px;
+}
+
+#btn-cancle{
+    background-color: hsla(230, 40%, 50%, 1);
+    color: white;
+    border:none;
+    border-radius: 0.5em;
+    width: 45px;
+    height: 30px;
+}
+
+#btn-save{
+    background-color: hsla(230, 40%, 50%, 1);
+    color: white;
+    border:none;
+    border-radius: 0.5em;
+    width: 45px;
+    height: 30px;
+    margin-left: 10px;
+}
+
+
+
+.bm-btn{
+    margin-top:10px;
+    text-align: end;
+}
