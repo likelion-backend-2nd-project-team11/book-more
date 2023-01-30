@@ -9,13 +9,15 @@ import org.springframework.util.StopWatch;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.core.scheduler.Schedulers;
+import site.bookmore.bookmore.books.dto.BookDetailResponse;
 import site.bookmore.bookmore.books.dto.BookResponse;
+import site.bookmore.bookmore.books.dto.BookSearchParams;
 import site.bookmore.bookmore.books.entity.Book;
 import site.bookmore.bookmore.books.repository.BookRepository;
 import site.bookmore.bookmore.books.util.api.kakao.KakaoBookSearch;
-import site.bookmore.bookmore.books.util.api.kakao.dto.KakaoSearchParams;
 import site.bookmore.bookmore.books.util.api.kolis.KolisBookSearch;
-import site.bookmore.bookmore.books.util.mapper.BookResponseMapper;
+import site.bookmore.bookmore.books.util.api.naver.NaverBooksearch;
+import site.bookmore.bookmore.books.util.api.naver.dto.NaverSearchParams;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,15 +30,15 @@ public class BookService {
     private final BookRepository bookRepository;
     private final KakaoBookSearch kakaoBookSearch;
     private final KolisBookSearch kolisBookSearch;
+    private final NaverBooksearch naverBooksearch;
 
-    public Page<BookResponse> search(KakaoSearchParams kakaoSearchParams) {
-        // Todo. 카카오 api 의존도 해결
-        Page<Book> response = kakaoBookSearch.search(kakaoSearchParams).block();
-        return response.map(BookResponseMapper::of);
+    public Page<BookResponse> search(BookSearchParams bookSearchParams) {
+        Page<Book> response = naverBooksearch.search(NaverSearchParams.from(bookSearchParams)).block();
+        return response.map(BookResponse::of);
     }
 
     @Transactional
-    public BookResponse searchByISBN(String isbn) {
+    public BookDetailResponse searchByISBN(String isbn) {
         StopWatch timer = new StopWatch();
         timer.start();
 
@@ -44,20 +46,18 @@ public class BookService {
         if (bookOptional.isPresent()) {
             timer.stop();
             log.info("총 응답 시간 : {}ms", timer.getTotalTimeMillis());
-            return BookResponseMapper.of(bookOptional.get());
+            return BookDetailResponse.of(bookOptional.get());
         }
 
         log.info("DB 내 도서 정보 없음");
         log.info("API 호출");
 
-        // api 요청 리스트 초기화
         List<Mono<Book>> requests = new ArrayList<>();
 
-        // api 요청 추가
+        requests.add(naverBooksearch.searchByISBN(isbn));
         requests.add(kakaoBookSearch.searchByISBN(isbn));
         requests.add(kolisBookSearch.searchByISBN(isbn));
 
-        // api 병렬 요청
         Flux<Book> bookFlux = Flux.merge(requests);
         Book book = bookFlux.subscribeOn(Schedulers.parallel())
                 .reduce(new Book(), Book::merge)
@@ -67,6 +67,6 @@ public class BookService {
 
         timer.stop();
         log.info("총 응답 시간 : {}ms", timer.getTotalTimeMillis());
-        return BookResponseMapper.of(book);
+        return BookDetailResponse.of(book);
     }
 }
