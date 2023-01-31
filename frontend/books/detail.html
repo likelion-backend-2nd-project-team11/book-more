@@ -121,8 +121,8 @@
                      data-bs-parent="#accordionExample">
                     <div class="accordion-body">
                         <div class="d-grid gap-2">
-                            <button class="btn" type="button">챌린지 작성하기</button>
-                            <button class="btn" type="button">챌린지 리스트</button>
+                            <a class="btn" type="button" href="../challenge/index.html">챌린지 작성하기</a>
+                            <a class="btn" type="button" href="../challenge/index.html">챌린지 리스트</a>
                         </div>
                     </div>
                 </div>
@@ -136,7 +136,7 @@
         unauthorizedComponent.forEach(ele => ele.style.display = !isLoggedIn ? ele.style.display : 'none')
     </script>
 </nav>
-<!-- ------------------------------------- -->
+<!-- --------------------------------------------------------------------------------------------------------->
 
 <div class="container pt-5 w-100 d-block d-xxl-flex">
     <!-- 도서 상세 정보--------------------------------- -->
@@ -146,148 +146,9 @@
     <!-- ------------------------------------- -->
     <!-- 리뷰 --------------------------------------- -->
     <div class="container bm-reviews-wrapper w-100 mb-5 p-0 py-5">
-<!--        <article class="review-item mb-5 p-3 pb-5 shadow bg-white">-->
-<!--            <div class="review-content  d-flex">-->
-<!--            <canvas class="chart me-3" width="200px" height="200px" id="chart1"></canvas>-->
-<!--            <div>-->
-<!--                <h4>test</h4>-->
-<!--                <p>-->
-<!--                    test9-->
-<!--                </p>-->
-<!--            </div>-->
-<!--            </div>-->
-<!--            <div class="review-footer">-->
-<!--                <hr/>-->
-<!--                <div class="float-start">2023-01-25 13:57</div>-->
-<!--                <button class="btn btn-outline-danger float-end">1 <i class="fa-regular fa-heart"></i></button>-->
-<!--            </div>-->
-<!--        </article>-->
-<!--        <article class="review-item mb-5 p-3 pb-5 shadow bg-white">-->
-<!--            <div class="review-content  d-flex">-->
-<!--                <canvas class="chart me-3" width="200px" height="200px" id="chart2"></canvas>-->
-<!--                <div>-->
-<!--                    <h4>test</h4>-->
-<!--                    <p>-->
-<!--                        test9-->
-<!--                    </p>-->
-<!--                </div>-->
-<!--            </div>-->
-<!--            <div class="review-footer">-->
-<!--                <hr/>-->
-<!--                <div class="float-start">2023-01-25 13:57</div>-->
-<!--                <button class="btn btn-outline-danger float-end">1 <i class="fa-regular fa-heart"></i></button>-->
-<!--            </div>-->
-<!--        </article>-->
-<!--        <article class="review-item mb-5 p-3 pb-5 shadow bg-white">-->
-<!--            <div class="review-content  d-flex">-->
-<!--                <canvas class="chart me-3" width="200px" height="200px" id="chart3"></canvas>-->
-<!--                <div>-->
-<!--                    <h4>test</h4>-->
-<!--                    <p>-->
-<!--                        test9-->
-<!--                    </p>-->
-<!--                </div>-->
-<!--            </div>-->
-<!--            <div class="review-footer">-->
-<!--                <hr/>-->
-<!--                <div class="float-start">2023-01-25 13:57</div>-->
-<!--                <button class="btn btn-outline-danger float-end">1 <i class="fa-regular fa-heart"></i></button>-->
-<!--            </div>-->
-<!--        </article>-->
-<!--        <article class="review-item mb-5 p-3 pb-5 shadow bg-white">-->
-<!--            <div class="review-content  d-flex">-->
-<!--                <canvas class="chart me-3" width="200px" height="200px" id="chart4"></canvas>-->
-<!--                <div>-->
-<!--                    <h4>test</h4>-->
-<!--                    <p>-->
-<!--                        test9-->
-<!--                    </p>-->
-<!--                </div>-->
-<!--            </div>-->
-<!--            <div class="review-footer">-->
-<!--                <hr/>-->
-<!--                <div class="float-start">2023-01-25 13:57</div>-->
-<!--                <button class="btn btn-outline-danger float-end">1 <i class="fa-regular fa-heart"></i></button>-->
-<!--            </div>-->
-<!--        </article>-->
     </div>
     <!-- ------------------------------------------- -->
 </div>
-<script>
-    // const chart1 = document.getElementById('chart1');
-    // const chart2 = document.getElementById('chart2');
-    //
-    // const labels = [
-    //     '전문성',
-    //     '재미',
-    //     '가독성',
-    //     '소장가치',
-    //     '난이도'
-    // ]
-    //
-    // const data1 = {
-    //     labels,
-    //     datasets: [{
-    //         data: [4, 4, 3, 5, 3],
-    //         fill: true,
-    //         backgroundColor: 'rgba(255, 99, 132, 0.2)',
-    //         borderColor: 'rgb(255, 99, 132)',
-    //         pointBackgroundColor: 'rgb(255, 99, 132)',
-    //         pointBorderColor: '#fff',
-    //         pointHoverBackgroundColor: '#fff',
-    //         pointHoverBorderColor: 'rgb(255, 99, 132)'
-    //     }]
-    // }
-    //
-    // const data2 = {
-    //     labels,
-    //     datasets: [{
-    //         data: [2, 3, 4, 3, 5],
-    //         fill: true,
-    //         backgroundColor: 'rgba(255, 99, 132, 0.2)',
-    //         borderColor: 'rgb(255, 99, 132)',
-    //         pointBackgroundColor: 'rgb(255, 99, 132)',
-    //         pointBorderColor: '#fff',
-    //         pointHoverBackgroundColor: '#fff',
-    //         pointHoverBorderColor: 'rgb(255, 99, 132)'
-    //     }]
-    // }
-    //
-    // const options = {
-    //         responsive: false,
-    //         plugins: {
-    //             legend: {
-    //                 display: false
-    //             },
-    //         },
-    //         elements: {
-    //             line: {
-    //                 borderWidth: 1
-    //             }
-    //         },
-    //         scales: {
-    //             r: {
-    //                 angleLines: {
-    //                     display: false
-    //                 },
-    //                 suggestedMin: 0,
-    //                 suggestedMax: 5
-    //             }
-    //         }
-    //     }
-    //
-    // new Chart(chart1, {
-    //     type: 'radar',
-    //     data: data1,
-    //     options
-    // });
-    //
-    // new Chart(chart2, {
-    //     type: 'radar',
-    //     data: data2,
-    //     options
-    // });
-</script>
 <script src="../js/book.js"></script>
 <script src="../js/review.js"></script>
 <script>
