@@ -43,13 +43,13 @@ public class Book {
 
     private String chapter;
 
-    @Column(length = 300)
+    @Column(length = 600)
     private String introduce;
 
-    private int price;
+    private Integer price;
 
     @Column(nullable = false)
-    private boolean cached;
+    private Boolean cached;
 
     @CreatedDate
     private LocalDateTime createdDatetime;
@@ -65,7 +65,7 @@ public class Book {
         if (image == null) image = book.getImage();
         if (chapter == null) chapter = book.getChapter();
         if (introduce == null) introduce = book.getIntroduce();
-        if (price == 0) price = book.getPrice();
+        if (price == null) price = book.getPrice();
         return this;
     }
 
