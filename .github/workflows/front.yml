@@ -46,7 +46,7 @@ jobs:
 #        working-directory: ${{ env.working-directory }}
 
       - name: Check
-        run: ls in /home/runner/work/book-more/book-more/frontend
+        run: ls in /home/runner/work/book-more/book-more/frontend/node_modules
 
       - name: build
         run: npm run build
