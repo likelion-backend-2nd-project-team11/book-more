@@ -37,19 +37,16 @@ jobs:
 #        run: yarn install --frozen-lockfile
 #        working-directory: ${{ env.working-directory }}
 #
-      - name: Check
-        run: ls in /home/runner/work/book-more/book-more
-#
 #      - name: Build
 #        run: yarn build
 #        working-directory: ${{ env.working-directory }}
 
-      - name: npm install for eslint
-        run: npm install
-
       - name: npm install
         run: npm install
         working-directory: ${{ env.working-directory }}
+
+      - name: Check
+        run: ls in /home/runner/work/book-more/book-more/frontend
 
       - name: build
         run: npm run build
