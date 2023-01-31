@@ -14,7 +14,9 @@ import site.bookmore.bookmore.security.provider.JwtProvider;
 import site.bookmore.bookmore.users.dto.UserJoinRequest;
 import site.bookmore.bookmore.users.dto.UserLoginRequest;
 import site.bookmore.bookmore.users.dto.UserUpdateRequest;
+import site.bookmore.bookmore.users.entity.Ranks;
 import site.bookmore.bookmore.users.entity.User;
+import site.bookmore.bookmore.users.repositroy.RanksRepository;
 import site.bookmore.bookmore.users.repositroy.UserRepository;
 
 import java.time.LocalDate;
@@ -32,11 +34,13 @@ class UserServiceTest {
 
     private final UserRepository userRepository = mock(UserRepository.class);
 
+    private final RanksRepository ranksRepository = mock(RanksRepository.class);
+
     private final JwtProvider jwtProvider = mock(JwtProvider.class);
 
     private final PasswordEncoder passwordEncoder = mock(PasswordEncoder.class);
 
-    private final UserService userService = new UserService(passwordEncoder, jwtProvider, userRepository);
+    private final UserService userService = new UserService(passwordEncoder, jwtProvider, userRepository, ranksRepository);
 
     private final User user = User.builder()
             .id(0L)
@@ -56,6 +60,7 @@ class UserServiceTest {
 
         when(userRepository.save(any(User.class)))
                 .thenReturn(user);
+        when(ranksRepository.findTop1ByOrderByRankingDesc()).thenReturn(new Ranks(1L, 0, 1L));
 
         Assertions.assertDoesNotThrow(() -> userService.join(new UserJoinRequest()));
 

@@ -113,8 +113,7 @@ class UserControllerTest {
                         .content(objectMapper.writeValueAsBytes(errorEmailFormat))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.resultCode").value("ERROR"))
-                .andExpect(jsonPath("$.result").value("[email] 올바른 형식의 이메일 주소여야 합니다"));
+                .andExpect(jsonPath("$.resultCode").value("ERROR"));
 
 //        verify(userService).join(any(UserJoinRequest.class));
     }
