@@ -33,15 +33,26 @@ jobs:
           restore-keys: |
            ${{ runner.os }}-node-
 
-      - name: Install Dependencies
-        run: yarn install --frozen-lockfile
+#      - name: Install Dependencies
+#        run: yarn install --frozen-lockfile
+#        working-directory: ${{ env.working-directory }}
+#
+##      - name: Check
+##        run: ls -a
+#
+#      - name: Build
+#        run: yarn build
+#        working-directory: ${{ env.working-directory }}
+
+      - name: npm install for eslint
+        run: npm install
+
+      - name: npm install
+        run: npm install
         working-directory: ${{ env.working-directory }}
 
-#      - name: Check
-#        run: ls -a
-
-      - name: Build
-        run: yarn build
+      - name: build
+        run: npm run build
         working-directory: ${{ env.working-directory }}
 
       - name: Configure AWS Credentials
