@@ -25,10 +25,9 @@ public class Translator {
         this.book = book;
     }
 
-    public static Translator of(String name, Book book) {
+    public static Translator of(String name) {
         return Translator.builder()
                 .name(name)
-                .book(book)
                 .build();
     }
 }

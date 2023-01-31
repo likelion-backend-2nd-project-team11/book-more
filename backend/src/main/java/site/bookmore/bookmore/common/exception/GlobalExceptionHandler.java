@@ -25,8 +25,9 @@ import static site.bookmore.bookmore.common.exception.ErrorCode.DATABASE_ERROR;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
     @ExceptionHandler(PersistenceException.class)
-    public ResponseEntity<ResultResponse<ErrorResponse>> persistenceException() {
+    public ResponseEntity<ResultResponse<ErrorResponse>> persistenceException(PersistenceException e) {
         log.error("{} {}", DATABASE_ERROR.name(), DATABASE_ERROR.getMessage());
+        e.printStackTrace();
         return ResponseEntity.status(DATABASE_ERROR.getHttpStatus())
                 .body(ResultResponse.error(ErrorResponse.of(DATABASE_ERROR)));
     }
