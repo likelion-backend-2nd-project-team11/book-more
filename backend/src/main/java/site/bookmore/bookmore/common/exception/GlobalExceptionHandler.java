@@ -3,15 +3,21 @@ package site.bookmore.bookmore.common.exception;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import site.bookmore.bookmore.common.dto.ErrorResponse;
 import site.bookmore.bookmore.common.dto.ResultResponse;
 
 import javax.persistence.PersistenceException;
+import javax.validation.ConstraintViolation;
+import javax.validation.ConstraintViolationException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import static site.bookmore.bookmore.common.exception.ErrorCode.DATABASE_ERROR;
 
@@ -31,20 +37,31 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(e.getErrorCode().getHttpStatus())
                 .body(ResultResponse.error(e));
     }
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<ResultResponse<String>> handleValidationExceptions(MethodArgumentNotValidException e) {
+
+    @ExceptionHandler(BindException.class)
+    public ResponseEntity<ResultResponse<Map>> handleBindExceptions(BindException e) {
         BindingResult bindingResult = e.getBindingResult();
 
-        StringBuilder builder = new StringBuilder();
+        Map<String, List<String>> result = new HashMap<>();
         for (FieldError fieldError : bindingResult.getFieldErrors()) {
-            builder.append("[");
-            builder.append(fieldError.getField()); // badRequest 한 컬럼 명
-            builder.append("] ");
-            builder.append(fieldError.getDefaultMessage());  // default 메세지
-//            builder.append(fieldError.getRejectedValue()); // 입력한 값
+            List<String> msg = result.getOrDefault(fieldError.getField(), new ArrayList<>());
+            msg.add(fieldError.getDefaultMessage());
+            result.put(fieldError.getField(), msg);
         }
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                .body(ResultResponse.error(builder.toString()));
+                .body(ResultResponse.error(result));
+    }
+
+    @ExceptionHandler(ConstraintViolationException.class)
+    public ResponseEntity<ResultResponse<Map>> handleValidationExceptions(ConstraintViolationException e) {
+        Map<String, String> result = new HashMap<>();
+
+        for (ConstraintViolation<?> cv : e.getConstraintViolations()) {
+            result.put(cv.getInvalidValue().toString(), cv.getMessage());
+        }
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(ResultResponse.error(result));
     }
 }
