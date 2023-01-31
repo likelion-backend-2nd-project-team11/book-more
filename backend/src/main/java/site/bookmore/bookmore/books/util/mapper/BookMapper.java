@@ -12,22 +12,19 @@ import java.util.stream.Collectors;
 
 public class BookMapper {
     public static Book of(Document document) {
-        Book book = Book.builder()
-                .price(document.getPrice())
-                .build();
-
         Set<Author> authors = document.getAuthors().stream()
-                .map(name -> Author.of(name, book))
+                .map(Author::of)
                 .collect(Collectors.toSet());
 
         Set<Translator> translators = document.getTranslators().stream()
-                .map(name -> Translator.of(name, book))
+                .map(Translator::of)
                 .collect(Collectors.toSet());
 
-        book.addAuthors(authors);
-        book.addTranslators(translators);
-
-        return book;
+        return Book.builder()
+                .price(document.getPrice())
+                .authors(authors)
+                .translators(translators)
+                .build();
     }
 
     public static Book of(Doc doc) {
