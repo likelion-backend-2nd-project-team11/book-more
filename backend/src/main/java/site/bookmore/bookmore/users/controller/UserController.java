@@ -35,7 +35,7 @@ public class UserController {
 
     @Authorized
     @ApiOperation(value = "회원 정보 수정")
-    @PatchMapping("/{id}")
+    @PostMapping("/{id}")
     public ResultResponse<UserResponse> update(@RequestBody UserUpdateRequest userUpdateRequest, @PathVariable Long id, @ApiIgnore Authentication authentication) {
         String email = authentication.getName();
         return ResultResponse.success(userService.infoUpdate(email, id, userUpdateRequest));
@@ -47,5 +47,16 @@ public class UserController {
     public ResultResponse<UserResponse> delete(@PathVariable Long id, @ApiIgnore Authentication authentication) {
         String email = authentication.getName();
         return ResultResponse.success(userService.delete(email, id));
+    }
+
+    /**
+     * verify
+     */
+    @Authorized
+    @ApiOperation(value = "회원 검증")
+    @PostMapping("/verify")
+    public ResultResponse<UserJoinResponse> verify(Authentication authentication) {
+        String email = authentication.getName();
+        return ResultResponse.success(userService.verify(email));
     }
 }

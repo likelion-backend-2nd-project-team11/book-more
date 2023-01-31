@@ -185,7 +185,6 @@ class UserServiceTest {
                 .thenReturn(Optional.of(user));
 
 
-
         Assertions.assertDoesNotThrow(() -> userService.delete(user.getEmail(), 0L));
     }
 
@@ -203,4 +202,27 @@ class UserServiceTest {
 
         assertThat(abstractAppException.getErrorCode()).isEqualTo(INVALID_TOKEN);
     }
+
+    @Test
+    @DisplayName("회원 정보 검증 - 성공")
+    void verify_success() {
+        when(userRepository.findByEmail(user.getEmail()))
+                .thenReturn(Optional.of(user));
+
+        Assertions.assertDoesNotThrow(() -> userService.verify(user.getEmail()));
+    }
+
+    @Test
+    @DisplayName("회원 정보 검증 - 실패")
+    void verify_fail() {
+        when(userRepository.findByEmail(user.getEmail()))
+                .thenReturn(Optional.of(user));
+
+        AbstractAppException abstractAppException = assertThrows(UserNotFoundException.class, () -> {
+            userService.verify("test@gmail.com");
+        });
+
+        assertThat(abstractAppException.getErrorCode()).isEqualTo(USER_NOT_FOUND);
+    }
+
 }

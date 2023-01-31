@@ -124,4 +124,9 @@ public class UserService implements UserDetailsService {
         return UserResponse.of(user, "회원 탈퇴 완료.");
     }
 
+    public UserJoinResponse verify(String email) {
+        User user = userRepository.findByEmail(email).orElseThrow(UserNotFoundException::new);
+        return UserJoinResponse.of(user);
+    }
+
 }
