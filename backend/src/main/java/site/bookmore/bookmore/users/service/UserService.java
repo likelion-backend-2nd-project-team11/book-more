@@ -38,6 +38,7 @@ public class UserService implements UserDetailsService {
     /**
      * 회원 가입
      */
+    @Transactional
     public UserJoinResponse join(UserJoinRequest userJoinRequest) {
         userRepository.findByEmail(userJoinRequest.getEmail()).ifPresent(user -> {
             throw new DuplicateEmailException();
