@@ -3,6 +3,7 @@ package site.bookmore.bookmore.challenge.dto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import site.bookmore.bookmore.challenge.entity.Challenge;
 import site.bookmore.bookmore.users.entity.User;
 
@@ -10,6 +11,7 @@ import java.time.LocalDate;
 
 
 @AllArgsConstructor
+@NoArgsConstructor
 @Getter
 @Builder
 public class ChallengeRequest {
