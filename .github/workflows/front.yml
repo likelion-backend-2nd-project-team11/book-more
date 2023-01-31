@@ -14,6 +14,8 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    env:
+      working-directory: ./frontend
     steps:
       - name: Checkout source code
         uses: actions/checkout@v3
@@ -33,13 +35,14 @@ jobs:
 
       - name: Install Dependencies
         run: yarn install --frozen-lockfile
+        working-directory: ${{ env.working-directory }}
 
 #      - name: Check
 #        run: ls -a
 
       - name: Build
         run: yarn build
-        build-root-directory: frontend/
+        working-directory: ${{ env.working-directory }}
 
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v1
