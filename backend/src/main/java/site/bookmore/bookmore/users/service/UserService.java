@@ -51,16 +51,13 @@ public class UserService implements UserDetailsService {
 
 
         // 회원 가입시 랭크 등록
-        Ranks ranksList = ranksRepository.findTop1ByOrderByRankingDesc();
-        Integer point = ranksList.getPoint();
-        Long ranking = ranksList.getRanking();
-        if (point != 0) {
-            point = 0;
-            ranking = ranking + 1;
-            ranksRepository.save(new Ranks(user.getId(), point, ranking));
-        } else {
-            ranksRepository.save(new Ranks(user.getId(), point, ranking));
-        }
+        Ranks findRank = ranksRepository.findTop1ByOrderByRankingDesc().orElse(new Ranks(0L, 0, 1L));
+
+        Integer findPoint = findRank.getPoint();
+        Long findRanking = findRank.getRanking();
+        Long ranking = findPoint == 0 ? findRanking : findRanking + 1;
+
+        ranksRepository.save(new Ranks(user.getId(), 0, ranking));
 
         return UserJoinResponse.of(user);
     }

@@ -6,6 +6,7 @@ import site.bookmore.bookmore.users.entity.Ranks;
 import site.bookmore.bookmore.users.vo.RanksNativeVo;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface RanksRepository extends JpaRepository<Ranks, Long> {
 
@@ -14,6 +15,6 @@ public interface RanksRepository extends JpaRepository<Ranks, Long> {
 
     List<Ranks> findTop100ByOrderByRankingAsc();
 
-    Ranks findTop1ByOrderByRankingDesc();
+    Optional<Ranks> findTop1ByOrderByRankingDesc();
 
 }
