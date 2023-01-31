@@ -33,10 +33,10 @@ jobs:
           restore-keys: |
            ${{ runner.os }}-node-
 
-      - name: Install Dependencies
-        run: yarn install --frozen-lockfile
-        working-directory: ${{ env.working-directory }}
-#
+#      - name: Install Dependencies
+#        run: yarn install --frozen-lockfile
+#        working-directory: ${{ env.working-directory }}
+##
 #      - name: Build
 #        run: yarn build
 #        working-directory: ${{ env.working-directory }}
@@ -45,12 +45,12 @@ jobs:
 #        run: npm install
 #        working-directory: ${{ env.working-directory }}
 
-      - name: Check
-        run: ls in /home/runner/work/book-more/book-more/frontend/node_modules
+#      - name: Check
+#        run: ls in /home/runner/work/book-more/book-more/frontend/
 
-      - name: build
-        run: npm run build
-        working-directory: ${{ env.working-directory }}
+#      - name: build
+#        run: npm run build
+#        working-directory: ${{ env.working-directory }}
 
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v1
