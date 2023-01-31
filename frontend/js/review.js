@@ -51,7 +51,9 @@ function fetchGetReviewsByBook(isbn) {
                 <div class="review-footer">
                     <hr/>
                     <div class="float-start">${review.createdDatetime}</div>
-                    <button class="btn btn-outline-danger float-end">${review.likesCount} <i class="fa-regular fa-heart"></i></button>
+                    <button class="btn btn-outline-danger float-end" onclick="fetchPostReviewLike(${review.id}, token)">
+                        ${review.likesCount} <i class="fa-regular fa-heart"></i>
+                    </button>
                 </div>
             </article>`);
 
@@ -79,5 +81,25 @@ function fetchGetReviewsByBook(isbn) {
                 options
             });
         })
+    })
+}
+
+function fetchPostReviewLike(id, token) {
+    fetch(`${BASE_URL}/api/v1/books/reviews/${id}/likes`, {
+        method: 'POST',
+        headers: {
+            "Authorization": "Bearer " + token,
+        },
+    }).then((response) => response.json())
+    .then((response) => {
+        const resultCode = response.resultCode;
+        if (resultCode === 'SUCCESS') {
+            alert(response.result);
+            window.location.reload();
+        } else if (resultCode === 'ERROR') {
+            alert(response.result.message);
+        } else {
+            console.log(response);
+        }동
     })
 }
