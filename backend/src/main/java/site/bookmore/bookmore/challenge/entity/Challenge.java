@@ -43,6 +43,8 @@ public class Challenge extends BaseEntity {
     public void update(Challenge challenge) {
         updateTitle(challenge.getTitle());
         updateDescription(challenge.getDescription());
+        updateProgress(challenge.getProgress());
+        updateDeadline(challenge.getDeadline());
     }
 
     private void updateTitle(String title){
@@ -57,5 +59,15 @@ public class Challenge extends BaseEntity {
         }
     }
 
+    private void updateProgress(Integer progress){
+        if(progress != null){
+            this.progress = progress;
+        }
+    }
 
+    private void updateDeadline(LocalDate deadline){
+        if(deadline != null){
+            this.deadline = deadline;
+        }
+    }
 }
