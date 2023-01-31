@@ -19,8 +19,7 @@
 <!-- ------------------------------------------------------------------------------------------------Top Bar-->
 <script src="js/auth.js"></script>
 <script>
-    const token = getToken();
-    const isLoggedIn = verifyToken();
+    const {token, isLoggedIn} = verifyToken();
 </script>
 <nav class="navbar fixed-top bg-family-color">
     <div class="container-fluid">
@@ -34,8 +33,8 @@
                     <i class="fa-solid fa-right-to-bracket"></i>
                 </button>
                 <ul class="dropdown-menu dropdown-menu-end">
-                    <li class="unauthorized-component"><a class="dropdown-item"  href="join.html">회원가입</a></li>
-                    <li class="unauthorized-component"><a class="dropdown-item" href="login.html">로그인</a></li>
+                    <li class="unauthorized-component"><a class="dropdown-item"  href="users/join.html">회원가입</a></li>
+                    <li class="unauthorized-component"><a class="dropdown-item" href="users/login.html">로그인</a></li>
                     <li class="authorized-component"><a class="dropdown-item" onclick="deleteToken()">로그아웃</a></li>
                 </ul>
             </div>
@@ -119,8 +118,8 @@
                      data-bs-parent="#accordionExample">
                     <div class="accordion-body">
                         <div class="d-grid gap-2">
-                            <button class="btn" type="button">챌린지 작성하기</button>
-                            <button class="btn" type="button">챌린지 리스트</button>
+                            <a class="btn" type="button" href="challenge/index.html">챌린지 작성하기</a>
+                            <a class="btn" type="button" href="challenge/index.html">챌린지 리스트</a>
                         </div>
                     </div>
                 </div>

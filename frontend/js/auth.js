@@ -4,8 +4,11 @@ function getToken() {
 }
 
 function verifyToken() {
-    const token = getToken();
-    return token !== undefined;
+    let token = getToken();
+    let isLoggedIn = false;
+    if (token === undefined || token === '') return {token, isLoggedIn};
+    isLoggedIn = true;
+    return {token, isLoggedIn};
 }
 
 function deleteToken() {

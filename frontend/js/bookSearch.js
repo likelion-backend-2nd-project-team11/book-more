@@ -3,7 +3,7 @@ const BASE_URL = 'http://api.bookmore.site';
 const urlSearchParams = new URLSearchParams(location.search);
 
 function search({query, page, size}) {
-    if (query.length > 1) window.location.href=`./books.html?query=${query}&page=${page || 1}&size=${size || 20}`;
+    if (query.length > 1) window.location.href=`books/search.html?query=${query}&page=${page || 1}&size=${size || 20}`;
     else alert('검색어를 확인해주세요. [최소 두 글자]');
 }
 
@@ -35,8 +35,8 @@ function fetchSearchBooks(query, page, size) {
             const contentWrapper = document.querySelector('.books-shelf');
             contentWrapper.innerHTML = books.map(book => {
                 return `
-                    <a class="p-3 text-decoration-none text-black" href="./book.html?isbn=${book.isbn}">
-                        <div class="book-item bg-white col h-100 p-4 rounded-4 shadow">
+                    <a class="p-3 text-decoration-none text-black" href="detail.html?isbn=${book.isbn}">
+                        <div class="book-item bg-white col h-100 p-4 rounded-4 shadow bm-scale-animation">
                             <img class="mx-auto mb-3 w-100 d-block shadow" src="${book.image}"/>
                             <div class="text-center fw-bold text-wrap">${book.title}</div>
                         </div>

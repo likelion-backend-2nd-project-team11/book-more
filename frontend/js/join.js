@@ -27,7 +27,7 @@ function join() {
         console.log(response);
         if (response.resultCode === 'SUCCESS') {
             alert("회원가입 완료")
-            window.location.href = "./login.html";
+            window.location.href = "login.html";
         } else if (response.resultCode === 'ERROR') {
             alert(response.result.message);
         }

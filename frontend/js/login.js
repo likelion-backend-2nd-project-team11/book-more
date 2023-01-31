@@ -27,7 +27,7 @@ function login() {
             if (response.resultCode === 'SUCCESS') {
                 window.localStorage.setItem("token", response.result.jwt);
                 alert("로그인 완료")
-                window.location.href = "index.html";
+                window.location.href = "../index.html";
             } else if (response.resultCode === 'ERROR') {
                 alert(response.result.message);
             }

@@ -33,6 +33,10 @@
     font-family: "HannahO";
 }
 
+body {
+    font-family: "Lucida Grande", Tahoma, Verdana, sans-serif;
+}
+
 /* 영문 폰트 */
 .en-font {
     font-family: "Righteous", serif;
@@ -40,4 +44,9 @@
 
 #offcanvasRight {
     width: 300px;
+}
+
+.bm-scale-animation:hover {
+    transition: all 0.2s linear;
+    transform: scale(1.05);
 }
