@@ -87,13 +87,13 @@
     <!-- 검색--------------------------------- -->
     <div class="container search-box mb-auto d-flex">
         <input class="ms-auto px-3 w-50 rounded-pill form-control bm-query" type="text" placeholder="검색어를 입력해 주세요.">
-        <button class="btn btn-outline-secondary ms-3 me-auto search-btn" onclick="search({query: getQuery()})"><i class="fas fa-search"></i></button>
+        <button class="btn btn-outline-secondary ms-3 me-auto search-btn" onclick="search({query: getQuery(), atHome: true})"><i class="fas fa-search"></i></button>
     </div>
     <!-- ------------------------------------- -->
 </div>
 <script src="js/book.js"></script>
 <script>
-    document.querySelector(".bm-query").addEventListener('keyup', event => submitQueryHandler(event));
+    document.querySelector(".bm-query").addEventListener('keyup', event => submitQueryHandler(event, true));
 </script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
 </body>

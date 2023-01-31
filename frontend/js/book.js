@@ -1,15 +1,22 @@
 const urlSearchParams = new URLSearchParams(location.search);
 
-function search({query, page, size}) {
-    if (query.length > 1) window.location.href=`books/search.html?query=${query}&page=${page || 1}&size=${size || 20}`;
-    else alert('검색어를 확인해주세요. [최소 두 글자]');
+function search({query, page, size, atHome}) {
+    if (query.length < 2) {
+        alert('검색어를 확인해주세요. [최소 두 글자]');
+        return;
+    }
+    if (atHome) { // 홈페이지에서 검색하는 경우
+        window.location.href=`books/search.html?query=${query}&page=${page || 1}&size=${size || 20}`;
+        return;
+    }
+    window.location.href=`search.html?query=${query}&page=${page || 1}&size=${size || 20}`;
 }
 
-function submitQueryHandler(e) {
+function submitQueryHandler(e, atHome) {
     let key = e.key || e.keyCode;
 
     if (key === 'Enter' || key === 13) {
-        search({query:e.target.value});
+        search({query:e.target.value, atHome});
     }
 }
 
