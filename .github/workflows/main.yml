@@ -49,6 +49,7 @@ jobs:
         build-root-directory: backend/
 
     - name: Add coverage to PR
+      if: ${{ github.event.workflow_run.event == 'pull_request' }}
       id: jacoco
       uses: madrapps/jacoco-report@v1.3
       with:
