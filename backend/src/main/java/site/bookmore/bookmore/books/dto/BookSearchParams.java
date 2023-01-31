@@ -6,6 +6,7 @@ import org.springframework.data.domain.Pageable;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 
 @Builder
 @AllArgsConstructor
@@ -14,7 +15,7 @@ import javax.validation.constraints.NotBlank;
 @Getter
 public class BookSearchParams {
     @NotBlank(message = "검색어를 입력해주세요.")
-    @Min(value = 2, message = "최소 두 글자 이상 검색해주세요.")
+    @Size(min = 2, message = "최소 두 글자 이상 검색해주세요.")
     private String query;
 
     @Min(1)
