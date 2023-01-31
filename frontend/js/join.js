@@ -1,4 +1,4 @@
-const BASE_URL = 'http://api.bookmore.site:8080';
+const BASE_URL = 'http://api.bookmore.site';
 
 /**
  *  1. 회원가입 시 비밀번호 더블 체크 에러

@@ -1,4 +1,4 @@
-const BASE_URL = 'http://api.bookmore.site:8080';
+const BASE_URL = 'http://api.bookmore.site';
 
 /**
  *  1. password 틀림
