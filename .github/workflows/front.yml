@@ -4,7 +4,7 @@ name: FrontEnd CI PipeLine
 on:
   pull_request:
     branches:
-      - develop
+      - main
     paths:
       - 'frontend/**'
 
