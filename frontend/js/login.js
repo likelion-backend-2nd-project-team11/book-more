@@ -1,5 +1,3 @@
-const BASE_URL = 'http://api.bookmore.site';
-
 /**
  *  1. password 틀림
  *  2. email 존재하지 않음

@@ -1,5 +1,3 @@
-const BASE_URL = 'http://api.bookmore.site';
-
 function fetchCreateChallenge(token) {
     const title = document.getElementById("create-title").value;
     const description = document.getElementById("create-description").value;
