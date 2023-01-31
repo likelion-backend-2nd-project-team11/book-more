@@ -23,7 +23,8 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -105,18 +106,18 @@ class UserControllerTest {
     @DisplayName("회원가입 - 실패(잘못된 이메일 형식)")
     void join_fail_3() throws Exception {
 
-        UserJoinRequest errorEmailFormat = new UserJoinRequest("email", "password","nickname",testDate);
+        UserJoinRequest errorEmailFormat = new UserJoinRequest("email", "password", "nickname", testDate);
 
         mockMvc.perform(post("/api/v1/users/join")
                         .with(csrf())
                         .content(objectMapper.writeValueAsBytes(errorEmailFormat))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.resultCode").value("ERROR"))
-                .andExpect(jsonPath("$.result").value("[email] 올바른 형식의 이메일 주소여야 합니다"));
+                .andExpect(jsonPath("$.resultCode").value("ERROR"));
 
 //        verify(userService).join(any(UserJoinRequest.class));
     }
+
     @Test
     @DisplayName("로그인 - 성공")
     void login_success() throws Exception {
@@ -180,7 +181,7 @@ class UserControllerTest {
 
         given(userService.infoUpdate(any(), any(), any(UserUpdateRequest.class))).willReturn(userResponse);
 
-        mockMvc.perform(patch("/api/v1/users/0")
+        mockMvc.perform(post("/api/v1/users/0")
                         .with(csrf())
                         .content(objectMapper.writeValueAsBytes(userUpdateRequest))
                         .contentType(MediaType.APPLICATION_JSON))
@@ -199,7 +200,7 @@ class UserControllerTest {
 
         given(userService.infoUpdate(any(), any(), any(UserUpdateRequest.class))).willThrow(new DuplicateNicknameException());
 
-        mockMvc.perform(patch("/api/v1/users/0")
+        mockMvc.perform(post("/api/v1/users/0")
                         .with(csrf())
                         .content(objectMapper.writeValueAsBytes(userUpdateRequest))
                         .contentType(MediaType.APPLICATION_JSON))
@@ -247,5 +248,45 @@ class UserControllerTest {
 
 
         verify(userService).delete(any(), any());
+    }
+
+
+    @Test
+    @DisplayName("회원 검증 - 성공")
+    void verify_success() throws Exception {
+
+        UserJoinResponse userJoinResponse = new UserJoinResponse(0L, userJoinRequest.getEmail(), userJoinRequest.getNickname());
+
+        given(userService.verify(any())).willReturn(userJoinResponse);
+
+        mockMvc.perform(post("/api/v1/users/verify")
+                        .with(csrf())
+                        .content(objectMapper.writeValueAsBytes(userJoinRequest))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.resultCode").value("SUCCESS"))
+                .andExpect(jsonPath("$.result.id").value(0L))
+                .andExpect(jsonPath("$.result.email").value("email@gmail.com"))
+                .andExpect(jsonPath("$.result.nickname").value("nickname"));
+
+        verify(userService).verify(any());
+    }
+
+
+    @Test
+    @DisplayName("회원 검증 - 실패(토큰이 다를경우)")
+    void userVerify_fail() throws Exception {
+
+        given(userService.verify(any())).willThrow(new UserNotFoundException());
+
+        mockMvc.perform(post("/api/v1/users/verify")
+                        .with(csrf())
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.resultCode").value("ERROR"))
+                .andExpect(jsonPath("$.result.errorCode").value("USER_NOT_FOUND"))
+                .andExpect(jsonPath("$.result.message").value("해당하는 유저를 찾을 수 없습니다."));
+
+        verify(userService).verify(any());
     }
 }

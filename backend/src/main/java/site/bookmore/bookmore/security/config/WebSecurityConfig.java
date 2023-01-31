@@ -30,19 +30,19 @@ public class WebSecurityConfig {
             "^/api/v1/users/\\d{0,}/follow$",
             "^/api/v1/challenges$",
             "^/api/v1/books/\\w{0,}/reviews$",
-            "^/api/v1/books/\\w{0,}/reviews/\\d{0,}/likes$",
+            "^/api/v1/books/reviews/\\d{0,}/likes$",
     };
 
     public static final String[] PATCH_AUTHENTICATED_REGEX_LIST = {
             "^/api/v1/challenges/\\d{0,}$",
-            "^/api/v1/books/\\w{0,}/reviews/\\d{0,}$",
+            "^/api/v1/books/reviews/\\d{0,}$",
     };
 
     public static final String[] DELETE_AUTHENTICATED_REGEX_LIST = {
             "^/api/v1/users/\\d{0,}$",
             "^/api/v1/users/\\d{0,}/follow$",
             "^/api/v1/challenges/\\d{0,}$",
-            "^/api/v1/books/\\w{0,}/reviews/\\d{0,}$",
+            "^/api/v1/books/reviews/\\d{0,}$",
     };
 
     public static final String[] ADMIN_ONLY_REGEX_LIST = {

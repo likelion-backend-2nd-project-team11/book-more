@@ -16,6 +16,7 @@ public class ChallengeRequest {
     private String title;
     private String description;
     private LocalDate deadline;
+    private int progress;
 
 
     // Todo. 기한 추가
@@ -25,6 +26,7 @@ public class ChallengeRequest {
                 .title(this.title)
                 .description(this.description)
                 .deadline(this.deadline)
+                .progress(this.progress)
                 .build();
     }
 
@@ -33,6 +35,7 @@ public class ChallengeRequest {
                 .title(this.title)
                 .description(this.description)
                 .deadline(this.deadline)
+                .progress(this.progress)
                 .build();
     }
 }
