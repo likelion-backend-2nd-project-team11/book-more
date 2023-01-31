@@ -19,8 +19,9 @@
     <!-- ------------------------------------------------------------------------------------------------Top Bar-->
     <script src="../js/auth.js"></script>
     <script>
-        const {token, isLoggedIn} = verifyToken();
-        if (isLoggedIn) window.history.back();
+        const token = getToken();
+        const isLoggedIn = !!token;
+        if(isLoggedIn) window.history.back();
     </script>
     <nav class="navbar fixed-top bg-family-color">
         <div class="container-fluid">

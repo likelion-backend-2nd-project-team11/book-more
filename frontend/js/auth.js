@@ -3,12 +3,16 @@ function getToken() {
     return token || undefined;
 }
 
-function verifyToken() {
-    let token = getToken();
-    let isLoggedIn = false;
-    if (token === undefined || token === '') return {token, isLoggedIn};
-    isLoggedIn = true;
-    return {token, isLoggedIn};
+function fetchVerifyToken(token) {
+    fetch(`${BASE_URL}/api/v1/users/verify`, {
+        method: 'POST',
+        headers: {
+            "Authorization": "Bearer " + token,
+        },
+    }).then(response => response.json())
+    .then(response => {
+        if (response.resultCode !== 'SUCCESS') deleteToken();
+    });
 }
 
 function deleteToken() {

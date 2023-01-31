@@ -22,7 +22,9 @@
 <!-- ------------------------------------------------------------------------------------------------Top Bar-->
 <script src="../js/auth.js"></script>
 <script>
-    const {token, isLoggedIn} = verifyToken();
+    const token = getToken();
+    const isLoggedIn = !!token;
+    if(isLoggedIn) fetchVerifyToken(token);
 </script>
 <nav class="navbar fixed-top bg-family-color">
     <div class="container-fluid">

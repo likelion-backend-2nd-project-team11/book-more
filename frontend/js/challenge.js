@@ -96,7 +96,7 @@ function fetchModifyChallenge(id, token) {
     console.log(data);
 
     fetch(`${BASE_URL}/api/v1/challenges/${id}`, {
-        method: 'PUT',
+        method: 'PATCH',
         headers: {
             'Content-Type': 'application/json',
             "Authorization": "Bearer " + token,
