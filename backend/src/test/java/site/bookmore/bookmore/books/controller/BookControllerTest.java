@@ -9,7 +9,6 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 import site.bookmore.bookmore.books.dto.BookDetailResponse;
 import site.bookmore.bookmore.books.dto.BookResponse;
 import site.bookmore.bookmore.books.dto.BookSearchParams;
@@ -34,10 +33,6 @@ class BookControllerTest {
 
     @MockBean
     private BookService bookService;
-
-    // Todo. 테스트에 validate도 포함 할 것.
-    @MockBean
-    private LocalValidatorFactoryBean validatorFactoryBean;
 
     private static final String SUCCESS = "SUCCESS";
 
@@ -90,7 +85,7 @@ class BookControllerTest {
     @WithMockUser
     void searchByISBN() throws Exception {
         BookDetailResponse bookDetailResponse = BookDetailResponse.builder()
-                                                                    .isbn("10001")
+                                                                    .isbn("1000000000001")
                                                                     .title("title")
                                                                     .subject(Subject.예술)
                                                                     .publisher("publisher")
@@ -100,9 +95,9 @@ class BookControllerTest {
                                                                     .price(10000)
                                                                     .build();
 
-        given(bookService.searchByISBN("10001")).willReturn(bookDetailResponse);
+        given(bookService.searchByISBN("1000000000001")).willReturn(bookDetailResponse);
 
-        mockMvc.perform(get("/api/v1/books/10001")
+        mockMvc.perform(get("/api/v1/books/1000000000001")
                         .with(csrf()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.resultCode").value(SUCCESS))
@@ -115,6 +110,6 @@ class BookControllerTest {
                 .andExpect(jsonPath("$.result.introduce").value(bookDetailResponse.getIntroduce()))
                 .andExpect(jsonPath("$.result.price").value(bookDetailResponse.getPrice()));
 
-        verify(bookService).searchByISBN("10001");
+        verify(bookService).searchByISBN("1000000000001");
     }
 }
