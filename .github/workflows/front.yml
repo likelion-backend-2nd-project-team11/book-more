@@ -44,8 +44,8 @@ jobs:
 #        run: yarn build
 #        working-directory: ${{ env.working-directory }}
 
-      - name: npm install for eslint
-        run: npm install
+#      - name: npm install for eslint
+#        run: npm install
 
       - name: npm install
         run: npm install
