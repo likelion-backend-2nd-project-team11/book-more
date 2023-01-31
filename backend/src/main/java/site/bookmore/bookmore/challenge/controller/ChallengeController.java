@@ -13,6 +13,8 @@ import site.bookmore.bookmore.challenge.dto.ChallengeResponse;
 import site.bookmore.bookmore.challenge.service.ChallengeService;
 import site.bookmore.bookmore.common.dto.ResultResponse;
 
+import javax.validation.constraints.Email;
+
 @RestController
 @RequestMapping("api/v1/challenges")
 @RequiredArgsConstructor
@@ -27,7 +29,7 @@ public class ChallengeController {
         return ResultResponse.success(challengeResponse);
     }
 
-    @PutMapping("/{id}")
+    @PatchMapping("/{id}")
     public ResultResponse<ChallengeResponse> modifyChallenge(Authentication authentication, @RequestBody ChallengeRequest challengeRequest, @PathVariable Long id) {
         String userName = authentication.getName();
         ChallengeResponse challengeResponse = challengeService.modify(userName, id, challengeRequest);
@@ -49,8 +51,9 @@ public class ChallengeController {
     }
 
     @GetMapping
-    public ResultResponse<Page<ChallengeDetailResponse>> listChallenge(@PageableDefault(size = 20, sort = "createdDatetime", direction = Sort.Direction.DESC) Pageable pageable) {
-        Page<ChallengeDetailResponse> challengeListResponses = challengeService.list(pageable);
+    public ResultResponse<Page<ChallengeDetailResponse>> listChallenge(Authentication authentication,@PageableDefault(size = 20, sort = "createdDatetime", direction = Sort.Direction.DESC) Pageable pageable) {
+        String userName = authentication.getName();
+        Page<ChallengeDetailResponse> challengeListResponses = challengeService.list(pageable,userName);
         return ResultResponse.success(challengeListResponses);
     }
 }

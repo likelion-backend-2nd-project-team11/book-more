@@ -5,6 +5,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import site.bookmore.bookmore.books.dto.ReviewPageResponse;
 import site.bookmore.bookmore.challenge.dto.ChallengeDetailResponse;
 import site.bookmore.bookmore.challenge.dto.ChallengeRequest;
 import site.bookmore.bookmore.challenge.dto.ChallengeResponse;
@@ -80,8 +81,9 @@ public class ChallengeService {
     }
 
 
-    public Page<ChallengeDetailResponse> list(Pageable pageable) {
-        Page<Challenge> page = challengeRepository.findAll(pageable);
-        return page.map(ChallengeDetailResponse::of);
+    public Page<ChallengeDetailResponse> list(Pageable pageable, String email) {
+        Page<Challenge> page = challengeRepository.findByOwner_Email(pageable,email);
+//        return page.map(ChallengeDetailResponse::of);
+        return challengeRepository.findByOwner_Email(pageable,email).map(ChallengeDetailResponse::of);
     }
 }
