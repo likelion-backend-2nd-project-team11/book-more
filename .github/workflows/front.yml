@@ -38,7 +38,7 @@ jobs:
 #        working-directory: ${{ env.working-directory }}
 #
       - name: Check
-        run: ls in /home/runner
+        run: ls in /home/runner/work/book-more/book-more
 #
 #      - name: Build
 #        run: yarn build
