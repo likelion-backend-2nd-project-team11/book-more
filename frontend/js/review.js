@@ -100,6 +100,6 @@ function fetchPostReviewLike(id, token) {
             alert(response.result.message);
         } else {
             console.log(response);
-        }동
+        }
     })
 }
