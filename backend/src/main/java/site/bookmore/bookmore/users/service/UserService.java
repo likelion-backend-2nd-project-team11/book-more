@@ -14,8 +14,10 @@ import site.bookmore.bookmore.common.exception.unauthorized.InvalidPasswordExcep
 import site.bookmore.bookmore.common.exception.unauthorized.InvalidTokenException;
 import site.bookmore.bookmore.security.provider.JwtProvider;
 import site.bookmore.bookmore.users.dto.*;
+import site.bookmore.bookmore.users.entity.Ranks;
 import site.bookmore.bookmore.users.entity.Role;
 import site.bookmore.bookmore.users.entity.User;
+import site.bookmore.bookmore.users.repositroy.RanksRepository;
 import site.bookmore.bookmore.users.repositroy.UserRepository;
 
 
@@ -26,6 +28,7 @@ public class UserService implements UserDetailsService {
     private final PasswordEncoder passwordEncoder;
     private final JwtProvider jwtProvider;
     private final UserRepository userRepository;
+    private final RanksRepository ranksRepository;
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
@@ -44,6 +47,19 @@ public class UserService implements UserDetailsService {
         });
         String encoded = passwordEncoder.encode(userJoinRequest.getPassword());
         User user = userRepository.save(userJoinRequest.toEntity(encoded));
+
+
+        // 회원 가입시 랭크 등록
+        Ranks ranksList = ranksRepository.findTop1ByOrderByRankingDesc();
+        Integer point = ranksList.getPoint();
+        Long ranking = ranksList.getRanking();
+        if (point != 0) {
+            point = 0;
+            ranking = ranking + 1;
+            ranksRepository.save(new Ranks(user.getId(), point, ranking));
+        } else {
+            ranksRepository.save(new Ranks(user.getId(), point, ranking));
+        }
 
         return UserJoinResponse.of(user);
     }

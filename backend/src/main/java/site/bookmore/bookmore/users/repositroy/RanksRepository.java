@@ -14,4 +14,6 @@ public interface RanksRepository extends JpaRepository<Ranks, Long> {
 
     List<Ranks> findTop100ByOrderByRankingAsc();
 
+    Ranks findTop1ByOrderByRankingDesc();
+
 }
