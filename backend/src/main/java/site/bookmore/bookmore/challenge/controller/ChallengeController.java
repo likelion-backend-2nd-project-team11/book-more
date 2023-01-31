@@ -17,6 +17,8 @@ import site.bookmore.bookmore.common.dto.ResultResponse;
 import site.bookmore.bookmore.common.support.annotation.Authorized;
 import springfox.documentation.annotations.ApiIgnore;
 
+import javax.validation.constraints.Email;
+
 @RestController
 @Api(tags = "3-챌린지")
 @RequestMapping("api/v1/challenges")
@@ -36,7 +38,7 @@ public class ChallengeController {
 
     @Authorized
     @ApiOperation(value = "수정")
-    @PutMapping("/{id}")
+    @PatchMapping("/{id}")
     public ResultResponse<ChallengeResponse> modifyChallenge(@ApiIgnore Authentication authentication, @RequestBody ChallengeRequest challengeRequest, @PathVariable Long id) {
         String userName = authentication.getName();
         ChallengeResponse challengeResponse = challengeService.modify(userName, id, challengeRequest);
@@ -64,8 +66,9 @@ public class ChallengeController {
     @Authorized
     @ApiOperation(value = "리스트 조회")
     @GetMapping
-    public ResultResponse<Page<ChallengeDetailResponse>> listChallenge(@PageableDefault(size = 20, sort = "createdDatetime", direction = Sort.Direction.DESC) Pageable pageable) {
-        Page<ChallengeDetailResponse> challengeListResponses = challengeService.list(pageable);
+    public ResultResponse<Page<ChallengeDetailResponse>> listChallenge(Authentication authentication,@PageableDefault(size = 20, sort = "createdDatetime", direction = Sort.Direction.DESC) Pageable pageable) {
+        String userName = authentication.getName();
+        Page<ChallengeDetailResponse> challengeListResponses = challengeService.list(pageable,userName);
         return ResultResponse.success(challengeListResponses);
     }
 }
