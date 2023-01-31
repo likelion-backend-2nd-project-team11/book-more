@@ -57,8 +57,8 @@ public class Book {
     public Book merge(Book book) {
         if (id == null) id = book.getId();
         if (title == null) title = book.getTitle();
-        if (authors.isEmpty()) authors = book.getAuthors();
-        if (translators.isEmpty()) translators = book.getTranslators();
+        if (authors.isEmpty()) this.addAuthors(book.getAuthors());
+        if (translators.isEmpty()) this.addTranslators(book.getTranslators());
         if (subject == null) subject = book.getSubject();
         if (publisher == null) publisher = book.getPublisher();
         if (pages == null) pages = book.getPages();
@@ -70,10 +70,12 @@ public class Book {
     }
 
     public void addAuthors(Set<Author> authors) {
+        authors.forEach(author -> author.setBook(this));
         this.authors.addAll(authors);
     }
 
     public void addTranslators(Set<Translator> translators) {
+        translators.forEach(translator -> translator.setBook(this));
         this.translators.addAll(translators);
     }
 }

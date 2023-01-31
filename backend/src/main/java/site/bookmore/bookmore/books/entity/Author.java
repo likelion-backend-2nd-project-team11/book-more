@@ -28,10 +28,9 @@ public class Author {
         this.book = book;
     }
 
-    public static Author of(String name, Book book) {
+    public static Author of(String name) {
         return Author.builder()
                 .name(name)
-                .book(book)
                 .build();
     }
 }
