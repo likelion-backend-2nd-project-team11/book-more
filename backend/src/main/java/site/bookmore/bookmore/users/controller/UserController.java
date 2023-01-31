@@ -42,6 +42,8 @@ public class UserController {
     /**
      * verify
      */
+//    @Authorized
+//    @ApiOperation(value = "회원 검증")
     @PostMapping("/verify")
     public ResultResponse<UserJoinResponse> verify(Authentication authentication) {
         String email = authentication.getName();
