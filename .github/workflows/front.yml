@@ -34,11 +34,12 @@ jobs:
       - name: Install Dependencies
         run: yarn install --frozen-lockfile
 
-      - name: Check
-        run: ls -a
+#      - name: Check
+#        run: ls -a
 
       - name: Build
         run: yarn build
+        build-root-directory: frontend/
 
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v1
