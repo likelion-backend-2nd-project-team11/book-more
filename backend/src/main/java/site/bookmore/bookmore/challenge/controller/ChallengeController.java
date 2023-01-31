@@ -29,7 +29,7 @@ public class ChallengeController {
         return ResultResponse.success(challengeResponse);
     }
 
-    @PutMapping("/{id}")
+    @PatchMapping("/{id}")
     public ResultResponse<ChallengeResponse> modifyChallenge(Authentication authentication, @RequestBody ChallengeRequest challengeRequest, @PathVariable Long id) {
         String userName = authentication.getName();
         ChallengeResponse challengeResponse = challengeService.modify(userName, id, challengeRequest);

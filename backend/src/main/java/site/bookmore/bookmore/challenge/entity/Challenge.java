@@ -32,7 +32,7 @@ public class Challenge extends BaseEntity {
     private String description;
 
     @NotNull
-    private int progress;
+    private Integer progress;
 
     @NotNull
     private boolean completed;
@@ -40,8 +40,22 @@ public class Challenge extends BaseEntity {
     @NotNull
     private LocalDate deadline;
 
-    public void update(Challenge update) {
-        this.title = update.title;
-        this.description = update.getDescription();
+    public void update(Challenge challenge) {
+        updateTitle(challenge.getTitle());
+        updateDescription(challenge.getDescription());
     }
+
+    private void updateTitle(String title){
+        if (title != null) {
+            this.title = title;
+        }
+    }
+
+    private void updateDescription(String description){
+        if(description != null){
+            this.description = description;
+        }
+    }
+
+
 }
