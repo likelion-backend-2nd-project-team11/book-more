@@ -19,10 +19,12 @@ public class BookSearchParams {
     private String query;
 
     @Min(1)
-    private Integer page;
+    @Builder.Default
+    private Integer page = 1;
 
     @Min(20)
-    private Integer size;
+    @Builder.Default
+    private Integer size = 20;
 
     public Pageable getPageable() {
         return PageRequest.of(page, size);
