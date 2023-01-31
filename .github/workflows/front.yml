@@ -69,7 +69,7 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_REGION: ${{ secrets.AWS_REGION }}
         run:
-          aws s3 cp sync ./dist s3://bookmore
+          aws s3 cp . s3://bookmore --recursive
 
 #      # CloudFront 적용하면 넣기
 #      - name: Invalidate CloudFront Cache
