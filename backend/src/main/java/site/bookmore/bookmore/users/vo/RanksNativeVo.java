@@ -6,4 +6,6 @@ public interface RanksNativeVo {
     Integer getPoint();
 
     Long getRanking();
+
+    String getNickname();
 }
