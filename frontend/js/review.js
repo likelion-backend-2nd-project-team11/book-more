@@ -1,14 +1,3 @@
-$('.form-control').keyup(function (e) {
-    var content = $(this).val();
-    $('#counter').html("(" + content.length + " / 최대 300자)");    //글자수 실시간 카운팅
-
-    if (content.length > 300) {
-        alert("최대 300자까지 입력 가능합니다.");
-        $(this).val(content.substring(0, 300));
-        $('#counter').html("(300 / 최대 300자)");
-    }
-});
-
 const labels = [
     '전문성',
     '재미',
