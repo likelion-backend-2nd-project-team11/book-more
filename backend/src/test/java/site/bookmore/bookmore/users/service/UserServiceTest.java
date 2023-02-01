@@ -15,6 +15,7 @@ import site.bookmore.bookmore.users.dto.UserJoinRequest;
 import site.bookmore.bookmore.users.dto.UserLoginRequest;
 import site.bookmore.bookmore.users.dto.UserUpdateRequest;
 import site.bookmore.bookmore.users.entity.User;
+import site.bookmore.bookmore.users.repositroy.RanksRepository;
 import site.bookmore.bookmore.users.repositroy.UserRepository;
 
 import java.time.LocalDate;
@@ -32,11 +33,13 @@ class UserServiceTest {
 
     private final UserRepository userRepository = mock(UserRepository.class);
 
+    private final RanksRepository ranksRepository = mock(RanksRepository.class);
+
     private final JwtProvider jwtProvider = mock(JwtProvider.class);
 
     private final PasswordEncoder passwordEncoder = mock(PasswordEncoder.class);
 
-    private final UserService userService = new UserService(passwordEncoder, jwtProvider, userRepository);
+    private final UserService userService = new UserService(passwordEncoder, jwtProvider, userRepository, ranksRepository);
 
     private final User user = User.builder()
             .id(0L)
@@ -56,6 +59,7 @@ class UserServiceTest {
 
         when(userRepository.save(any(User.class)))
                 .thenReturn(user);
+        when(ranksRepository.findTop1ByOrderByRankingDesc()).thenReturn(Optional.empty());
 
         Assertions.assertDoesNotThrow(() -> userService.join(new UserJoinRequest()));
 
@@ -185,7 +189,6 @@ class UserServiceTest {
                 .thenReturn(Optional.of(user));
 
 
-
         Assertions.assertDoesNotThrow(() -> userService.delete(user.getEmail(), 0L));
     }
 
@@ -203,4 +206,27 @@ class UserServiceTest {
 
         assertThat(abstractAppException.getErrorCode()).isEqualTo(INVALID_TOKEN);
     }
+
+    @Test
+    @DisplayName("회원 정보 검증 - 성공")
+    void verify_success() {
+        when(userRepository.findByEmail(user.getEmail()))
+                .thenReturn(Optional.of(user));
+
+        Assertions.assertDoesNotThrow(() -> userService.verify(user.getEmail()));
+    }
+
+    @Test
+    @DisplayName("회원 정보 검증 - 실패")
+    void verify_fail() {
+        when(userRepository.findByEmail(user.getEmail()))
+                .thenReturn(Optional.of(user));
+
+        AbstractAppException abstractAppException = assertThrows(UserNotFoundException.class, () -> {
+            userService.verify("test@gmail.com");
+        });
+
+        assertThat(abstractAppException.getErrorCode()).isEqualTo(USER_NOT_FOUND);
+    }
+
 }

@@ -14,8 +14,10 @@ import site.bookmore.bookmore.common.exception.unauthorized.InvalidPasswordExcep
 import site.bookmore.bookmore.common.exception.unauthorized.InvalidTokenException;
 import site.bookmore.bookmore.security.provider.JwtProvider;
 import site.bookmore.bookmore.users.dto.*;
+import site.bookmore.bookmore.users.entity.Ranks;
 import site.bookmore.bookmore.users.entity.Role;
 import site.bookmore.bookmore.users.entity.User;
+import site.bookmore.bookmore.users.repositroy.RanksRepository;
 import site.bookmore.bookmore.users.repositroy.UserRepository;
 
 
@@ -26,6 +28,7 @@ public class UserService implements UserDetailsService {
     private final PasswordEncoder passwordEncoder;
     private final JwtProvider jwtProvider;
     private final UserRepository userRepository;
+    private final RanksRepository ranksRepository;
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
@@ -35,6 +38,7 @@ public class UserService implements UserDetailsService {
     /**
      * 회원 가입
      */
+    @Transactional
     public UserJoinResponse join(UserJoinRequest userJoinRequest) {
         userRepository.findByEmail(userJoinRequest.getEmail()).ifPresent(user -> {
             throw new DuplicateEmailException();
@@ -44,6 +48,16 @@ public class UserService implements UserDetailsService {
         });
         String encoded = passwordEncoder.encode(userJoinRequest.getPassword());
         User user = userRepository.save(userJoinRequest.toEntity(encoded));
+
+
+        // 회원 가입시 랭크 등록
+        Ranks findRank = ranksRepository.findTop1ByOrderByRankingDesc().orElse(new Ranks(0L, 0, 1L));
+
+        Integer findPoint = findRank.getPoint();
+        Long findRanking = findRank.getRanking();
+        Long ranking = findPoint == 0 ? findRanking : findRanking + 1;
+
+        ranksRepository.save(new Ranks(user.getId(), 0, ranking));
 
         return UserJoinResponse.of(user);
     }
@@ -105,6 +119,11 @@ public class UserService implements UserDetailsService {
         userFindId.delete();
 
         return UserResponse.of(user, "회원 탈퇴 완료.");
+    }
+
+    public UserJoinResponse verify(String email) {
+        User user = userRepository.findByEmail(email).orElseThrow(UserNotFoundException::new);
+        return UserJoinResponse.of(user);
     }
 
 }

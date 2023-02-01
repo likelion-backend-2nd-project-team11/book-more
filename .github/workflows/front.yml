@@ -11,9 +11,14 @@ on:
   # 해당 옵션을 통해 사용자가 직접 Actions 탭에서 Workflow를 실행시킬 수 있음
   workflow_dispatch:
 
+defaults:
+  run:
+    working-directory: ./frontend
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout source code
         uses: actions/checkout@v3
@@ -29,8 +34,9 @@ jobs:
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_REGION: ${{ secrets.AWS_REGION }}
         run:
-          aws s3 cp --recursive --region ap-northeast-2 build s3://bookmore.site
+          aws s3 cp . s3://bookmore --recursive
 
 #      # CloudFront 적용하면 넣기
 #      - name: Invalidate CloudFront Cache

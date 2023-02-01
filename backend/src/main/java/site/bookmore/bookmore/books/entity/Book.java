@@ -43,13 +43,13 @@ public class Book {
 
     private String chapter;
 
-    @Column(length = 300)
+    @Column(length = 600)
     private String introduce;
 
-    private int price;
+    private Integer price;
 
     @Column(nullable = false)
-    private boolean cached;
+    private Boolean cached = false;
 
     @CreatedDate
     private LocalDateTime createdDatetime;
@@ -57,23 +57,25 @@ public class Book {
     public Book merge(Book book) {
         if (id == null) id = book.getId();
         if (title == null) title = book.getTitle();
-        if (authors.isEmpty()) authors = book.getAuthors();
-        if (translators.isEmpty()) translators = book.getTranslators();
+        if (authors.isEmpty()) this.addAuthors(book.getAuthors());
+        if (translators.isEmpty()) this.addTranslators(book.getTranslators());
         if (subject == null) subject = book.getSubject();
         if (publisher == null) publisher = book.getPublisher();
         if (pages == null) pages = book.getPages();
         if (image == null) image = book.getImage();
         if (chapter == null) chapter = book.getChapter();
         if (introduce == null) introduce = book.getIntroduce();
-        if (price == 0) price = book.getPrice();
+        if (price == null) price = book.getPrice();
         return this;
     }
 
     public void addAuthors(Set<Author> authors) {
+        authors.forEach(author -> author.setBook(this));
         this.authors.addAll(authors);
     }
 
     public void addTranslators(Set<Translator> translators) {
+        translators.forEach(translator -> translator.setBook(this));
         this.translators.addAll(translators);
     }
 }

@@ -76,7 +76,7 @@ class ChallengeControllerTest {
 
         when(challengeService.modify(any(), any(), any())).thenReturn(new ChallengeResponse("Message", 1L));
 
-        mockMvc.perform(put("/api/v1/challenges/1")
+        mockMvc.perform(patch("/api/v1/challenges/1")
                         .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsBytes(challengeRequest)))
@@ -110,7 +110,7 @@ class ChallengeControllerTest {
         when(challengeService.modify(any(), any(), any()))
                 .thenThrow(new ReviewNotFoundException());
 
-        mockMvc.perform(put("/api/v1/challenges/1")
+        mockMvc.perform(patch("/api/v1/challenges/1")
                         .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsBytes(challengeRequest)))
@@ -127,7 +127,7 @@ class ChallengeControllerTest {
         when(challengeService.modify(any(), any(), any()))
                 .thenThrow(new UserNotFoundException());
 
-        mockMvc.perform(put("/api/v1/challenges/1")
+        mockMvc.perform(patch("/api/v1/challenges/1")
                         .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsBytes(challengeRequest)))
@@ -144,7 +144,7 @@ class ChallengeControllerTest {
         when(challengeService.modify(any(), any(), any()))
                 .thenThrow(new DatabaseException());
 
-        mockMvc.perform(put("/api/v1/challenges/1")
+        mockMvc.perform(patch("/api/v1/challenges/1")
                         .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsBytes(challengeRequest)))
