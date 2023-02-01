@@ -99,16 +99,18 @@ function fetchPostReviewLike(id, token) {
     fetch(`${BASE_URL}/api/v1/books/reviews/${id}/likes`, {
         method: 'POST',
         headers: {
-            "Authorization": "Bearer " + token,
+            "Authorization": token ? "Bearer " + token : '',
         },
     }).then((response) => response.json())
     .then((response) => {
         const resultCode = response.resultCode;
+        const errorCode = response.result.errorCode;
         if (resultCode === 'SUCCESS') {
             alert(response.result);
             window.location.reload();
         } else if (resultCode === 'ERROR') {
             alert(response.result.message);
+            if (errorCode === 'USER_NOT_LOGGED_IN' || errorCode === 'INVALID_TOKEN') window.location.href='../users/login.html';
         } else {
             console.log(response);
         }
