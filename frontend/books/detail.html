@@ -19,70 +19,70 @@
     <title>BookMore</title>
 </head>
 <body class="bg-light vh-100">
-<!-- ------------------------------------------------------------------------------------------------Top Bar-->
-<script src="../js/auth.js"></script>
-<script>
-    const token = getToken();
-    const isLoggedIn = !!token;
-    if(isLoggedIn) fetchVerifyToken(token);
-</script>
-<nav class="navbar fixed-top bg-family-color">
-    <div class="container-fluid">
-        <a class="navbar-brand en-font" href="../index.html">BookMore</a>
-
-        <div class="d-md-block">
-            <!--로그인 드롭다운------------------>
-            <div class="dropdown-center bm-auth-dropdown" style="float:left;">
-                <button class="btn dropdown-toggle btn-lg" style="color: #FFFFFF" type="button"
-                        data-bs-toggle="dropdown" aria-expanded="false">
-                    <i class="fa-solid fa-right-to-bracket"></i>
-                </button>
-                <ul class="dropdown-menu dropdown-menu-end">
-                    <li class="unauthorized-component"><a class="dropdown-item"  href="../users/join.html">회원가입</a></li>
-                    <li class="unauthorized-component"><a class="dropdown-item" href="../users/login.html">로그인</a></li>
-                    <li class="authorized-component"><a class="dropdown-item" onclick="deleteToken()">로그아웃</a></li>
-                </ul>
-            </div>
-            <!----------------------->
-            <div class="authorized-component" style="float:left;">
-                <button class="btn btn-lg" style="color: #FFFFFF" type="button"><i
-                        class="fa-solid fa-bell"></i></button>
-            </div>
-
-            <button class="btn btn-lg" style="color: #FFFFFF" type="button" data-bs-toggle="offcanvas"
-                    data-bs-target="#offcanvasRight" aria-controls="offcanvasRight"><i
-                    class="fa-solid fa-bars"></i></button>
-        </div>
-    </div>
-
-    <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
-        <div class="offcanvas-header pb-5">
-            <button type="button" class="btn-close ms-auto" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-        </div>
-
-        <div>
-            <a class="btn w-100 authorized-component" href="../users/mypage.html">
-                마이페이지
-            </a>
-            <a class="btn w-100 authorized-component" href="../users/detail.html">
-                마이피드
-            </a>
-            <div class="btn w-100">
-                랭킹
-            </div>
-            <a class="btn w-100 authorized-component" href="../challenge/index.html">
-                챌린지
-            </a>
-        </div>
-    </div>
+    <!-- ------------------------------------------------------------------------------------------------Top Bar-->
+    <script src="../js/auth.js"></script>
     <script>
-        const authorizedComponent = document.querySelectorAll(".authorized-component");
-        const unauthorizedComponent = document.querySelectorAll(".unauthorized-component");
-        authorizedComponent.forEach(ele => ele.style.display = isLoggedIn ? ele.style.display : 'none')
-        unauthorizedComponent.forEach(ele => ele.style.display = !isLoggedIn ? ele.style.display : 'none')
+        const token = getToken();
+        const isLoggedIn = !!token;
+        if(isLoggedIn) fetchVerifyToken(token);
     </script>
-</nav>
-<!-- --------------------------------------------------------------------------------------------------------->
+    <nav class="navbar fixed-top bg-family-color">
+        <div class="container-fluid">
+            <a class="navbar-brand en-font" href="../index.html">BookMore</a>
+
+            <div class="d-md-block">
+                <!--로그인 드롭다운------------------>
+                <div class="dropdown-center bm-auth-dropdown" style="float:left;">
+                    <button class="btn dropdown-toggle btn-lg" style="color: #FFFFFF" type="button"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fa-solid fa-right-to-bracket"></i>
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        <li class="unauthorized-component"><a class="dropdown-item"  href="../users/join.html">회원가입</a></li>
+                        <li class="unauthorized-component"><a class="dropdown-item" href="../users/login.html">로그인</a></li>
+                        <li class="authorized-component"><a class="dropdown-item" onclick="deleteToken()">로그아웃</a></li>
+                    </ul>
+                </div>
+                <!----------------------->
+                <div class="authorized-component" style="float:left;">
+                    <a class="btn btn-lg" style="color: #FFFFFF" type="button" href="../notifications/index.html"><i
+                            class="fa-solid fa-bell"></i></a>
+                </div>
+
+                <button class="btn btn-lg" style="color: #FFFFFF" type="button" data-bs-toggle="offcanvas"
+                        data-bs-target="#offcanvasRight" aria-controls="offcanvasRight"><i
+                        class="fa-solid fa-bars"></i></button>
+            </div>
+        </div>
+
+        <div class="offcanvas offcanvas-end side-bar-font" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
+            <div class="offcanvas-header pb-5">
+                <button type="button" class="btn-close ms-auto" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+            </div>
+
+            <div>
+                <a class="bm-scale-animation py-3 text-hover-family-color btn w-100 authorized-component fs-5 fw-bold" href="../users/mypage.html">
+                    마이페이지
+                </a>
+                <a class="bm-scale-animation py-3 text-hover-family-color btn w-100 authorized-component fs-5 fw-bold" href="../users/detail.html">
+                    마이피드
+                </a>
+                <a class="bm-scale-animation py-3 text-hover-family-color btn w-100 fs-5 fw-bold" href="../ranks.html">
+                    랭킹
+                </a>
+                <a class="bm-scale-animation py-3 text-hover-family-color btn w-100 authorized-component fs-5 fw-bold" href="../challenge/index.html">
+                    챌린지
+                </a>
+            </div>
+        </div>
+        <script>
+            const authorizedComponent = document.querySelectorAll(".authorized-component");
+            const unauthorizedComponent = document.querySelectorAll(".unauthorized-component");
+            authorizedComponent.forEach(ele => ele.style.display = isLoggedIn ? ele.style.display : 'none')
+            unauthorizedComponent.forEach(ele => ele.style.display = !isLoggedIn ? ele.style.display : 'none')
+        </script>
+    </nav>
+    <!-- --------------------------------------------------------------------------------------------------------->
 
 <div class="container pt-5 w-100 d-block d-xxl-flex">
     <!-- 도서 상세 정보--------------------------------- -->

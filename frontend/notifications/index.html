@@ -1,32 +1,27 @@
 <!doctype html>
 <html lang="ko">
+
 <head>
-    <meta charset="UTF-8">
+    <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
-    <link
-            rel="stylesheet"
-            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css"
-            integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g=="
-            crossorigin="anonymous"
-            referrerpolicy="no-referrer"
-    />
-
-    <link rel="stylesheet" href="../css/top-bar.css"/>
-    <link rel="stylesheet" href="../css/index.css"/>
-    <script src="../js/book.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css"
+          integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g=="
+          crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="../css/top-bar.css" />
+    <script defer src="../js/notifications.js"></script>
     <script src="../js/constant.js"></script>
-    <title>BookMore</title>
+    <title>Notifications</title>
 </head>
-<body class="bg-light">
-<div class="container pt-5">
+
+<body class="body-font bg-light">
     <!-- ------------------------------------------------------------------------------------------------Top Bar-->
     <script src="../js/auth.js"></script>
     <script>
         const token = getToken();
         const isLoggedIn = !!token;
-        if(isLoggedIn) fetchVerifyToken(token);
+        if (isLoggedIn) fetchVerifyToken(token);
     </script>
     <nav class="navbar fixed-top bg-family-color">
         <div class="container-fluid">
@@ -86,28 +81,70 @@
     </nav>
     <!-- --------------------------------------------------------------------------------------------------------->
 
-    <h1 class="text-center mt-5 mx-auto logo">BookMore</h1>
-    <!-- 검색--------------------------------- -->
-    <div class="container search-box my-5 d-flex">
-        <input class="ms-auto px-3 w-50 rounded-pill form-control bm-query" type="text" placeholder="검색어를 입력해 주세요.">
-        <button class="btn btn-outline-secondary ms-3 me-auto search-btn" onclick="search({query: getQuery()})"><i
-                class="fas fa-search"></i></button>
+<!---------------------------------------------------------------------------------------------Container1-->
+
+<div class="d-flex justify-content-center mt-5 w-25" style="float:left">
+    <div class="container px-5 py-3 my-5">
+
+        <ul class="list-group">
+            <a href="#"
+               class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                새로운 알림
+                <span class="badge bg-danger rounded-pill">3</span>
+            </a>
+
+
+            <a href="#"
+               class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                모든 알림
+            </a>
+        </ul>
+
     </div>
-    <!-- ------------------------------------- -->
-    <!-- 도서 리스트--------------------------------- -->
-    <div class="container contents-wrapper w-100 pb-5">
-        <div class="books-shelf row row-cols-2 row-cols-lg-3 row-cols-xl-4 justify-content-start">
+</div>
+
+<!---------------------------------------------------------------------------------------------Container2-->
+<div class="d-flex justify-content-center mt-5 w-50" style="float:left">
+    <div class="container px-5 py-3 my-5">
+
+        <div class="list-group">
+            <a href="#" class="list-group-item list-group-item-action">
+                <div class="d-flex w-100 justify-content-between">
+                    <h5 class="mb-1">나의 리뷰에 현보님이 좋아요를 눌렀어요.</h5>
+                    <small class="text-muted">3분 전</small>
+                </div>
+                <p class="mb-1">쉽게 배우는 자바 프로그래밍</p>
+            </a>
+
+            <a href="#" class="list-group-item list-group-item-action">
+                <div class="d-flex w-100 justify-content-between">
+                    <h5 class="mb-1">민우님이 새로운 리뷰를 등록했어요.</h5>
+                    <small class="text-muted">4일 전</small>
+                </div>
+                <p class="mb-1">배워서 바로 쓰는 스프링 부트2</p>
+
+            </a>
+            <a href="#" class="list-group-item list-group-item-action">
+                <div class="d-flex w-100 justify-content-between">
+                    <h5 class="mb-1">나의 리뷰에 지영님이 좋아요를 눌렀어요.</h5>
+                    <small class="text-muted">4일 전</small>
+                </div>
+                <p class="mb-1">쉽게 배우는 자바 프로그래밍</p>
+            </a>
+            <a href="#" class="list-group-item list-group-item-action">
+                <div class="d-flex w-100 justify-content-between">
+                    <h5 class="mb-1">나의 리뷰에 주완님이 좋아요를 눌렀어요.</h5>
+                    <small class="text-muted">5일 전</small>
+                </div>
+                <p class="mb-1">쉽게 배우는 자바 프로그래밍</p>
+            </a>
         </div>
     </div>
-    <!-- ------------------------------------- -->
 </div>
-<script>
-    setQueryInputVal(urlSearchParams.get('query'));
-    fetchSearchBooks(urlSearchParams.get('query'), urlSearchParams.get('page'), urlSearchParams.get('size'));
-    document.querySelector(".bm-query").addEventListener('keyup', event => submitQueryHandler(event));
-</script>
+
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4"
         crossorigin="anonymous"></script>
 </body>
+
 </html>
