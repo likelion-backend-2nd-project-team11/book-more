@@ -9,6 +9,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.validation.constraints.PositiveOrZero;
 
 @Entity
 @Builder
@@ -19,8 +20,11 @@ public class FollowCount {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @PositiveOrZero
     private Integer followerCount;
 
+    @PositiveOrZero
     private Integer followingCount;
 
     public void plusFollowerCount(Integer followerCount) {
