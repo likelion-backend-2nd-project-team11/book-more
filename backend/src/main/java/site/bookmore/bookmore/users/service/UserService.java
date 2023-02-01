@@ -126,4 +126,14 @@ public class UserService implements UserDetailsService {
         return UserJoinResponse.of(user);
     }
 
+    public UserDetailResponse detail(Long id) {
+        User user = userRepository.findById(id)
+                .orElseThrow(UserNotFoundException::new);
+        return UserDetailResponse.builder()
+                .nickname(user.getNickname())
+                .followingCount(user.getFollowCount().getFollowingCount())
+                .followerCount(user.getFollowCount().getFollowerCount())
+                .build();
+    }
+
 }

@@ -50,7 +50,7 @@ public class RanksService {
         for (int i = 0; i < rankList.size(); i++) {
             Long ranking = rankList.get(i).getRanking();
             log.info("ranking : {}", ranking);
-            ranksRepository.save(new Ranks(rankList.get(i).getId(), rankList.get(i).getPoint(), ranking, rankList.get(i).getNickname()));
+            ranksRepository.save(Ranks.of(rankList.get(i).getId(), rankList.get(i).getPoint(), ranking, rankList.get(i).getNickname()));
         }
     }
 

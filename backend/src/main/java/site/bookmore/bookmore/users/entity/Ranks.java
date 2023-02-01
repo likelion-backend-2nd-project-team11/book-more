@@ -4,6 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import site.bookmore.bookmore.books.entity.Likes;
+import site.bookmore.bookmore.books.entity.Review;
 
 import javax.persistence.*;
 
