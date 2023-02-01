@@ -1,0 +1,36 @@
+.bm-all{
+    margin-top: 250px;
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    padding: 50px;
+}
+
+.bm-account{
+    margin-top: 30px;
+}
+
+.bm-width{
+    width: 300px;
+    float: left;
+}
+
+.bm-button{
+    float: right;
+    border: none;
+    border-radius: 0.7em;
+}
+
+.bm-editBtn{
+    float: right;
+    border: none;
+    border-radius: 0.7em;
+}
+
+.bm-ALL{
+    width: 450px;
+    margin: 0 auto;
+    border-radius: 0.7em;
+    box-shadow: 0px 0px 10px rgba(64, 63, 63, 0.2);
+}
