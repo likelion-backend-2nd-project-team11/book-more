@@ -49,6 +49,11 @@ public class User extends BaseEntity implements UserDetails {
     @Column(nullable = false)
     private boolean enabled = true;
 
+    @OneToOne(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+    @JoinColumn(name = "follow_count_id")
+    private FollowCount followCount;
+
+
     @Builder
     public User(Long id, String email, String password, Role role, String nickname, Tier tier, LocalDate birth) {
         this.id = id;
@@ -58,6 +63,10 @@ public class User extends BaseEntity implements UserDetails {
         this.tier = tier;
         this.birth = birth;
         this.role = role == null ? Role.ROLE_USER : role;
+        this.followCount = FollowCount.builder()
+                .followerCount(0)
+                .followingCount(0)
+                .build();
     }
 
     public void update(User user) {
