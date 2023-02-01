@@ -91,8 +91,10 @@ public class FollowService {
 
         targetFollow.delete();
 
-        user.getFollowCount().minusFollowingCount(user.getFollowCount().getFollowingCount());
-        targetUser.getFollowCount().minusFollowerCount(targetUser.getFollowCount().getFollowerCount());
+        if(user.getFollowCount().getFollowingCount() >= 1 && targetUser.getFollowCount().getFollowerCount() >= 1){
+            user.getFollowCount().minusFollowingCount(user.getFollowCount().getFollowingCount());
+            targetUser.getFollowCount().minusFollowerCount(targetUser.getFollowCount().getFollowerCount());
+        }
 
         return String.format("%s 님을 언팔로우 하셨습니다.", id);
     }
