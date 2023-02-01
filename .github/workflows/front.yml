@@ -18,24 +18,10 @@ defaults:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    env:
-      working-directory: ./frontend
+
     steps:
       - name: Checkout source code
         uses: actions/checkout@v3
-
-      # Node v 확인
-      - name: Check Node v
-        run: node -v
-
-      # 실행 속도를 빠르게 하기 위해 설치된 Node 모듈을 캐시하도록 설정
-      - name: Cache node modules
-        uses: actions/cache@v2
-        with:
-          path: ~/.npm
-          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-           ${{ runner.os }}-node-
 
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v1
@@ -50,7 +36,7 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_REGION: ${{ secrets.AWS_REGION }}
         run:
-          aws s3 cp . s3://bookmore --recursive
+          aws s3 sync . s3://bookmore --delete
 
 #      # CloudFront 적용하면 넣기
 #      - name: Invalidate CloudFront Cache
