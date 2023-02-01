@@ -62,8 +62,8 @@ public class FollowService {
         follow.undelete();
         followRepository.save(follow);
 
-        user.getFollowCount().plusFollowingCount(user.getFollowCount().getFollowingCount());
-        targetUser.getFollowCount().plusFollowerCount(targetUser.getFollowCount().getFollowerCount());
+        user.getFollowCount().plusFollowingCount();
+        targetUser.getFollowCount().plusFollowerCount();
 
         publisher.publishEvent(AlarmCreate.of(AlarmType.NEW_FOLLOW, follow.getFollowing(), user, follow.getId()));
 
@@ -91,8 +91,8 @@ public class FollowService {
 
         targetFollow.delete();
 
-        user.getFollowCount().minusFollowingCount(user.getFollowCount().getFollowingCount());
-        targetUser.getFollowCount().minusFollowerCount(targetUser.getFollowCount().getFollowerCount());
+        user.getFollowCount().minusFollowingCount();
+        targetUser.getFollowCount().minusFollowerCount();
 
         return String.format("%s 님을 언팔로우 하셨습니다.", id);
     }

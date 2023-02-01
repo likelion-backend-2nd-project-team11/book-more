@@ -27,19 +27,19 @@ public class FollowCount {
     @PositiveOrZero
     private Integer followingCount;
 
-    public void plusFollowerCount(Integer followerCount) {
-        this.followerCount = followerCount + 1;
+    public void plusFollowerCount() {
+        this.followerCount++;
     }
 
-    public void minusFollowerCount(Integer followerCount) {
-        this.followerCount = followerCount - 1;
+    public void minusFollowerCount() {
+        this.followerCount--;
     }
 
-    public void plusFollowingCount(Integer followingCount) {
-        this.followingCount = followingCount + 1;
+    public void plusFollowingCount() {
+        this.followingCount++;
     }
 
-    public void minusFollowingCount(Integer followingCount) {
-        this.followingCount = followingCount - 1;
+    public void minusFollowingCount() {
+        this.followingCount--;
     }
 }
