@@ -1,5 +1,3 @@
-const urlSearchParams = new URLSearchParams(location.search);
-
 function search({query, page, size, atHome}) {
     if (query.length < 2) {
         alert('검색어를 확인해주세요. [최소 두 글자]');

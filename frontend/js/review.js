@@ -95,7 +95,7 @@ function fetchPostReviewLike(id, token) {
         const resultCode = response.resultCode;
         const errorCode = response.result.errorCode;
         if (resultCode === 'SUCCESS') {
-            alert(response.result);
+            alert(response.result.message);
             window.location.reload();
         } else if (resultCode === 'ERROR') {
             alert(response.result.message);
@@ -104,4 +104,51 @@ function fetchPostReviewLike(id, token) {
             console.log(response);
         }
     })
+}
+
+function fetchPostReview(isbn) {
+    const body = document.getElementById('body-input').value;
+    const spoiler = document.getElementById('spoiler-check').checked;
+    const professionalism = document.getElementById('professionalism-value').value;
+    const fun = document.getElementById('fun-value').value;
+    const readability = document.getElementById('readability-value').value;
+    const collectible = document.getElementById('collectible-value').value;
+    const difficulty = document.getElementById('difficulty-value').value;
+
+    const data = {
+        body,
+        spoiler,
+        chart : {
+            professionalism,
+            fun,
+            readability,
+            collectible,
+            difficulty
+        }
+    };
+
+    console.log(isbn);
+    console.log(data);
+
+    fetch(`${BASE_URL}/api/v1/books/${isbn}/reviews`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            "Authorization": token ? "Bearer " + token : '',
+        },
+        body: JSON.stringify(data),
+    }).then((response) => response.json())
+        .then((response) => {
+            const resultCode = response.resultCode;
+            const errorCode = response.result.errorCode;
+            if (resultCode === 'SUCCESS') {
+                alert(response.result);
+                window.location.href=`detail.html?isbn=${isbn}`;
+            } else if (resultCode === 'ERROR') {
+                alert(response.result.message);
+                if (errorCode === 'USER_NOT_LOGGED_IN' || errorCode === 'INVALID_TOKEN') window.location.href='../users/login.html';
+            } else {
+                console.log(response);
+            }
+        })
 }
