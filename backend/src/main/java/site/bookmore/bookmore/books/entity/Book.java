@@ -43,7 +43,7 @@ public class Book {
 
     private String chapter;
 
-    @Column(length = 600)
+    @Column(length = 2000)
     private String introduce;
 
     private Integer price;
