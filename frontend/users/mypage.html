@@ -22,8 +22,12 @@
     <script>
         const token = getToken();
         const isLoggedIn = !!token;
-        if(isLoggedIn) fetchVerifyToken(token);
-        if(!isLoggedIn) window.history.back();
+        if(isLoggedIn) {
+            fetchVerifyToken(token);
+        } else {
+            alert("로그인이 필요합니다.");
+            window.history.back();
+        }
     </script>
     <nav class="navbar fixed-top bg-family-color">
         <div class="container-fluid">

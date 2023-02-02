@@ -26,7 +26,10 @@
         const isLoggedIn = !!token;
         if(isLoggedIn) fetchVerifyToken(token);
         const isbn = urlSearchParams.get('isbn');
-        if (!isbn) window.history.back();
+        if (!isbn) {
+            alert("잘못된 접근입니다.");
+            window.history.back();
+        }
     </script>
     <nav class="navbar fixed-top bg-family-color">
         <div class="container-fluid">

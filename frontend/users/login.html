@@ -21,7 +21,10 @@
     <script>
         const token = getToken();
         const isLoggedIn = !!token;
-        if(isLoggedIn) window.history.back();
+        if(isLoggedIn) {
+            alert("잘못된 접근입니다.");
+            window.history.back();
+        }
     </script>
     <nav class="navbar fixed-top bg-family-color">
         <div class="container-fluid">
