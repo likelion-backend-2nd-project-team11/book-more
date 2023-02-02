@@ -38,24 +38,35 @@ function fetchGetReviewsByBook(isbn) {
         const wrapper = document.querySelector(".bm-reviews-wrapper");
         const reviews = res.result.content;
         reviews.forEach(review => {
-            wrapper.insertAdjacentHTML('beforeend', `<article class="review-item mb-5 p-3 pb-5 shadow bg-white">
-                <div class="review-content  d-flex">
-                <canvas class="chart me-3" width="200px" height="200px" id="chart-${review.id}"></canvas>
-                <div>
-                    <h4>${review.nickname}</h4>
-                    <p>
-                        ${review.body}
-                    </p>
-                </div>
-                </div>
-                <div class="review-footer">
-                    <hr/>
-                    <div class="float-start">${review.createdDatetime}</div>
-                    <button class="btn btn-outline-danger float-end" onclick="fetchPostReviewLike(${review.id}, token)">
-                        ${review.likesCount} <i class="fa-regular fa-heart"></i>
-                    </button>
-                </div>
-            </article>`);
+            const origin = new Date(review.createdDatetime);
+            const year = origin.getFullYear();
+            const month = origin.getMonth();
+            const date = origin.getDate();
+            const hour = origin.getHours();
+            const minute = origin.getMinutes();
+            const second = origin.getSeconds();
+            const utcDate = new Date(Date.UTC(year, month, date, hour, minute, second));
+            const dateString = utcDate.toLocaleString();
+            wrapper.insertAdjacentHTML('beforeend',
+            `<article class="review-item mb-5 p-3 pb-5 shadow bg-white">
+                    <div class="review-content  d-flex">
+                    <canvas class="chart me-3" width="200px" height="200px" id="chart-${review.id}"></canvas>
+                    <div>
+                        <h4>${review.nickname}</h4>
+                        <p>
+                            ${review.body}
+                        </p>
+                    </div>
+                    </div>
+                    <div class="review-footer">
+                        <hr/>
+                        <div class="float-start">${dateString}</div>
+                        <button class="btn btn-outline-danger float-end" onclick="fetchPostReviewLike(${review.id}, token)">
+                            ${review.likesCount} <i class="fa-regular fa-heart"></i>
+                        </button>
+                    </div>
+                </article>`
+            );
 
             new Chart(document.getElementById(`chart-${review.id}`), {
                 type: 'radar',
