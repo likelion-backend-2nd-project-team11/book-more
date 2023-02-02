@@ -1,4 +1,4 @@
-package site.bookmore.bookmore.users.oauth2.service;
+package site.bookmore.bookmore.oauth2.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -10,7 +10,7 @@ import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
-import site.bookmore.bookmore.users.entity.User;
+import site.bookmore.bookmore.oauth2.util.mapper.UserMapper;
 import site.bookmore.bookmore.users.repositroy.UserRepository;
 
 import java.util.Collections;
@@ -40,14 +40,8 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
 
         log.info("{}", oAuth2Attribute);
 
-        User user = new User(oAuth2Attribute.getEmail());
-        if (userRepository.findByEmail(user.getEmail()) != null) {
-            userRepository.save(user);
-        }
-        userRepository.save(user);
+        userRepository.findByEmail(oAuth2Attribute.getEmail()).orElseGet(() -> userRepository.save(UserMapper.of(oAuth2User)));
 
-
-//        var memberAttribute = oAuth2Attribute.convertToMap();
         Map<String, Object> memberAttribute = oAuth2Attribute.convertToMap();
 
         return new DefaultOAuth2User(

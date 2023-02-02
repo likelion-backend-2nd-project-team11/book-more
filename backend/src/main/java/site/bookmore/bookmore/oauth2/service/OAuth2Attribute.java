@@ -1,4 +1,4 @@
-package site.bookmore.bookmore.users.oauth2.service;
+package site.bookmore.bookmore.oauth2.service;
 
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -37,7 +37,7 @@ class OAuth2Attribute {
         return OAuth2Attribute.builder()
                 .name((String) attributes.get("name"))
                 .email((String) attributes.get("email"))
-                .picture((String)attributes.get("picture"))
+                .picture((String) attributes.get("picture"))
                 .attributes(attributes)
                 .attributeKey(attributeKey)
                 .build();
@@ -51,7 +51,7 @@ class OAuth2Attribute {
         return OAuth2Attribute.builder()
                 .name((String) kakaoProfile.get("nickname"))
                 .email((String) kakaoAccount.get("email"))
-                .picture((String)kakaoProfile.get("profile_image_url"))
+                .picture((String) kakaoProfile.get("profile_image_url"))
                 .attributes(kakaoAccount)
                 .attributeKey(attributeKey)
                 .build();
