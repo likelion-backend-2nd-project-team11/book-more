@@ -64,20 +64,20 @@ function fetchSearchBookDetail(isbn) {
                         <img class="me-5 shadow" height="240px" src="${book.image}"/>
                         <div class="info">
                             <h2>${book.title}</h2>
-                            <p>가격 : ${book.price}원</p>
-                            <p>페이지 : ${book.pages}</p>
-                            <p>저자 : ${book.authors}</p>
-                            <p>번역 : ${book.translators}</p>
-                            <p>출판사 : ${book.publisher}</p>
+                            <p>가격 : ${book.price || '-'}원</p>
+                            <p>페이지 : ${book.pages || '-'}</p>
+                            <p>저자 : ${book.authors || '-'}</p>
+                            <p>번역 : ${book.translators || '-'}</p>
+                            <p>출판사 : ${book.publisher || '-'}</p>
                         </div>
                     </div>
                     <hr/>
                     <div>
                         <h4>책소개</h4>
-                        <p>${book.introduce}...</p>
+                        <p>${book.introduce || '-'}</p>
                         <h4>목차</h4>
                         <p class="desc">
-                            ${book.chapter}
+                            ${book.chapter || '-'}
                         </p>
                     </div>
                 </div>`;
