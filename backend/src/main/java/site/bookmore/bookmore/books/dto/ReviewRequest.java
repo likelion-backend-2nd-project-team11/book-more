@@ -18,7 +18,7 @@ public class ReviewRequest {
     private String body;
     private boolean spoiler;
     @Valid
-    private ChartRequest chartRequest;
+    private ChartRequest chart;
 
     // 도서 리뷰 등록
     public Review toEntity(User user, Book book) {
@@ -27,7 +27,7 @@ public class ReviewRequest {
                 .book(book)
                 .body(body)
                 .spoiler(spoiler)
-                .chart(chartRequest.toEntity())
+                .chart(chart.toEntity())
                 .likesCount(0)
                 .build();
     }
@@ -37,7 +37,7 @@ public class ReviewRequest {
         return Review.builder()
                 .body(body)
                 .spoiler(spoiler)
-                .chart(chartRequest.toEntity())
+                .chart(chart.toEntity())
                 .build();
     }
 }
