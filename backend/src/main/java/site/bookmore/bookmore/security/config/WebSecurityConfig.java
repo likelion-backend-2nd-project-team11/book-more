@@ -31,6 +31,7 @@ public class WebSecurityConfig {
     public static final String[] POST_AUTHENTICATED_REGEX_LIST = {
             "^/api/v1/users/\\d{0,}$",
             "^/api/v1/users/\\d{0,}/follow$",
+            "^/api/v1/users/verify$",
             "^/api/v1/challenges$",
             "^/api/v1/books/\\w{0,}/reviews$",
             "^/api/v1/books/reviews/\\d{0,}/likes$",
