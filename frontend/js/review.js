@@ -52,7 +52,7 @@ function fetchGetReviewsByBook(isbn) {
                     <div class="review-content  d-flex">
                     <canvas class="chart me-3" width="200px" height="200px" id="chart-${review.id}"></canvas>
                     <div>
-                        <h4>${review.nickname}</h4>
+                        <h4>@${review.nickname}</h4>
                         <p>
                             ${review.body}
                         </p>
@@ -106,7 +106,7 @@ function fetchPostReviewLike(id, token) {
         const resultCode = response.resultCode;
         const errorCode = response.result.errorCode;
         if (resultCode === 'SUCCESS') {
-            alert(response.result.message);
+            alert(response.result);
             window.location.reload();
         } else if (resultCode === 'ERROR') {
             alert(response.result.message);
@@ -153,7 +153,7 @@ function fetchPostReview(isbn) {
             const resultCode = response.resultCode;
             const errorCode = response.result.errorCode;
             if (resultCode === 'SUCCESS') {
-                alert(response.result);
+                alert(response.result.message);
                 window.location.href=`detail.html?isbn=${isbn}`;
             } else if (resultCode === 'ERROR') {
                 alert(response.result.message);
