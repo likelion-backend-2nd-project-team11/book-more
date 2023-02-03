@@ -1,7 +1,6 @@
 package site.bookmore.bookmore.challenge.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.hamcrest.core.Is;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,20 +21,13 @@ import site.bookmore.bookmore.common.exception.not_found.ReviewNotFoundException
 import site.bookmore.bookmore.common.exception.not_found.UserNotFoundException;
 import site.bookmore.bookmore.common.exception.unauthorized.InvalidPasswordException;
 
-import javax.validation.ConstraintViolation;
-import javax.xml.validation.Validator;
-
 import java.time.LocalDate;
-import java.util.Iterator;
-import java.util.Set;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -73,7 +65,12 @@ class ChallengeControllerTest {
     @Test
     @WithMockUser
     public void Test() throws Exception {
-        ChallengeRequest challengeRequest = ChallengeRequest.builder().title("title").description("description").build();
+        ChallengeRequest challengeRequest = ChallengeRequest.builder()
+                .title("title")
+                .description("description")
+                .progress(0)
+                .deadline(LocalDate.of(2023, 5, 30))
+                .build();
         when(challengeService.add(anyString(), any(ChallengeRequest.class))).thenReturn(new ChallengeResponse("message", 1L));
 
         mockMvc.perform(post("/api/v1/challenges")
