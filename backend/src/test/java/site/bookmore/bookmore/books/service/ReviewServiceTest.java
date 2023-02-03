@@ -5,9 +5,9 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.context.ApplicationEventPublisher;
+import site.bookmore.bookmore.books.dto.ChartRequest;
 import site.bookmore.bookmore.books.dto.ReviewRequest;
 import site.bookmore.bookmore.books.entity.Book;
-import site.bookmore.bookmore.books.entity.Chart;
 import site.bookmore.bookmore.books.entity.Likes;
 import site.bookmore.bookmore.books.entity.Review;
 import site.bookmore.bookmore.books.repository.BookRepository;
@@ -69,7 +69,7 @@ class ReviewServiceTest {
         when(reviewRepository.save(any(Review.class)))
                 .thenReturn(review);
 
-        Assertions.assertDoesNotThrow(() -> reviewService.create(new ReviewRequest(), book.getId(), user.getEmail()));
+        Assertions.assertDoesNotThrow(() -> reviewService.create(new ReviewRequest("body", false, new ChartRequest()), book.getId(), user.getEmail()));
     }
 
     @Test
@@ -133,7 +133,7 @@ class ReviewServiceTest {
         when(userRepository.findByEmail(user2.getEmail()))
                 .thenReturn(Optional.of(user2));
 
-        AbstractAppException abstractAppException = Assertions.assertThrows(AbstractAppException.class, () -> reviewService.update(new ReviewRequest("new body", true, new Chart()), review.getId(), user2.getEmail()));
+        AbstractAppException abstractAppException = Assertions.assertThrows(AbstractAppException.class, () -> reviewService.update(new ReviewRequest("new body", true, new ChartRequest()), review.getId(), user2.getEmail()));
         assertEquals(ErrorCode.INVALID_PERMISSION, abstractAppException.getErrorCode());
     }
 
