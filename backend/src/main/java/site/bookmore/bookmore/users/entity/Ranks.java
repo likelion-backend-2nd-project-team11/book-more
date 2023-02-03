@@ -4,6 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import site.bookmore.bookmore.books.entity.Likes;
+import site.bookmore.bookmore.books.entity.Review;
 
 import javax.persistence.*;
 
@@ -21,9 +23,19 @@ public class Ranks {
 
     private Long ranking;
 
+    private String nickName;
+
     public Ranks(Long id, Integer point) {
         this.id = id;
         this.point = point;
     }
 
+    public static Ranks of(Long id,Integer point,Long ranking,String nickName) {
+        return Ranks.builder()
+                .id(id)
+                .point(point)
+                .ranking(ranking)
+                .nickName(nickName)
+                .build();
+    }
 }

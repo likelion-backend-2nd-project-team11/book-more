@@ -20,6 +20,7 @@ import site.bookmore.bookmore.common.exception.not_found.BookNotFoundException;
 import site.bookmore.bookmore.common.exception.not_found.ReviewNotFoundException;
 import site.bookmore.bookmore.common.exception.not_found.UserNotFoundException;
 import site.bookmore.bookmore.observer.event.alarm.AlarmCreate;
+import site.bookmore.bookmore.observer.event.alarm.AlarmListCreate;
 import site.bookmore.bookmore.users.entity.Follow;
 import site.bookmore.bookmore.users.entity.User;
 import site.bookmore.bookmore.users.repositroy.FollowRepository;
@@ -27,6 +28,7 @@ import site.bookmore.bookmore.users.repositroy.UserRepository;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -52,10 +54,10 @@ public class ReviewService {
         Review savedReview = reviewRepository.save(review);
 
         // 나의 팔로잉이 리뷰를 등록했을 때의 알림 발생
-        List<Follow> followers = followRepository.findAllByFollowingAndDeletedDatetimeIsNull(user);
-        for (Follow follower : followers) {
-            publisher.publishEvent(AlarmCreate.of(AlarmType.NEW_FOLLOW_REVIEW, follower.getFollower(), user, review.getId()));
-        }
+        List<Follow> follows = followRepository.findAllByFollowingAndDeletedDatetimeIsNull(user);
+        List<User> followers = follows.stream().map(Follow::getFollower).collect(Collectors.toList());
+
+        publisher.publishEvent(AlarmListCreate.of(AlarmType.NEW_FOLLOW_REVIEW, followers, user, review.getId()));
 
         return savedReview.getId();
     }

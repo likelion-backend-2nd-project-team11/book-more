@@ -35,6 +35,9 @@ dependencies {
     testImplementation 'io.projectreactor:reactor-test'
     testImplementation 'org.springframework.security:spring-security-test'
 
+    // OAuth2.0
+    implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
+
     // jwt
     implementation 'io.jsonwebtoken:jjwt:0.9.1'
 

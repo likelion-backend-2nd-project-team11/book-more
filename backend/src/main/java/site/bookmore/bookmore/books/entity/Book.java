@@ -19,6 +19,7 @@ import java.util.Set;
 @Entity
 @EntityListeners(AuditingEntityListener.class)
 public class Book {
+    public static final int INTRODUCE_LENGTH = 2000;
     @Id
     private String id;
 
@@ -43,7 +44,7 @@ public class Book {
 
     private String chapter;
 
-    @Column(length = 600)
+    @Column(length = INTRODUCE_LENGTH)
     private String introduce;
 
     private Integer price;

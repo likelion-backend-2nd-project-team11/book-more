@@ -59,4 +59,10 @@ public class UserController {
         String email = authentication.getName();
         return ResultResponse.success(userService.verify(email));
     }
+
+    @ApiOperation(value = "회원 상세 정보")
+    @GetMapping("/{id}")
+    public ResultResponse<UserDetailResponse> detail(@PathVariable Long id) {
+        return ResultResponse.success(userService.detail(id));
+    }
 }

@@ -51,13 +51,13 @@ public class UserService implements UserDetailsService {
 
 
         // 회원 가입시 랭크 등록
-        Ranks findRank = ranksRepository.findTop1ByOrderByRankingDesc().orElse(new Ranks(0L, 0, 1L));
+        Ranks findRank = ranksRepository.findTop1ByOrderByRankingDesc().orElse(Ranks.of(0L, 0, 1L, "0"));
 
         Integer findPoint = findRank.getPoint();
         Long findRanking = findRank.getRanking();
         Long ranking = findPoint == 0 ? findRanking : findRanking + 1;
 
-        ranksRepository.save(new Ranks(user.getId(), 0, ranking));
+        ranksRepository.save(Ranks.of(user.getId(), 0, ranking, user.getNickname()));
 
         return UserJoinResponse.of(user);
     }
@@ -124,6 +124,16 @@ public class UserService implements UserDetailsService {
     public UserJoinResponse verify(String email) {
         User user = userRepository.findByEmail(email).orElseThrow(UserNotFoundException::new);
         return UserJoinResponse.of(user);
+    }
+
+    public UserDetailResponse detail(Long id) {
+        User user = userRepository.findById(id)
+                .orElseThrow(UserNotFoundException::new);
+        return UserDetailResponse.builder()
+                .nickname(user.getNickname())
+                .followingCount(user.getFollowCount().getFollowingCount())
+                .followerCount(user.getFollowCount().getFollowerCount())
+                .build();
     }
 
 }
