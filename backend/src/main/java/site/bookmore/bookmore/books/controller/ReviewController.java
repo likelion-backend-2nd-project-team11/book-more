@@ -17,6 +17,8 @@ import site.bookmore.bookmore.common.dto.ResultResponse;
 import site.bookmore.bookmore.common.support.annotation.Authorized;
 import springfox.documentation.annotations.ApiIgnore;
 
+import javax.validation.Valid;
+
 @RestController
 @Api(tags = "4-리뷰")
 @RequestMapping("/api/v1/books")
@@ -28,7 +30,7 @@ public class ReviewController {
     @Authorized
     @ApiOperation(value = "작성")
     @PostMapping("/{isbn}/reviews")
-    public ResultResponse<ReviewResponse> create(@RequestBody ReviewRequest reviewRequest, @PathVariable String isbn, Authentication authentication) {
+    public ResultResponse<ReviewResponse> create(@RequestBody @Valid ReviewRequest reviewRequest, @PathVariable String isbn, Authentication authentication) {
         String email = authentication.getName();
         Long id = reviewService.create(reviewRequest, isbn, email);
         return ResultResponse.success(new ReviewResponse(id, "리뷰 등록 완료"));

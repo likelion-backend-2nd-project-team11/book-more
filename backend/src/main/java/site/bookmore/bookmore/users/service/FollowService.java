@@ -21,7 +21,6 @@ import site.bookmore.bookmore.users.repositroy.FollowRepository;
 import site.bookmore.bookmore.users.repositroy.UserRepository;
 
 import java.util.Objects;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -31,6 +30,7 @@ public class FollowService {
     private final UserRepository userRepository;
     private final ApplicationEventPublisher publisher;
 
+    @Transactional
     public String following(Long id, String email) {
 
         //나
@@ -62,6 +62,9 @@ public class FollowService {
         follow.undelete();
         followRepository.save(follow);
 
+        user.getFollowCount().plusFollowingCount();
+        targetUser.getFollowCount().plusFollowerCount();
+
         publisher.publishEvent(AlarmCreate.of(AlarmType.NEW_FOLLOW, follow.getFollowing(), user, follow.getId()));
 
         return String.format("%s 님을 팔로우 하셨습니다.", id);
@@ -87,6 +90,9 @@ public class FollowService {
         }
 
         targetFollow.delete();
+
+        user.getFollowCount().minusFollowingCount();
+        targetUser.getFollowCount().minusFollowerCount();
 
         return String.format("%s 님을 언팔로우 하셨습니다.", id);
     }

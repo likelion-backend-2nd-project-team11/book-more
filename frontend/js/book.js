@@ -1,8 +1,6 @@
-const urlSearchParams = new URLSearchParams(location.search);
-
 function search({query, page, size, atHome}) {
-    if (query.length < 2) {
-        alert('검색어를 확인해주세요. [최소 두 글자]');
+    if (query.length < 1) {
+        alert('검색어를 확인해주세요. [최소 한 글자]');
         return;
     }
     if (atHome) { // 홈페이지에서 검색하는 경우
@@ -66,20 +64,20 @@ function fetchSearchBookDetail(isbn) {
                         <img class="me-5 shadow" height="240px" src="${book.image}"/>
                         <div class="info">
                             <h2>${book.title}</h2>
-                            <p>가격 : ${book.price}원</p>
-                            <p>페이지 : ${book.pages}</p>
-                            <p>저자 : ${book.authors}</p>
-                            <p>번역 : ${book.translators}</p>
-                            <p>출판사 : ${book.publisher}</p>
+                            <p>가격 : ${book.price || '-'}원</p>
+                            <p>페이지 : ${book.pages || '-'}</p>
+                            <p>저자 : ${book.authors || '-'}</p>
+                            <p>번역 : ${book.translators || '-'}</p>
+                            <p>출판사 : ${book.publisher || '-'}</p>
                         </div>
                     </div>
                     <hr/>
                     <div>
                         <h4>책소개</h4>
-                        <p>${book.introduce}...</p>
+                        <textarea class="w-100 border-0 mb-3" readonly rows="12">${book.introduce || '-'}</textarea>
                         <h4>목차</h4>
                         <p class="desc">
-                            ${book.chapter}
+                            ${book.chapter || '-'}
                         </p>
                     </div>
                 </div>`;

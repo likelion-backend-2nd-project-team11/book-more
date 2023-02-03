@@ -50,9 +50,10 @@ public class RanksService {
         for (int i = 0; i < rankList.size(); i++) {
             Long ranking = rankList.get(i).getRanking();
             log.info("ranking : {}", ranking);
-            ranksRepository.save(new Ranks(rankList.get(i).getId(), rankList.get(i).getPoint(), ranking));
+            ranksRepository.save(Ranks.of(rankList.get(i).getId(), rankList.get(i).getPoint(), ranking, rankList.get(i).getNickname()));
         }
     }
+
     public List<RanksResponse> findTop100Ranks() {
 
         return ranksRepository.findTop100ByOrderByRankingAsc().stream().map(ranks -> new RanksResponse(ranks))
