@@ -10,7 +10,9 @@ import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 import site.bookmore.bookmore.oauth2.util.mapper.UserMapper;
+import site.bookmore.bookmore.users.entity.Ranks;
 import site.bookmore.bookmore.users.entity.User;
+import site.bookmore.bookmore.users.repositroy.RanksRepository;
 import site.bookmore.bookmore.users.repositroy.UserRepository;
 
 import java.util.Collections;
@@ -21,6 +23,7 @@ import java.util.Map;
 public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequest, OAuth2User> {
 
     private final UserRepository userRepository;
+    private final RanksRepository ranksRepository;
 
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
@@ -38,7 +41,19 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
                 OAuth2Attribute.of(registrationId, userNameAttributeName, oAuth2User.getAttributes());
 
         User user = userRepository.findByEmail(oAuth2Attribute.getEmail())
-                .orElseGet(() -> userRepository.save(UserMapper.of(oAuth2User)));
+                .orElseGet(() -> {
+                    User saved = userRepository.save(UserMapper.of(oAuth2User));
+                    // 랭킹 등록
+                    Ranks findRank = ranksRepository.findTop1ByOrderByRankingDesc().orElse(Ranks.of(0L, 0, 1L, "0"));
+
+                    Integer findPoint = findRank.getPoint();
+                    Long findRanking = findRank.getRanking();
+                    Long ranking = findPoint == 0 ? findRanking : findRanking + 1;
+
+                    ranksRepository.save(Ranks.of(saved.getId(), 0, ranking, saved.getNickname()));
+
+                    return saved;
+                });
 
         Map<String, Object> memberAttribute = oAuth2Attribute.convertToMap();
         memberAttribute.put("id", user.getId());
