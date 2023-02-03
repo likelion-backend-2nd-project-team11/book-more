@@ -17,6 +17,7 @@ import site.bookmore.bookmore.common.dto.ResultResponse;
 import site.bookmore.bookmore.common.support.annotation.Authorized;
 import springfox.documentation.annotations.ApiIgnore;
 
+import javax.validation.Valid;
 import javax.validation.constraints.Email;
 
 @RestController
@@ -30,7 +31,7 @@ public class ChallengeController {
     @Authorized
     @ApiOperation(value = "작성")
     @PostMapping()
-    public ResultResponse<ChallengeResponse> addChallenge(@ApiIgnore Authentication authentication, @RequestBody ChallengeRequest challengeRequest) {
+    public ResultResponse<ChallengeResponse> addChallenge(@ApiIgnore Authentication authentication, @RequestBody @Valid ChallengeRequest challengeRequest) {
         String email = authentication.getName();
         ChallengeResponse challengeResponse = challengeService.add(email, challengeRequest);
         return ResultResponse.success(challengeResponse);
