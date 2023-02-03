@@ -15,7 +15,7 @@ import javax.validation.constraints.Size;
 @Getter
 public class BookSearchParams {
     @NotBlank(message = "검색어를 입력해주세요.")
-    @Size(min = 2, message = "최소 두 글자 이상 검색해주세요.")
+    @Size(min = 1, message = "최소 한 글자 이상 검색해주세요.")
     private String query;
 
     @Min(1)

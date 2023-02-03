@@ -1,6 +1,6 @@
 function search({query, page, size, atHome}) {
-    if (query.length < 2) {
-        alert('검색어를 확인해주세요. [최소 두 글자]');
+    if (query.length < 1) {
+        alert('검색어를 확인해주세요. [최소 한 글자]');
         return;
     }
     if (atHome) { // 홈페이지에서 검색하는 경우
