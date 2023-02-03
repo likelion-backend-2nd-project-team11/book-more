@@ -1,7 +1,6 @@
 package site.bookmore.bookmore.oauth2;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
@@ -16,7 +15,6 @@ import site.bookmore.bookmore.users.repositroy.UserRepository;
 import java.util.Collections;
 import java.util.Map;
 
-@Slf4j
 @Service
 @RequiredArgsConstructor
 public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequest, OAuth2User> {
@@ -37,8 +35,6 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
         // OAuth 서비스 구분
         OAuth2Attribute oAuth2Attribute =
                 OAuth2Attribute.of(registrationId, userNameAttributeName, oAuth2User.getAttributes());
-
-        log.info("{}", oAuth2Attribute);
 
         userRepository.findByEmail(oAuth2Attribute.getEmail()).orElseGet(() -> userRepository.save(UserMapper.of(oAuth2User)));
 
