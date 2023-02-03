@@ -11,6 +11,7 @@ public class UserMapper {
     public static User of(OAuth2User oAuth2User) {
         var attributes = oAuth2User.getAttributes();
         return User.builder()
+                .id((Long) attributes.get("id"))
                 .email((String) attributes.get("email"))
                 .password("")
                 .nickname((String) attributes.get("sub"))
