@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.security.oauth2.client.servlet.OAuth2ClientAutoConfiguration;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.jpa.mapping.JpaMetamodelMappingContext;
@@ -29,7 +30,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(ChallengeController.class)
+@WebMvcTest(value = ChallengeController.class, excludeAutoConfiguration = {OAuth2ClientAutoConfiguration.class})
 @MockBean(JpaMetamodelMappingContext.class)
 class ChallengeControllerTest {
     @Autowired
@@ -45,7 +46,7 @@ class ChallengeControllerTest {
     @WithMockUser
     public void Test() throws Exception {
         ChallengeRequest challengeRequest = ChallengeRequest.builder().title("title").description("description").build();
-        when(challengeService.add(anyString(),any(ChallengeRequest.class))).thenReturn(new ChallengeResponse("message", 1L));
+        when(challengeService.add(anyString(), any(ChallengeRequest.class))).thenReturn(new ChallengeResponse("message", 1L));
 
         mockMvc.perform(post("/api/v1/challenges")
                         .with(csrf())
@@ -59,7 +60,7 @@ class ChallengeControllerTest {
     @WithAnonymousUser
     public void Test2() throws Exception {
         ChallengeRequest challengeRequest = ChallengeRequest.builder().title("title").description("description").build();
-        when(challengeService.add(anyString(),any(ChallengeRequest.class))).thenThrow(new InvalidPermissionException());
+        when(challengeService.add(anyString(), any(ChallengeRequest.class))).thenThrow(new InvalidPermissionException());
 
         mockMvc.perform(post("/api/v1/challenges")
                         .with(csrf())

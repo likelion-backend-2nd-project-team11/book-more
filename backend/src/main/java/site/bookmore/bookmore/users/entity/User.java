@@ -53,6 +53,9 @@ public class User extends BaseEntity implements UserDetails {
     @JoinColumn(name = "follow_count_id")
     private FollowCount followCount;
 
+    public User(String email) {
+        this.email = email;
+    }
 
     @Builder
     public User(Long id, String email, String password, Role role, String nickname, Tier tier, LocalDate birth) {
