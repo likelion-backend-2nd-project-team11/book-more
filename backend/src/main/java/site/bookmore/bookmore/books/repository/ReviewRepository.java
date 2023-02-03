@@ -7,12 +7,15 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import site.bookmore.bookmore.books.entity.Book;
 import site.bookmore.bookmore.books.entity.Review;
+import site.bookmore.bookmore.users.entity.User;
 
 import java.util.Optional;
 
 public interface ReviewRepository extends JpaRepository<Review, Long> {
 
     Page<Review> findByBookAndDeletedDatetimeIsNull(Pageable pageable, Book book);
+
+    Page<Review> findByAuthorAndDeletedDatetimeIsNull(Pageable pageable, User user);
 
     Optional<Review> findByIdAndDeletedDatetimeIsNull(Long id);
 
