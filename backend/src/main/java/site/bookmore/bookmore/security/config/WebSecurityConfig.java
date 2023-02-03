@@ -8,8 +8,8 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import site.bookmore.bookmore.oauth2.config.OAuth2SuccessHandler;
-import site.bookmore.bookmore.oauth2.service.CustomOAuth2UserService;
+import site.bookmore.bookmore.oauth2.OAuth2SuccessHandler;
+import site.bookmore.bookmore.oauth2.CustomOAuth2UserService;
 import site.bookmore.bookmore.security.entrypoint.CustomAccessDeniedEntryPoint;
 import site.bookmore.bookmore.security.entrypoint.CustomAuthenticationEntryPoint;
 import site.bookmore.bookmore.security.fiter.JwtAuthenticationFilter;

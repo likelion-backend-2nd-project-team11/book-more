@@ -1,4 +1,4 @@
-package site.bookmore.bookmore.oauth2.config;
+package site.bookmore.bookmore.oauth2;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

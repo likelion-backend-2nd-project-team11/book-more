@@ -1,4 +1,4 @@
-package site.bookmore.bookmore.oauth2.service;
+package site.bookmore.bookmore.oauth2;
 
 import lombok.AccessLevel;
 import lombok.Builder;
