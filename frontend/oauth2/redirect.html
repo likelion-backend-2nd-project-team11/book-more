@@ -1,0 +1,13 @@
+<!doctype html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>Redirecting...</title>
+    <script src="../js/constant.js"></script>
+</head>
+<script>
+    const token = urlSearchParams.get('token');
+    window.localStorage.setItem('token', token);
+    window.location.replace('../index.html');
+</script>
+</html>

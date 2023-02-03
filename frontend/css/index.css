@@ -1,10 +1,6 @@
 @import url(https://fonts.googleapis.com/css?family=Righteous);
 @import url(https://fonts.googleapis.com/css?family=Montserrat);
 
-body {
-    font-family: "Montserrat";
-}
-
 .logo {
     color: hsla(230, 40%, 50%, 1);
     text-transform: uppercase;

@@ -3,9 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
-    <link rel="stylesheet" href="css/top-bar.css" />
-    <link rel="stylesheet" href="css/index.css" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
     <link
             rel="stylesheet"
             href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css"
@@ -13,12 +12,17 @@
             crossorigin="anonymous"
             referrerpolicy="no-referrer"
     />
-    <script src="js/constant.js"></script>
+
+    <link rel="stylesheet" href="../css/top-bar.css"/>
+    <link rel="stylesheet" href="../css/index.css"/>
+    <script src="../js/book.js"></script>
+    <script src="../js/constant.js"></script>
     <title>BookMore</title>
 </head>
-<body class="vh-100 bg-light">
+<body class="bg-light">
+<div class="container pt-5">
     <!-- ------------------------------------------------------------------------------------------------Top Bar-->
-    <script src="js/auth.js"></script>
+    <script src="../js/auth.js"></script>
     <script>
         const token = getToken();
         const isLoggedIn = !!token;
@@ -26,7 +30,7 @@
     </script>
     <nav class="navbar fixed-top bg-family-color">
         <div class="container-fluid">
-            <a class="navbar-brand en-font" href="index.html">BookMore</a>
+            <a class="navbar-brand en-font" href="../index.html">BookMore</a>
 
             <div class="d-md-block">
                 <!--로그인 드롭다운------------------>
@@ -36,14 +40,14 @@
                         <i class="fa-solid fa-right-to-bracket"></i>
                     </button>
                     <ul class="dropdown-menu dropdown-menu-end">
-                        <li class="unauthorized-component"><a class="dropdown-item"  href="users/join.html">회원가입</a></li>
-                        <li class="unauthorized-component"><a class="dropdown-item" href="users/login.html">로그인</a></li>
+                        <li class="unauthorized-component"><a class="dropdown-item"  href="../users/join.html">회원가입</a></li>
+                        <li class="unauthorized-component"><a class="dropdown-item" href="../users/login.html">로그인</a></li>
                         <li class="authorized-component"><a class="dropdown-item" onclick="deleteToken()">로그아웃</a></li>
                     </ul>
                 </div>
                 <!----------------------->
                 <div class="authorized-component" style="float:left;">
-                    <a class="btn btn-lg" style="color: #FFFFFF" type="button" href="notifications/index.html"><i
+                    <a class="btn btn-lg" style="color: #FFFFFF" type="button" href="../notifications/index.html"><i
                             class="fa-solid fa-bell"></i></a>
                 </div>
 
@@ -59,16 +63,16 @@
             </div>
 
             <div>
-                <a class="bm-scale-animation py-3 text-hover-family-color btn w-100 authorized-component fs-5 fw-bold" href="users/mypage.html">
+                <a class="bm-scale-animation py-3 text-hover-family-color btn w-100 authorized-component fs-5 fw-bold" href="../users/mypage.html">
                     마이페이지
                 </a>
-                <a class="bm-scale-animation py-3 text-hover-family-color btn w-100 authorized-component fs-5 fw-bold" href="users/detail.html">
+                <a class="bm-scale-animation py-3 text-hover-family-color btn w-100 authorized-component fs-5 fw-bold" href="../users/detail.html">
                     마이피드
                 </a>
-                <a class="bm-scale-animation py-3 text-hover-family-color btn w-100 fs-5 fw-bold" href="ranks.html">
+                <a class="bm-scale-animation py-3 text-hover-family-color btn w-100 fs-5 fw-bold" href="../ranks.html">
                     랭킹
                 </a>
-                <a class="bm-scale-animation py-3 text-hover-family-color btn w-100 authorized-component fs-5 fw-bold" href="challenge/index.html">
+                <a class="bm-scale-animation py-3 text-hover-family-color btn w-100 authorized-component fs-5 fw-bold" href="../challenge/index.html">
                     챌린지
                 </a>
             </div>
@@ -82,19 +86,28 @@
     </nav>
     <!-- --------------------------------------------------------------------------------------------------------->
 
-    <div class="container h-100 d-flex flex-column">
-        <h1 data-shadow="BookMore" class="text-center mx-auto mt-auto logo">BookMore</h1>
-        <!-- 검색--------------------------------- -->
-        <div class="container search-box mb-auto d-flex">
-            <input class="ms-auto px-3 w-50 rounded-pill form-control bm-query" type="text" placeholder="검색어를 입력해 주세요.">
-            <button class="btn btn-outline-secondary ms-3 me-auto search-btn" onclick="search({query: getQuery(), atHome: true})"><i class="fas fa-search"></i></button>
-        </div>
-        <!-- ------------------------------------- -->
+    <h1 class="text-center mt-5 mx-auto logo">BookMore</h1>
+    <!-- 검색--------------------------------- -->
+    <div class="container search-box my-5 d-flex">
+        <input class="ms-auto px-3 w-50 rounded-pill form-control bm-query" type="text" placeholder="검색어를 입력해 주세요.">
+        <button class="btn btn-outline-secondary ms-3 me-auto search-btn" onclick="search({query: getQuery()})"><i
+                class="fas fa-search"></i></button>
     </div>
-    <script src="js/book.js"></script>
-    <script>
-        document.querySelector(".bm-query").addEventListener('keyup', event => submitQueryHandler(event, true));
-    </script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
+    <!-- ------------------------------------- -->
+    <!-- 도서 리스트--------------------------------- -->
+    <div class="container contents-wrapper w-100 pb-5">
+        <div class="books-shelf row row-cols-2 row-cols-lg-3 row-cols-xl-4 justify-content-start">
+        </div>
+    </div>
+    <!-- ------------------------------------- -->
+</div>
+<script>
+    setQueryInputVal(urlSearchParams.get('query'));
+    fetchSearchBooks(urlSearchParams.get('query'), urlSearchParams.get('page'), urlSearchParams.get('size'));
+    document.querySelector(".bm-query").addEventListener('keyup', event => submitQueryHandler(event));
+</script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4"
+        crossorigin="anonymous"></script>
 </body>
 </html>
