@@ -74,7 +74,7 @@ function fetchSearchBookDetail(isbn) {
                     <hr/>
                     <div>
                         <h4>책소개</h4>
-                        <p>${book.introduce || '-'}</p>
+                        <textarea class="w-100 border-0 mb-3" readonly rows="12">${book.introduce || '-'}</textarea>
                         <h4>목차</h4>
                         <p class="desc">
                             ${book.chapter || '-'}
