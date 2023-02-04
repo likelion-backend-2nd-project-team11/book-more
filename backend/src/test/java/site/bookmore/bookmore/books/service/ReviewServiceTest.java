@@ -7,22 +7,20 @@ import org.mockito.Mockito;
 import org.springframework.context.ApplicationEventPublisher;
 import site.bookmore.bookmore.books.dto.ChartRequest;
 import site.bookmore.bookmore.books.dto.ReviewRequest;
-import site.bookmore.bookmore.books.entity.Book;
-import site.bookmore.bookmore.books.entity.Likes;
-import site.bookmore.bookmore.books.entity.Review;
-import site.bookmore.bookmore.books.repository.BookRepository;
-import site.bookmore.bookmore.books.repository.LikesRepository;
-import site.bookmore.bookmore.books.repository.ReviewRepository;
+import site.bookmore.bookmore.books.entity.*;
+import site.bookmore.bookmore.books.repository.*;
 import site.bookmore.bookmore.common.exception.AbstractAppException;
 import site.bookmore.bookmore.common.exception.ErrorCode;
 import site.bookmore.bookmore.users.entity.User;
 import site.bookmore.bookmore.users.repositroy.FollowRepository;
 import site.bookmore.bookmore.users.repositroy.UserRepository;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
 
 class ReviewServiceTest {
@@ -32,8 +30,18 @@ class ReviewServiceTest {
     private final LikesRepository likesRepository = Mockito.mock(LikesRepository.class);
     private final ReviewRepository reviewRepository = Mockito.mock(ReviewRepository.class);
     private final UserRepository userRepository = Mockito.mock(UserRepository.class);
+    private final TagRepository tagRepository = Mockito.mock(TagRepository.class);
+    private final ReviewTagRepository reviewTagRepository = Mockito.mock(ReviewTagRepository.class);
     private final ApplicationEventPublisher publisher = Mockito.mock(ApplicationEventPublisher.class);
-    private final ReviewService reviewService = new ReviewService(bookRepository, followRepository, likesRepository, reviewRepository, userRepository, publisher);
+    private final ReviewService reviewService = new ReviewService(
+                                                                bookRepository,
+                                                                followRepository,
+                                                                likesRepository,
+                                                                reviewRepository,
+                                                                userRepository,
+                                                                tagRepository,
+                                                                reviewTagRepository,
+                                                                publisher);
 
     private final User user = User.builder()
             .email("email")
@@ -52,6 +60,12 @@ class ReviewServiceTest {
             .book(book)
             .build();
 
+    private final Set<String> tags = Set.of("tag1", "tag2");
+
+    private final Set<Tag> tagSet = Tag.of(tags);
+
+    private final Set<ReviewTag> reviewTagSet = ReviewTag.from(review, tagSet);
+
     private final Likes likes = Likes.builder()
             .liked(true)
             .review(review)
@@ -69,7 +83,7 @@ class ReviewServiceTest {
         when(reviewRepository.save(any(Review.class)))
                 .thenReturn(review);
 
-        Assertions.assertDoesNotThrow(() -> reviewService.create(new ReviewRequest("body", false, new ChartRequest()), book.getId(), user.getEmail()));
+        Assertions.assertDoesNotThrow(() -> reviewService.create(new ReviewRequest("body", false, new ChartRequest(), null), book.getId(), user.getEmail()));
     }
 
     @Test
@@ -98,6 +112,26 @@ class ReviewServiceTest {
 
         AbstractAppException abstractAppException = Assertions.assertThrows(AbstractAppException.class, () -> reviewService.create(new ReviewRequest(), book.getId(), user.getEmail()));
         assertEquals(ErrorCode.BOOK_NOT_FOUND, abstractAppException.getErrorCode());
+    }
+
+    /* ========== 리뷰, 태그 등록 =========*/
+    @Test
+    @DisplayName("도서 리뷰 등록 성공 - 태그 모두 처음 저장되는 경우")
+    void create_with_tag() {
+        when(userRepository.findByEmail(user.getEmail()))
+                .thenReturn(Optional.of(user));
+        when(bookRepository.findById(book.getId()))
+                .thenReturn(Optional.of(book));
+        when(reviewRepository.save(any(Review.class)))
+                .thenReturn(review);
+        when(tagRepository.findByLabel(anyString()))
+                .thenReturn(Optional.empty());
+        when(reviewTagRepository.saveAll(anyIterable()))
+                .thenReturn(List.copyOf(reviewTagSet));
+
+        ReviewRequest reviewRequest = new ReviewRequest("body", false, new ChartRequest(), tags);
+
+        Assertions.assertDoesNotThrow(() -> reviewService.create(reviewRequest, book.getId(), user.getEmail()));
     }
 
     /* ========== 도서 리뷰 수정 ========== */
@@ -133,7 +167,7 @@ class ReviewServiceTest {
         when(userRepository.findByEmail(user2.getEmail()))
                 .thenReturn(Optional.of(user2));
 
-        AbstractAppException abstractAppException = Assertions.assertThrows(AbstractAppException.class, () -> reviewService.update(new ReviewRequest("new body", true, new ChartRequest()), review.getId(), user2.getEmail()));
+        AbstractAppException abstractAppException = Assertions.assertThrows(AbstractAppException.class, () -> reviewService.update(new ReviewRequest("new body", true, new ChartRequest(), null), review.getId(), user2.getEmail()));
         assertEquals(ErrorCode.INVALID_PERMISSION, abstractAppException.getErrorCode());
     }
 
