@@ -9,12 +9,8 @@ import org.springframework.transaction.annotation.Transactional;
 import site.bookmore.bookmore.alarms.entity.AlarmType;
 import site.bookmore.bookmore.books.dto.ReviewPageResponse;
 import site.bookmore.bookmore.books.dto.ReviewRequest;
-import site.bookmore.bookmore.books.entity.Book;
-import site.bookmore.bookmore.books.entity.Likes;
-import site.bookmore.bookmore.books.entity.Review;
-import site.bookmore.bookmore.books.repository.BookRepository;
-import site.bookmore.bookmore.books.repository.LikesRepository;
-import site.bookmore.bookmore.books.repository.ReviewRepository;
+import site.bookmore.bookmore.books.entity.*;
+import site.bookmore.bookmore.books.repository.*;
 import site.bookmore.bookmore.common.exception.forbidden.InvalidPermissionException;
 import site.bookmore.bookmore.common.exception.not_found.BookNotFoundException;
 import site.bookmore.bookmore.common.exception.not_found.ReviewNotFoundException;
@@ -28,6 +24,7 @@ import site.bookmore.bookmore.users.repositroy.UserRepository;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -40,9 +37,12 @@ public class ReviewService {
 
     private final ReviewRepository reviewRepository;
     private final UserRepository userRepository;
+    private final TagRepository tagRepository;
+    private final ReviewTagRepository reviewTagRepository;
     private final ApplicationEventPublisher publisher;
 
     // 도서 리뷰 등록
+    @Transactional
     public Long create(ReviewRequest reviewRequest, String isbn, String email) {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(UserNotFoundException::new);
@@ -52,6 +52,16 @@ public class ReviewService {
 
         Review review = reviewRequest.toEntity(user, book);
         Review savedReview = reviewRepository.save(review);
+
+        // 태그 저장
+        if (reviewRequest.getTags() != null && !reviewRequest.getTags().isEmpty()) {
+            Set<Tag> tags = reviewRequest.getTags().stream()
+                    .map(label -> tagRepository.findByLabel(label).orElse(Tag.of(label)))
+                    .collect(Collectors.toSet());
+
+            Set<ReviewTag> reviewTagSet = ReviewTag.from(review, tags);
+            reviewTagRepository.saveAll(reviewTagSet);
+        }
 
         // 나의 팔로잉이 리뷰를 등록했을 때의 알림 발생
         List<Follow> follows = followRepository.findAllByFollowingAndDeletedDatetimeIsNull(user);
