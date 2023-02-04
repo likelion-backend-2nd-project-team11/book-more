@@ -3,8 +3,13 @@ package site.bookmore.bookmore.users.controller;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+import site.bookmore.bookmore.books.dto.ReviewPageResponse;
 import site.bookmore.bookmore.common.dto.ResultResponse;
 import site.bookmore.bookmore.common.support.annotation.Authorized;
 import site.bookmore.bookmore.users.dto.*;
@@ -59,4 +64,24 @@ public class UserController {
         String email = authentication.getName();
         return ResultResponse.success(userService.verify(email));
     }
+
+    @Authorized
+    @ApiOperation(value = "내 정보 수정")
+    @PostMapping("/me")
+    public ResultResponse<UserUpdateResponse> update(@RequestBody UserUpdateRequest userUpdateRequest, @ApiIgnore Authentication authentication) {
+        String email = authentication.getName();
+        return ResultResponse.success(userService.infoEdit(email, userUpdateRequest));
+    }
+
+
+    @ApiOperation(value = "내 정보 조회")
+    @GetMapping("/me")
+    public ResultResponse<UserUpdateResponse> searchMyProfile(String email) {
+        UserUpdateResponse userUpdateResponse = userService.search(email);
+        return ResultResponse.success(userUpdateResponse);
+    }
 }
+
+
+
+
