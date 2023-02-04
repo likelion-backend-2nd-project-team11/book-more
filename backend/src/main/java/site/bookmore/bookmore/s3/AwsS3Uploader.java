@@ -11,7 +11,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 import site.bookmore.bookmore.common.exception.bad_request.FileNotExistsException;
-import site.bookmore.bookmore.users.entity.User;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -53,8 +52,8 @@ public class AwsS3Uploader {
         return key;
     }
 
-    public void delete(User user) {
+    public void delete(String filePath) {
 
-        amazonS3Client.deleteObject(new DeleteObjectRequest(bucket, user.getProfile()));
+        amazonS3Client.deleteObject(new DeleteObjectRequest(bucket, filePath));
     }
 }

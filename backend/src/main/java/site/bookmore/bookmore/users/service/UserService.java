@@ -14,6 +14,7 @@ import site.bookmore.bookmore.common.exception.conflict.DuplicateProfileExceptio
 import site.bookmore.bookmore.common.exception.not_found.UserNotFoundException;
 import site.bookmore.bookmore.common.exception.unauthorized.InvalidPasswordException;
 import site.bookmore.bookmore.common.exception.unauthorized.InvalidTokenException;
+import site.bookmore.bookmore.s3.AwsS3Uploader;
 import site.bookmore.bookmore.security.provider.JwtProvider;
 import site.bookmore.bookmore.users.dto.*;
 import site.bookmore.bookmore.users.entity.Ranks;
@@ -21,7 +22,6 @@ import site.bookmore.bookmore.users.entity.Role;
 import site.bookmore.bookmore.users.entity.User;
 import site.bookmore.bookmore.users.repositroy.RanksRepository;
 import site.bookmore.bookmore.users.repositroy.UserRepository;
-import site.bookmore.bookmore.s3.AwsS3Uploader;
 
 import java.io.IOException;
 import java.util.Objects;
@@ -167,7 +167,7 @@ public class UserService implements UserDetailsService {
             throw new DuplicateProfileException();
         }
 
-        awsS3Uploader.delete(user);
+        awsS3Uploader.delete(user.getProfile());
 
         user.updateProfileDefault();
         return user.getNickname();
