@@ -5,6 +5,7 @@ import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import site.bookmore.bookmore.common.dto.ResultResponse;
 import site.bookmore.bookmore.common.support.annotation.Authorized;
 import site.bookmore.bookmore.users.dto.*;
@@ -12,6 +13,7 @@ import site.bookmore.bookmore.users.service.UserService;
 import springfox.documentation.annotations.ApiIgnore;
 
 import javax.validation.Valid;
+import java.io.IOException;
 
 @RestController
 @Api(tags = "1-회원")
@@ -20,6 +22,7 @@ import javax.validation.Valid;
 public class UserController {
 
     private final UserService userService;
+
 
     @ApiOperation(value = "회원가입")
     @PostMapping("/join")
@@ -64,5 +67,23 @@ public class UserController {
     @GetMapping("/{id}")
     public ResultResponse<UserDetailResponse> detail(@PathVariable Long id) {
         return ResultResponse.success(userService.detail(id));
+    }
+
+    @Authorized
+    @ApiOperation(value = "회원 프로필 사진 변경")
+    @PostMapping("/me/profile")
+    public ResultResponse<UserProfileResponse> updateProfile(@RequestPart MultipartFile multipartFile, Authentication authentication) throws IOException {
+        String email = authentication.getName();
+        String userNickname = userService.updateProfile(multipartFile, email);
+        return ResultResponse.success(new UserProfileResponse(userNickname, "프로필 사진 변경 완료"));
+    }
+
+    @Authorized
+    @ApiOperation(value = "회원 프로필 기본 사진으로 변경")
+    @DeleteMapping("/me/profile")
+    public ResultResponse<UserProfileResponse> updateProfileDefault(Authentication authentication) {
+        String email = authentication.getName();
+        String userNickname = userService.updateProfileDefault(email);
+        return ResultResponse.success(new UserProfileResponse(userNickname, "프로필 기본 사진으로 변경 완료"));
     }
 }
