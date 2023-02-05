@@ -9,6 +9,7 @@ import site.bookmore.bookmore.users.entity.User;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
+import java.util.HashSet;
 import java.util.Set;
 
 @AllArgsConstructor
@@ -20,7 +21,7 @@ public class ReviewRequest {
     private boolean spoiler;
     @Valid
     private ChartRequest chart;
-    private Set<String> tags;
+    private Set<String> tags = new HashSet<>();
 
     // 도서 리뷰 등록
     public Review toEntity(User user, Book book) {
@@ -39,7 +40,7 @@ public class ReviewRequest {
         return Review.builder()
                 .body(body)
                 .spoiler(spoiler)
-                .chart(chart.toEntity())
+                .chart(chart == null ? null : chart.toEntity())
                 .build();
     }
 }
