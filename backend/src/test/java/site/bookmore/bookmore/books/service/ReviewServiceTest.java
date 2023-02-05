@@ -15,6 +15,7 @@ import site.bookmore.bookmore.users.entity.User;
 import site.bookmore.bookmore.users.repositroy.FollowRepository;
 import site.bookmore.bookmore.users.repositroy.UserRepository;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -64,7 +65,7 @@ class ReviewServiceTest {
 
     private final Set<Tag> tagSet = Tag.of(tags);
 
-    private final Set<ReviewTag> reviewTagSet = ReviewTag.from(review, tagSet);
+    private final Set<ReviewTag> reviewTagSet = ReviewTag.of(review, tagSet);
 
     private final Likes likes = Likes.builder()
             .liked(true)
@@ -83,7 +84,7 @@ class ReviewServiceTest {
         when(reviewRepository.save(any(Review.class)))
                 .thenReturn(review);
 
-        Assertions.assertDoesNotThrow(() -> reviewService.create(new ReviewRequest("body", false, new ChartRequest(), null), book.getId(), user.getEmail()));
+        Assertions.assertDoesNotThrow(() -> reviewService.create(new ReviewRequest("body", false, new ChartRequest(), new HashSet<>()), book.getId(), user.getEmail()));
     }
 
     @Test
@@ -126,8 +127,10 @@ class ReviewServiceTest {
                 .thenReturn(review);
         when(tagRepository.findByLabel(anyString()))
                 .thenReturn(Optional.empty());
-        when(reviewTagRepository.saveAll(anyIterable()))
-                .thenReturn(List.copyOf(reviewTagSet));
+        when(tagRepository.save(any(Tag.class)))
+                .thenReturn(Tag.of("tag"));
+        when(reviewTagRepository.save(any(ReviewTag.class)))
+                .thenReturn(ReviewTag.of(review, Tag.of("tag")));
 
         ReviewRequest reviewRequest = new ReviewRequest("body", false, new ChartRequest(), tags);
 
@@ -135,6 +138,19 @@ class ReviewServiceTest {
     }
 
     /* ========== 도서 리뷰 수정 ========== */
+    @Test
+    @DisplayName("도서 리뷰 수정 성공 - 차트는 수정하지 않은 경우")
+    void update_review_exclude_chart() {
+        when(reviewRepository.findByIdWithTags(review.getId()))
+                .thenReturn(Optional.of(review));
+        when(userRepository.findByEmail(user.getEmail()))
+                .thenReturn(Optional.of(user));
+
+        ReviewRequest reviewRequest = new ReviewRequest("body", false, null, new HashSet<>());
+
+        Assertions.assertDoesNotThrow(() -> reviewService.update(reviewRequest, review.getId(), user.getEmail()));
+    }
+
     @Test
     @DisplayName("도서 리뷰 수정 실패 - 해당 리뷰가 없는 경우")
     void update_review_not_found() {
@@ -148,7 +164,7 @@ class ReviewServiceTest {
     @Test
     @DisplayName("도서 리뷰 수정 실패 - 해당 유저가 없는 경우")
     void update__user_not_found() {
-        when(reviewRepository.findByIdAndDeletedDatetimeIsNull(review.getId()))
+        when(reviewRepository.findByIdWithTags(review.getId()))
                 .thenReturn(Optional.of(review));
         when(userRepository.findByEmail(user.getEmail()))
                 .thenReturn(Optional.empty());
@@ -160,7 +176,7 @@ class ReviewServiceTest {
     @Test
     @DisplayName("도서 리뷰 수정 실패 - 작성자와 유저가 일치하지 않는 경우")
     void update_invalid_permission() {
-        when(reviewRepository.findByIdAndDeletedDatetimeIsNull(review.getId()))
+        when(reviewRepository.findByIdWithTags(review.getId()))
                 .thenReturn(Optional.of(review));
         when(userRepository.findByEmail(user.getEmail()))
                 .thenReturn(Optional.of(user));
