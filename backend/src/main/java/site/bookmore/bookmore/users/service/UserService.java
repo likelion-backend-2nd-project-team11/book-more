@@ -1,12 +1,20 @@
 package site.bookmore.bookmore.users.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import site.bookmore.bookmore.books.dto.ReviewPageResponse;
+import site.bookmore.bookmore.books.entity.Book;
+import site.bookmore.bookmore.common.exception.conflict.DuplicateEmailException;
+import site.bookmore.bookmore.common.exception.conflict.DuplicateNicknameException;
+import site.bookmore.bookmore.common.exception.not_found.BookNotFoundException;
+import site.bookmore.bookmore.common.exception.not_found.EmailNotFoundException;
 import org.springframework.web.multipart.MultipartFile;
 import site.bookmore.bookmore.common.exception.conflict.DuplicateEmailException;
 import site.bookmore.bookmore.common.exception.conflict.DuplicateNicknameException;
@@ -113,6 +121,46 @@ public class UserService implements UserDetailsService {
 
         return UserResponse.of(user, "수정 완료 했습니다.");
     }
+
+    /*내 정보 수정*/
+    @Transactional
+    public UserUpdateResponse infoEdit(String email, UserUpdateRequest userUpdateRequest) {
+
+        User user = userRepository.findByEmail(email).orElseThrow(UserNotFoundException::new);
+
+
+        // 중복 이름 예외처리
+        if (userUpdateRequest.getNickname() != null) {
+            userRepository.findByNickname(userUpdateRequest.getNickname())
+                    .ifPresent(user1 -> {
+                        throw new DuplicateNicknameException();
+                    });
+        }
+
+        // password encode
+        String encoded = userUpdateRequest.getPassword();
+        if (encoded == null) {
+            encoded = user.getPassword();
+        }
+        String encodedPw = passwordEncoder.encode(encoded);
+
+        user.update(userUpdateRequest.toEntity(encodedPw));
+        userRepository.saveAndFlush(user);
+
+        UserUpdateResponse userUpdateResponse = new UserUpdateResponse(user);
+        return userUpdateResponse;
+    }
+
+
+    public UserUpdateResponse search(String email) {
+        User user = userRepository.findByEmail(email).orElseThrow(UserNotFoundException::new);
+        UserUpdateResponse userUpdateResponse = new UserUpdateResponse(user);
+        return userUpdateResponse;
+    }
+
+
+
+
 
     /**
      * 회원 탈퇴

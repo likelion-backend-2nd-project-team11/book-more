@@ -68,6 +68,23 @@ public class UserController {
         return ResultResponse.success(userService.verify(email));
     }
 
+    @Authorized
+    @ApiOperation(value = "내 정보 수정")
+    @PostMapping("/me")
+    public ResultResponse<UserUpdateResponse> update(@RequestBody UserUpdateRequest userUpdateRequest, @ApiIgnore Authentication authentication) {
+        String email = authentication.getName();
+        return ResultResponse.success(userService.infoEdit(email, userUpdateRequest));
+    }
+
+    @Authorized
+    @ApiOperation(value = "내 정보 조회")
+    @GetMapping("/me")
+    public ResultResponse<UserUpdateResponse> searchMyProfile(@ApiIgnore Authentication authentication) {
+        String email = authentication.getName();
+        UserUpdateResponse userUpdateResponse = userService.search(email);
+        return ResultResponse.success(userUpdateResponse);
+    }
+
     @ApiOperation(value = "회원 상세 정보")
     @GetMapping("/{id}")
     public ResultResponse<UserDetailResponse> detail(@PathVariable Long id) {
@@ -99,3 +116,7 @@ public class UserController {
         return ResultResponse.success(reviewService.findByAuthor(id, pageable));
     }
 }
+
+
+
+
