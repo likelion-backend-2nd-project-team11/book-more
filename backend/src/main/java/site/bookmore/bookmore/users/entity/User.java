@@ -19,6 +19,8 @@ import java.util.List;
 @Getter
 public class User extends BaseEntity implements UserDetails {
 
+    public static final String DEFAULT_PROFILE_IMG_PATH = "images/default-profile.png";
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -56,6 +58,8 @@ public class User extends BaseEntity implements UserDetails {
     public User(String email) {
         this.email = email;
     }
+
+    private String profile = DEFAULT_PROFILE_IMG_PATH;
 
     @Builder
     public User(Long id, String email, String password, Role role, String nickname, Tier tier, LocalDate birth) {
@@ -96,6 +100,23 @@ public class User extends BaseEntity implements UserDetails {
         }
     }
 
+    public void updateProfile(String profile) {
+        setProfile(profile);
+    }
+
+    private void setProfile(String profile) {
+        if (profile != null) {
+            this.profile = profile;
+        }
+    }
+
+    public void updateProfileDefault() {
+        setProfileDefault();
+    }
+
+    private void setProfileDefault() {
+        this.profile = DEFAULT_PROFILE_IMG_PATH;
+    }
 
     //권한을 리턴
     @Override
@@ -104,7 +125,7 @@ public class User extends BaseEntity implements UserDetails {
     }
 
 
-    // 사용자의 password를 반환
+    // 사용자의 password 를 반환
     @Override
     public String getPassword() {
         return this.password;

@@ -130,4 +130,12 @@ public class ReviewService {
 
         return result;
     }
+
+    // 특정 유저의 리뷰 조회
+    public Page<ReviewPageResponse> findByAuthor(Long authorId, Pageable pageable) {
+        User author = userRepository.findById(authorId)
+                .orElseThrow(UserNotFoundException::new);
+        return reviewRepository.findByAuthorAndDeletedDatetimeIsNull(pageable, author)
+                .map(ReviewPageResponse::of);
+    }
 }

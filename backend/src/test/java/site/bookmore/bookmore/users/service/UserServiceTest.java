@@ -17,6 +17,7 @@ import site.bookmore.bookmore.users.dto.UserUpdateRequest;
 import site.bookmore.bookmore.users.entity.User;
 import site.bookmore.bookmore.users.repositroy.RanksRepository;
 import site.bookmore.bookmore.users.repositroy.UserRepository;
+import site.bookmore.bookmore.s3.AwsS3Uploader;
 
 import java.time.LocalDate;
 import java.util.Optional;
@@ -38,8 +39,9 @@ class UserServiceTest {
     private final JwtProvider jwtProvider = mock(JwtProvider.class);
 
     private final PasswordEncoder passwordEncoder = mock(PasswordEncoder.class);
+    private final AwsS3Uploader awsS3Uploader = mock(AwsS3Uploader.class);
 
-    private final UserService userService = new UserService(passwordEncoder, jwtProvider, userRepository, ranksRepository);
+    private final UserService userService = new UserService(passwordEncoder, jwtProvider, userRepository, ranksRepository, awsS3Uploader);
 
     private final User user = User.builder()
             .id(0L)
