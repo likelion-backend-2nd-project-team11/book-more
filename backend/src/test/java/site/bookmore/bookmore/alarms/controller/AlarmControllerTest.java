@@ -15,7 +15,10 @@ import org.springframework.test.web.servlet.MockMvc;
 import site.bookmore.bookmore.alarms.entity.AlarmType;
 import site.bookmore.bookmore.alarms.dto.AlarmResponse;
 import site.bookmore.bookmore.alarms.service.AlarmService;
+import site.bookmore.bookmore.users.dto.UserDetailResponse;
+import site.bookmore.bookmore.users.entity.User;
 
+import java.util.HashMap;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -36,12 +39,16 @@ class AlarmControllerTest {
     @MockBean
     AlarmService alarmService;
 
+    User user = User.builder()
+            .id(2L)
+            .email("user2@test.com")
+            .build();
+
     AlarmResponse response = AlarmResponse.builder()
             .id(1L)
             .alarmType(AlarmType.NEW_FOLLOW_REVIEW)
-            .targetUser(1L)
-            .fromUser(2L)
-            .source(3L)
+            .fromUser(UserDetailResponse.of(user))
+            .source(new HashMap<>())
             .build();
 
 
@@ -57,9 +64,7 @@ class AlarmControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$..['id']").exists())
                 .andExpect(jsonPath("$..['alarmType']").exists())
-                .andExpect(jsonPath("$..['targetUser']").exists())
-                .andExpect(jsonPath("$..['fromUser']").exists())
-                .andExpect(jsonPath("$..['source']").exists());
+                .andExpect(jsonPath("$..['fromUser']").exists());
 
         verify(alarmService).findByFollowingReview(any(Pageable.class), eq("user2"));
     }
