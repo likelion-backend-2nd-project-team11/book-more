@@ -3,9 +3,13 @@ package site.bookmore.bookmore.users.controller;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import site.bookmore.bookmore.books.dto.ReviewPageResponse;
+import site.bookmore.bookmore.books.service.ReviewService;
 import site.bookmore.bookmore.common.dto.ResultResponse;
 import site.bookmore.bookmore.common.support.annotation.Authorized;
 import site.bookmore.bookmore.users.dto.*;
@@ -22,6 +26,7 @@ import java.io.IOException;
 public class UserController {
 
     private final UserService userService;
+    private final ReviewService reviewService;
 
 
     @ApiOperation(value = "회원가입")
@@ -85,5 +90,12 @@ public class UserController {
         String email = authentication.getName();
         String userNickname = userService.updateProfileDefault(email);
         return ResultResponse.success(new UserProfileResponse(userNickname, "프로필 기본 사진으로 변경 완료"));
+    }
+
+
+    @ApiOperation(value = "회원 리뷰 조회")
+    @GetMapping("/{id}/reviews")
+    public ResultResponse<Page<ReviewPageResponse>> findReviewsByAuthor(@ApiIgnore Pageable pageable, @PathVariable Long id) {
+        return ResultResponse.success(reviewService.findByAuthor(id, pageable));
     }
 }
