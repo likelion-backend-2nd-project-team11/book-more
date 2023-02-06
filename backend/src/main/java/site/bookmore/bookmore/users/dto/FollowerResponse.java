@@ -5,7 +5,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import site.bookmore.bookmore.users.entity.Follow;
-import site.bookmore.bookmore.users.entity.Tier;
 
 import java.time.format.DateTimeFormatter;
 
@@ -19,7 +18,6 @@ public class FollowerResponse {
     private String nickname;
     private Integer followerCount;
     private Integer followingCount;
-    private Tier tier;
     private String createdDatetime;
 
     public FollowerResponse(Follow follow) {
@@ -28,7 +26,6 @@ public class FollowerResponse {
         this.nickname = follow.getFollower().getNickname();
         this.followerCount = follow.getFollower().getFollowCount().getFollowerCount();
         this.followingCount = follow.getFollower().getFollowCount().getFollowingCount();
-        this.tier = follow.getFollower().getTier();
         this.createdDatetime = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss").format(follow.getCreatedDatetime());
     }
 }

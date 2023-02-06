@@ -9,5 +9,6 @@ ENTRYPOINT [                                                \
    "-jar",                                                 \
    "-Djava.security.egd=file:/dev/./urandom",              \
    "-Dsun.net.inetaddr.ttl=0",                             \
+   "-Dcom.amazonaws.sdk.disableEc2Metadata=true",          \
    "app.jar"              \
 ]

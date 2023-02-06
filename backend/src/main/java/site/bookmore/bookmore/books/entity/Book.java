@@ -49,9 +49,6 @@ public class Book {
 
     private Integer price;
 
-    @Column(nullable = false)
-    private Boolean cached = false;
-
     @CreatedDate
     private LocalDateTime createdDatetime;
 

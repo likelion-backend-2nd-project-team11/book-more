@@ -19,10 +19,10 @@ public class Follow extends BaseEntity {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "following", nullable = false)
+    @JoinColumn(name = "following", nullable = false, foreignKey = @ForeignKey(name = "fk_follow_following_user"))
     private User following;
 
     @ManyToOne
-    @JoinColumn(name = "follower", nullable = false)
+    @JoinColumn(name = "follower", nullable = false, foreignKey = @ForeignKey(name = "fk_follow_follower_user"))
     private User follower;
 }

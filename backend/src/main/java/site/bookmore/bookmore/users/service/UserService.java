@@ -7,11 +7,14 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 import site.bookmore.bookmore.common.exception.conflict.DuplicateEmailException;
 import site.bookmore.bookmore.common.exception.conflict.DuplicateNicknameException;
+import site.bookmore.bookmore.common.exception.conflict.DuplicateProfileException;
 import site.bookmore.bookmore.common.exception.not_found.UserNotFoundException;
 import site.bookmore.bookmore.common.exception.unauthorized.InvalidPasswordException;
 import site.bookmore.bookmore.common.exception.unauthorized.InvalidTokenException;
+import site.bookmore.bookmore.s3.AwsS3Uploader;
 import site.bookmore.bookmore.security.provider.JwtProvider;
 import site.bookmore.bookmore.users.dto.*;
 import site.bookmore.bookmore.users.entity.Ranks;
@@ -19,6 +22,11 @@ import site.bookmore.bookmore.users.entity.Role;
 import site.bookmore.bookmore.users.entity.User;
 import site.bookmore.bookmore.users.repositroy.RanksRepository;
 import site.bookmore.bookmore.users.repositroy.UserRepository;
+
+import java.io.IOException;
+import java.util.Objects;
+
+import static site.bookmore.bookmore.users.entity.User.DEFAULT_PROFILE_IMG_PATH;
 
 
 @RequiredArgsConstructor
@@ -29,6 +37,7 @@ public class UserService implements UserDetailsService {
     private final JwtProvider jwtProvider;
     private final UserRepository userRepository;
     private final RanksRepository ranksRepository;
+    private final AwsS3Uploader awsS3Uploader;
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
@@ -47,17 +56,20 @@ public class UserService implements UserDetailsService {
             throw new DuplicateNicknameException();
         });
         String encoded = passwordEncoder.encode(userJoinRequest.getPassword());
-        User user = userRepository.save(userJoinRequest.toEntity(encoded));
 
 
         // 회원 가입시 랭크 등록
-        Ranks findRank = ranksRepository.findTop1ByOrderByRankingDesc().orElse(Ranks.of(0L, 0, 1L, "0"));
+        Ranks lastRank = ranksRepository.findTop1ByOrderByRankingDesc().orElse(Ranks.of(0, 1L, null));
 
-        Integer findPoint = findRank.getPoint();
-        Long findRanking = findRank.getRanking();
+        Integer findPoint = lastRank.getPoint();
+        Long findRanking = lastRank.getRanking();
         Long ranking = findPoint == 0 ? findRanking : findRanking + 1;
 
-        ranksRepository.save(Ranks.of(user.getId(), 0, ranking, user.getNickname()));
+        User user = userJoinRequest.toEntity(encoded);
+
+        userRepository.save(user);
+
+        ranksRepository.save(Ranks.of(0, ranking, user));
 
         return UserJoinResponse.of(user);
     }
@@ -105,6 +117,25 @@ public class UserService implements UserDetailsService {
         return UserResponse.of(user, "수정 완료 했습니다.");
     }
 
+    /*내 정보 수정*/
+    @Transactional
+    public UserPersonalResponse infoEdit(String email, UserUpdateRequest userUpdateRequest) {
+
+        User user = userRepository.findByEmail(email).orElseThrow(UserNotFoundException::new);
+
+        infoUpdate(email, user.getId(), userUpdateRequest);
+
+        return UserPersonalResponse.of(user);
+    }
+
+
+    public UserPersonalResponse search(String email) {
+        User user = userRepository.findByEmail(email).orElseThrow(UserNotFoundException::new);
+        UserPersonalResponse userPersonalResponse = new UserPersonalResponse(user);
+        return userPersonalResponse;
+    }
+
+
     /**
      * 회원 탈퇴
      */
@@ -136,4 +167,31 @@ public class UserService implements UserDetailsService {
                 .build();
     }
 
+    @Transactional
+    public String updateProfile(MultipartFile multipartFile, String email) throws IOException {
+
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(UserNotFoundException::new);
+
+        String key = awsS3Uploader.upload(multipartFile);
+
+        user.updateProfile(key);
+        return user.getNickname();
+    }
+
+    @Transactional
+    public String updateProfileDefault(String email) {
+
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(UserNotFoundException::new);
+
+        if (Objects.equals(user.getProfile(), DEFAULT_PROFILE_IMG_PATH)) {
+            throw new DuplicateProfileException();
+        }
+
+        awsS3Uploader.delete(user.getProfile());
+
+        user.updateProfileDefault();
+        return user.getNickname();
+    }
 }

@@ -38,11 +38,11 @@ public class Alarm {
     private LocalDateTime createdDatetime;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "target_user", nullable = false)
+    @JoinColumn(name = "target_user", nullable = false, foreignKey = @ForeignKey(name = "fk_alarm_target_user"))
     private User targetUser;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "from_user", nullable = false)
+    @JoinColumn(name = "from_user", nullable = false, foreignKey = @ForeignKey(name = "fk_alarm_from_user"))
     private User fromUser;
 
 

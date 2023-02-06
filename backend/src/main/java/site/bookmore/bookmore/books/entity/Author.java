@@ -12,7 +12,7 @@ import javax.persistence.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "book_author", uniqueConstraints = {@UniqueConstraint(name = "idx_name_book", columnNames = {"name", "book_id"})})
+@Table(name = "book_author")
 public class Author {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,6 +22,7 @@ public class Author {
     private String name;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(foreignKey = @ForeignKey(name = "fk_author_book"))
     private Book book;
 
     public void setBook(Book book) {
