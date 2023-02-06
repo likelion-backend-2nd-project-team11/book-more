@@ -14,6 +14,7 @@ public enum ErrorCode {
     BAD_CONSTANT(BAD_REQUEST, "잘못된 인자입니다."),
     BOOK_NOT_FOUND(NOT_FOUND, "해당하는 책 정보를 찾을 수 없습니다."),
     REVIEW_NOT_FOUND(NOT_FOUND, "해당하는 리뷰를 찾을 수 없습니다."),
+    REVIEW_TAG_RELATION_NOT_FOUND(NOT_FOUND, "해당하는 리뷰 태그 관계를 찾을 수 없습니다."),
     FOLLOW_NOT_FOUND(NOT_FOUND, "팔로우 중이 아닙니다."),
     API_REQUEST_TIMEOUT(REQUEST_TIMEOUT, "요청 시간이 초과되었습니다."),
     DUPLICATED_NICKNAME(CONFLICT, "이미 사용중인 닉네임입니다."),

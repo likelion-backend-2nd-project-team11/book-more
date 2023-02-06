@@ -8,6 +8,9 @@ import site.bookmore.bookmore.common.entity.BaseEntity;
 import site.bookmore.bookmore.users.entity.User;
 
 import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Entity
 @Getter
@@ -34,11 +37,27 @@ public class Review extends BaseEntity {
 
     private int likesCount;
 
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "review", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+    @Builder.Default
+    private Set<ReviewTag> reviewTags = new HashSet<>();
+
+    public Set<Tag> getTags() {
+        return reviewTags.stream().map(ReviewTag::getTag).collect(Collectors.toSet());
+    }
+
+    public Set<String> extractTagsLabel() {
+        return reviewTags.stream().map(reviewTag -> reviewTag.getTag().getLabel()).collect(Collectors.toSet());
+    }
+
     // 도서 리뷰 수정
     public void update(Review review) {
         updateBody(review.getBody());
         updateSpoiler(review.getSpoiler());
-        chart.update(review.getChart());
+        updateChart(review.getChart());
+    }
+
+    public void removeReviewTag(ReviewTag reviewTag) {
+        this.reviewTags.remove(reviewTag);
     }
 
     private void updateBody(String body) {
@@ -50,6 +69,12 @@ public class Review extends BaseEntity {
     private void updateSpoiler(Boolean spoiler) {
         if (spoiler != null) {
             this.spoiler = spoiler;
+        }
+    }
+
+    private void updateChart(Chart chart) {
+        if (chart != null) {
+            this.chart.update(chart);
         }
     }
 

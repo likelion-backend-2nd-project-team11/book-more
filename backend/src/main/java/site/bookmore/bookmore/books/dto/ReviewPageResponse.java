@@ -7,6 +7,9 @@ import lombok.NoArgsConstructor;
 import site.bookmore.bookmore.books.entity.Review;
 
 import java.time.format.DateTimeFormatter;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Builder
 @AllArgsConstructor
@@ -16,6 +19,8 @@ public class ReviewPageResponse {
     private Long id;
     private String nickname;
     private String body;
+    @Builder.Default
+    private Set<TagResponse> tags = new HashSet<>();
     private boolean spoiler;
     private int professionalism;
     private int fun;
@@ -30,6 +35,7 @@ public class ReviewPageResponse {
                 .id(review.getId())
                 .nickname(review.getAuthor().getNickname())
                 .body(review.getBody())
+                .tags(review.getTags().stream().map(TagResponse::of).collect(Collectors.toSet()))
                 .spoiler(review.getSpoiler())
                 .professionalism(review.getChart().getProfessionalism())
                 .fun(review.getChart().getFun())
