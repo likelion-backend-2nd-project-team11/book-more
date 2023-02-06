@@ -14,6 +14,7 @@ import javax.persistence.*;
 @Getter
 public class Ranks {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(nullable = false)
@@ -21,19 +22,22 @@ public class Ranks {
 
     private Long ranking;
 
-    private String nickname;
+    @OneToOne
+    private User user;
 
-    public Ranks(Long id, Integer point) {
-        this.id = id;
-        this.point = point;
+    public void updatePoint(Integer point) {
+        if (point != null) this.point = point;
     }
 
-    public static Ranks of(Long id,Integer point,Long ranking,String nickname) {
+    public void updateRanking(Long ranking) {
+        if (ranking != null) this.ranking = ranking;
+    }
+
+    public static Ranks of(Integer point, Long ranking, User user) {
         return Ranks.builder()
-                .id(id)
                 .point(point)
                 .ranking(ranking)
-                .nickname(nickname)
+                .user(user)
                 .build();
     }
 }

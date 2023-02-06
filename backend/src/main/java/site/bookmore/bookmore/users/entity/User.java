@@ -74,6 +74,7 @@ public class User extends BaseEntity implements UserDetails {
                 .followerCount(0)
                 .followingCount(0)
                 .build();
+        this.profile = DEFAULT_PROFILE_IMG_PATH;
     }
 
     public void update(User user) {
@@ -105,7 +106,7 @@ public class User extends BaseEntity implements UserDetails {
     }
 
     private void setProfile(String profile) {
-        if (profile != null) {
+        if (profile != null && !profile.equals(DEFAULT_PROFILE_IMG_PATH)) {
             this.profile = profile;
         }
     }

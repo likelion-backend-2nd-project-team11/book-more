@@ -24,5 +24,6 @@ public class RanksResponse {
         this.id = ranks.getId();
         this.point = ranks.getPoint();
         this.ranking = ranks.getRanking();
+        this.nickName = ranks.getUser().getNickname();
     }
 }

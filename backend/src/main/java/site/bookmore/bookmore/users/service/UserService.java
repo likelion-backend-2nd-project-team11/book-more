@@ -7,9 +7,9 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 import site.bookmore.bookmore.common.exception.conflict.DuplicateEmailException;
 import site.bookmore.bookmore.common.exception.conflict.DuplicateNicknameException;
-import org.springframework.web.multipart.MultipartFile;
 import site.bookmore.bookmore.common.exception.conflict.DuplicateProfileException;
 import site.bookmore.bookmore.common.exception.not_found.UserNotFoundException;
 import site.bookmore.bookmore.common.exception.unauthorized.InvalidPasswordException;
@@ -56,17 +56,20 @@ public class UserService implements UserDetailsService {
             throw new DuplicateNicknameException();
         });
         String encoded = passwordEncoder.encode(userJoinRequest.getPassword());
-        User user = userRepository.save(userJoinRequest.toEntity(encoded));
 
 
         // 회원 가입시 랭크 등록
-        Ranks findRank = ranksRepository.findTop1ByOrderByRankingDesc().orElse(Ranks.of(0L, 0, 1L, "0"));
+        Ranks lastRank = ranksRepository.findTop1ByOrderByRankingDesc().orElse(Ranks.of(0, 1L, null));
 
-        Integer findPoint = findRank.getPoint();
-        Long findRanking = findRank.getRanking();
+        Integer findPoint = lastRank.getPoint();
+        Long findRanking = lastRank.getRanking();
         Long ranking = findPoint == 0 ? findRanking : findRanking + 1;
 
-        ranksRepository.save(Ranks.of(user.getId(), 0, ranking, user.getNickname()));
+        User user = userJoinRequest.toEntity(encoded);
+
+        userRepository.save(user);
+
+        ranksRepository.save(Ranks.of(0, ranking, user));
 
         return UserJoinResponse.of(user);
     }
@@ -149,9 +152,6 @@ public class UserService implements UserDetailsService {
         UserUpdateResponse userUpdateResponse = new UserUpdateResponse(user);
         return userUpdateResponse;
     }
-
-
-
 
 
     /**

@@ -5,7 +5,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import site.bookmore.bookmore.users.entity.User;
 
-
 import javax.validation.constraints.Email;
 import java.time.LocalDate;
 

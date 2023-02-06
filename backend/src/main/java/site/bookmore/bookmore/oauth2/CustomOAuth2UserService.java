@@ -44,15 +44,17 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
 
         User user = userRepository.findByEmail(oAuth2Attribute.getEmail())
                 .orElseGet(() -> {
-                    User saved = userRepository.save(UserMapper.of(oAuth2User));
+                    User saved = UserMapper.of(oAuth2User);
                     // 랭킹 등록
-                    Ranks findRank = ranksRepository.findTop1ByOrderByRankingDesc().orElse(Ranks.of(0L, 0, 1L, "0"));
+                    Ranks findRank = ranksRepository.findTop1ByOrderByRankingDesc().orElse(Ranks.of(0, 1L, null));
 
                     Integer findPoint = findRank.getPoint();
                     Long findRanking = findRank.getRanking();
                     Long ranking = findPoint == 0 ? findRanking : findRanking + 1;
 
-                    ranksRepository.save(Ranks.of(saved.getId(), 0, ranking, saved.getNickname()));
+                    userRepository.save(saved);
+
+                    ranksRepository.save(Ranks.of(0, ranking, saved));
 
                     return saved;
                 });
