@@ -178,9 +178,13 @@ class UserControllerTest {
     @Test
     @DisplayName("내 정보 수정")
     void infoEdit_success() throws Exception {
-        UserUpdateResponse userUpdateResponse = new UserUpdateResponse("test@test.com","HANA",LocalDate.of(2014,07,24));
+        UserPersonalResponse userPersonalResponse = UserPersonalResponse.builder()
+                .email("test@test.com")
+                .nickname("HANA")
+                .birth(LocalDate.of(2014, 7, 27))
+                .build();
 
-        given(userService.infoEdit(any(), any(UserUpdateRequest.class))).willReturn(userUpdateResponse);
+        given(userService.infoEdit(any(), any(UserUpdateRequest.class))).willReturn(userPersonalResponse);
 
         mockMvc.perform(post("/api/v1/users/me")
                 .with(csrf())

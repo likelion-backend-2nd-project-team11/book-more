@@ -119,38 +119,20 @@ public class UserService implements UserDetailsService {
 
     /*내 정보 수정*/
     @Transactional
-    public UserUpdateResponse infoEdit(String email, UserUpdateRequest userUpdateRequest) {
+    public UserPersonalResponse infoEdit(String email, UserUpdateRequest userUpdateRequest) {
 
         User user = userRepository.findByEmail(email).orElseThrow(UserNotFoundException::new);
 
+        infoUpdate(email, user.getId(), userUpdateRequest);
 
-        // 중복 이름 예외처리
-        if (userUpdateRequest.getNickname() != null) {
-            userRepository.findByNickname(userUpdateRequest.getNickname())
-                    .ifPresent(user1 -> {
-                        throw new DuplicateNicknameException();
-                    });
-        }
-
-        // password encode
-        String encoded = userUpdateRequest.getPassword();
-        if (encoded == null) {
-            encoded = user.getPassword();
-        }
-        String encodedPw = passwordEncoder.encode(encoded);
-
-        user.update(userUpdateRequest.toEntity(encodedPw));
-        userRepository.saveAndFlush(user);
-
-        UserUpdateResponse userUpdateResponse = new UserUpdateResponse(user);
-        return userUpdateResponse;
+        return UserPersonalResponse.of(user);
     }
 
 
-    public UserUpdateResponse search(String email) {
+    public UserPersonalResponse search(String email) {
         User user = userRepository.findByEmail(email).orElseThrow(UserNotFoundException::new);
-        UserUpdateResponse userUpdateResponse = new UserUpdateResponse(user);
-        return userUpdateResponse;
+        UserPersonalResponse userPersonalResponse = new UserPersonalResponse(user);
+        return userPersonalResponse;
     }
 
 

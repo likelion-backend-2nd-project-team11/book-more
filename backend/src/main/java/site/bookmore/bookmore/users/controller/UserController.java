@@ -71,7 +71,7 @@ public class UserController {
     @Authorized
     @ApiOperation(value = "내 정보 수정")
     @PostMapping("/me")
-    public ResultResponse<UserUpdateResponse> update(@RequestBody UserUpdateRequest userUpdateRequest, @ApiIgnore Authentication authentication) {
+    public ResultResponse<UserPersonalResponse> update(@RequestBody UserUpdateRequest userUpdateRequest, @ApiIgnore Authentication authentication) {
         String email = authentication.getName();
         return ResultResponse.success(userService.infoEdit(email, userUpdateRequest));
     }
@@ -79,10 +79,10 @@ public class UserController {
     @Authorized
     @ApiOperation(value = "내 정보 조회")
     @GetMapping("/me")
-    public ResultResponse<UserUpdateResponse> searchMyProfile(@ApiIgnore Authentication authentication) {
+    public ResultResponse<UserPersonalResponse> searchMyProfile(@ApiIgnore Authentication authentication) {
         String email = authentication.getName();
-        UserUpdateResponse userUpdateResponse = userService.search(email);
-        return ResultResponse.success(userUpdateResponse);
+        UserPersonalResponse userPersonalResponse = userService.search(email);
+        return ResultResponse.success(userPersonalResponse);
     }
 
     @ApiOperation(value = "회원 상세 정보")

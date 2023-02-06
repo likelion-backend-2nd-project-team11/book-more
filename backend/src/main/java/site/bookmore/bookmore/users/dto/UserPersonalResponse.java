@@ -11,22 +11,24 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
-public class UserUpdateResponse {
+public class UserPersonalResponse {
     private String email;
     private String nickname;
     private LocalDate birth;
+    private String profile;
 
-    public UserUpdateResponse(User user) {
+    public UserPersonalResponse(User user) {
         this.email = user.getEmail();
         this.nickname = user.getNickname();
         this.birth = user.getBirth();
     }
 
-    public static UserUpdateResponse of(User user){
-        return UserUpdateResponse.builder()
+    public static UserPersonalResponse of(User user){
+        return UserPersonalResponse.builder()
                 .email(user.getEmail())
                 .nickname(user.getNickname())
                 .birth(user.getBirth())
+                .profile(user.getProfile())
                 .build();
     }
 }
