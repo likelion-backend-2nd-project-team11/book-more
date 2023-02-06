@@ -7,6 +7,10 @@
 
 <br>
 
+### 배포
+- [Swagger](https://api.bookmore.site/swagger-ui/index.html)
+- [홈페이지](https://www.bookmore.site)
+
 ### ⚒️ 개발 환경
 
 - 에디터 : Intellij Ultimate
