@@ -25,11 +25,11 @@ public class Likes extends BaseEntity {
     private boolean liked;
 
     @ManyToOne(fetch = LAZY, optional = false)
-    @JoinColumn(name = "review_id")
+    @JoinColumn(name = "review_id", foreignKey = @ForeignKey(name = "fk_likes_review"))
     private Review review;
 
     @ManyToOne(fetch = LAZY, optional = false)
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_id", foreignKey = @ForeignKey(name = "fk_likes_user"))
     private User user;
 
     public static Likes of(User user, Review review) {

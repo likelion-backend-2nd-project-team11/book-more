@@ -19,6 +19,7 @@ public class Translator {
     private String name;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(foreignKey = @ForeignKey(name = "fk_translator_book"))
     private Book book;
 
     public void setBook(Book book) {

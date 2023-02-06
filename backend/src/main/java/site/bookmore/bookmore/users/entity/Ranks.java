@@ -22,7 +22,8 @@ public class Ranks {
 
     private Long ranking;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", foreignKey = @ForeignKey(name = "fk_ranks_user"))
     private User user;
 
     public void updatePoint(Integer point) {

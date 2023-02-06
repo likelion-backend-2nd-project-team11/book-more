@@ -17,8 +17,10 @@ public class ReviewTag {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "review_id", foreignKey = @ForeignKey(name = "fk_review_tag_review"))
     private Review review;
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "tag_id", foreignKey = @ForeignKey(name = "fk_review_tag_tag"))
     private Tag tag;
 
     @Builder

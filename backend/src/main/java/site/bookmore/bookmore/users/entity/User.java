@@ -40,11 +40,6 @@ public class User extends BaseEntity implements UserDetails {
     @Column(nullable = false)
     private Role role = Role.ROLE_USER;
 
-    // @Enumerated enum 이름을 DB에 저장
-    @Enumerated(EnumType.STRING)
-//    @Column(nullable = false)
-    private Tier tier;
-
     @Column(nullable = false)
     private LocalDate birth;
 
@@ -52,7 +47,7 @@ public class User extends BaseEntity implements UserDetails {
     private boolean enabled = true;
 
     @OneToOne(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
-    @JoinColumn(name = "follow_count_id")
+    @JoinColumn(name = "follow_count_id", foreignKey = @ForeignKey(name = "fk_user_follow_count"))
     private FollowCount followCount;
 
     public User(String email) {
@@ -62,12 +57,11 @@ public class User extends BaseEntity implements UserDetails {
     private String profile = DEFAULT_PROFILE_IMG_PATH;
 
     @Builder
-    public User(Long id, String email, String password, Role role, String nickname, Tier tier, LocalDate birth) {
+    public User(Long id, String email, String password, Role role, String nickname, LocalDate birth) {
         this.id = id;
         this.email = email;
         this.password = password;
         this.nickname = nickname;
-        this.tier = tier;
         this.birth = birth;
         this.role = role == null ? Role.ROLE_USER : role;
         this.followCount = FollowCount.builder()

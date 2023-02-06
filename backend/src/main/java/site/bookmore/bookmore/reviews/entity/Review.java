@@ -24,16 +24,18 @@ public class Review extends BaseEntity {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "author_id", foreignKey = @ForeignKey(name = "fk_review_user"))
     private User author;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "book_id", foreignKey = @ForeignKey(name = "fk_review_book"))
     private Book book;
 
     private String body;
     private Boolean spoiler;
 
     @OneToOne(fetch = FetchType.LAZY, optional = false, cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
-    @JoinColumn(name = "chart_id")
+    @JoinColumn(name = "chart_id", foreignKey = @ForeignKey(name = "fk_review_chart"))
     private Chart chart;
 
     private int likesCount;
