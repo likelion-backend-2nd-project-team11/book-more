@@ -9,6 +9,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
+import site.bookmore.bookmore.books.service.ReviewService;
 import site.bookmore.bookmore.common.exception.conflict.DuplicateEmailException;
 import site.bookmore.bookmore.common.exception.conflict.DuplicateNicknameException;
 import site.bookmore.bookmore.common.exception.not_found.UserNotFoundException;
@@ -33,6 +34,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class UserControllerTest {
     @MockBean
     UserService userService;
+    @MockBean
+    ReviewService reviewService;
 
     @Autowired
     ObjectMapper objectMapper;
