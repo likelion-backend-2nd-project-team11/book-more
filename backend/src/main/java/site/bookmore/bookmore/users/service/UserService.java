@@ -1,17 +1,28 @@
 package site.bookmore.bookmore.users.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import site.bookmore.bookmore.books.dto.ReviewPageResponse;
+import site.bookmore.bookmore.books.entity.Book;
 import site.bookmore.bookmore.common.exception.conflict.DuplicateEmailException;
 import site.bookmore.bookmore.common.exception.conflict.DuplicateNicknameException;
+import site.bookmore.bookmore.common.exception.not_found.BookNotFoundException;
+import site.bookmore.bookmore.common.exception.not_found.EmailNotFoundException;
+import org.springframework.web.multipart.MultipartFile;
+import site.bookmore.bookmore.common.exception.conflict.DuplicateEmailException;
+import site.bookmore.bookmore.common.exception.conflict.DuplicateNicknameException;
+import site.bookmore.bookmore.common.exception.conflict.DuplicateProfileException;
 import site.bookmore.bookmore.common.exception.not_found.UserNotFoundException;
 import site.bookmore.bookmore.common.exception.unauthorized.InvalidPasswordException;
 import site.bookmore.bookmore.common.exception.unauthorized.InvalidTokenException;
+import site.bookmore.bookmore.s3.AwsS3Uploader;
 import site.bookmore.bookmore.security.provider.JwtProvider;
 import site.bookmore.bookmore.users.dto.*;
 import site.bookmore.bookmore.users.entity.Ranks;
@@ -19,6 +30,11 @@ import site.bookmore.bookmore.users.entity.Role;
 import site.bookmore.bookmore.users.entity.User;
 import site.bookmore.bookmore.users.repositroy.RanksRepository;
 import site.bookmore.bookmore.users.repositroy.UserRepository;
+
+import java.io.IOException;
+import java.util.Objects;
+
+import static site.bookmore.bookmore.users.entity.User.DEFAULT_PROFILE_IMG_PATH;
 
 
 @RequiredArgsConstructor
@@ -29,6 +45,7 @@ public class UserService implements UserDetailsService {
     private final JwtProvider jwtProvider;
     private final UserRepository userRepository;
     private final RanksRepository ranksRepository;
+    private final AwsS3Uploader awsS3Uploader;
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
@@ -105,6 +122,46 @@ public class UserService implements UserDetailsService {
         return UserResponse.of(user, "수정 완료 했습니다.");
     }
 
+    /*내 정보 수정*/
+    @Transactional
+    public UserUpdateResponse infoEdit(String email, UserUpdateRequest userUpdateRequest) {
+
+        User user = userRepository.findByEmail(email).orElseThrow(UserNotFoundException::new);
+
+
+        // 중복 이름 예외처리
+        if (userUpdateRequest.getNickname() != null) {
+            userRepository.findByNickname(userUpdateRequest.getNickname())
+                    .ifPresent(user1 -> {
+                        throw new DuplicateNicknameException();
+                    });
+        }
+
+        // password encode
+        String encoded = userUpdateRequest.getPassword();
+        if (encoded == null) {
+            encoded = user.getPassword();
+        }
+        String encodedPw = passwordEncoder.encode(encoded);
+
+        user.update(userUpdateRequest.toEntity(encodedPw));
+        userRepository.saveAndFlush(user);
+
+        UserUpdateResponse userUpdateResponse = new UserUpdateResponse(user);
+        return userUpdateResponse;
+    }
+
+
+    public UserUpdateResponse search(String email) {
+        User user = userRepository.findByEmail(email).orElseThrow(UserNotFoundException::new);
+        UserUpdateResponse userUpdateResponse = new UserUpdateResponse(user);
+        return userUpdateResponse;
+    }
+
+
+
+
+
     /**
      * 회원 탈퇴
      */
@@ -136,4 +193,31 @@ public class UserService implements UserDetailsService {
                 .build();
     }
 
+    @Transactional
+    public String updateProfile(MultipartFile multipartFile, String email) throws IOException {
+
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(UserNotFoundException::new);
+
+        String key = awsS3Uploader.upload(multipartFile);
+
+        user.updateProfile(key);
+        return user.getNickname();
+    }
+
+    @Transactional
+    public String updateProfileDefault(String email) {
+
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(UserNotFoundException::new);
+
+        if (Objects.equals(user.getProfile(), DEFAULT_PROFILE_IMG_PATH)) {
+            throw new DuplicateProfileException();
+        }
+
+        awsS3Uploader.delete(user.getProfile());
+
+        user.updateProfileDefault();
+        return user.getNickname();
+    }
 }
