@@ -23,30 +23,32 @@ public class WebSecurityConfig {
     private final JwtProvider jwtProvider;
 
     public static final String[] GET_AUTHENTICATED_REGEX_LIST = {
-            "^/api/v1/challenges/\\d{0,}$",
+            "^/api/v1/users/me$",
+            "^/api/v1/challenges/\\d*$",
             "^/api/v1/challenges$",
             "^/api/v1/alarms$",
     };
 
     public static final String[] POST_AUTHENTICATED_REGEX_LIST = {
-            "^/api/v1/users/\\d{0,}$",
-            "^/api/v1/users/\\d{0,}/follow$",
+            "^/api/v1/users/\\d*$",
+            "^/api/v1/users/me$",
+            "^/api/v1/users/\\d*/follow$",
             "^/api/v1/users/verify$",
             "^/api/v1/challenges$",
-            "^/api/v1/books/\\w{0,}/reviews$",
-            "^/api/v1/books/reviews/\\d{0,}/likes$",
+            "^/api/v1/books/\\w*/reviews$",
+            "^/api/v1/books/reviews/\\d*/likes$",
     };
 
     public static final String[] PATCH_AUTHENTICATED_REGEX_LIST = {
-            "^/api/v1/challenges/\\d{0,}$",
-            "^/api/v1/books/reviews/\\d{0,}$",
+            "^/api/v1/challenges/\\d*$",
+            "^/api/v1/books/reviews/\\d*$",
     };
 
     public static final String[] DELETE_AUTHENTICATED_REGEX_LIST = {
-            "^/api/v1/users/\\d{0,}$",
-            "^/api/v1/users/\\d{0,}/follow$",
-            "^/api/v1/challenges/\\d{0,}$",
-            "^/api/v1/books/reviews/\\d{0,}$",
+            "^/api/v1/users/\\d*$",
+            "^/api/v1/users/\\d*/follow$",
+            "^/api/v1/challenges/\\d*$",
+            "^/api/v1/books/reviews/\\d*$",
     };
 
     @Bean
