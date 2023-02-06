@@ -21,9 +21,19 @@ public class Ranks {
 
     private Long ranking;
 
+    private String nickname;
+
     public Ranks(Long id, Integer point) {
         this.id = id;
         this.point = point;
     }
 
+    public static Ranks of(Long id,Integer point,Long ranking,String nickname) {
+        return Ranks.builder()
+                .id(id)
+                .point(point)
+                .ranking(ranking)
+                .nickname(nickname)
+                .build();
+    }
 }

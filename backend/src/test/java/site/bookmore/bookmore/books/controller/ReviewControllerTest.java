@@ -10,8 +10,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
+import site.bookmore.bookmore.books.dto.ChartRequest;
 import site.bookmore.bookmore.books.dto.ReviewRequest;
-import site.bookmore.bookmore.books.entity.Chart;
 import site.bookmore.bookmore.books.service.ReviewService;
 
 import static org.mockito.ArgumentMatchers.*;
@@ -40,7 +40,7 @@ class ReviewControllerTest {
     @WithMockUser
     void create_success() throws Exception {
         // given
-        ReviewRequest reviewRequest = new ReviewRequest("body", false, Chart.builder().build());
+        ReviewRequest reviewRequest = new ReviewRequest("body", false, ChartRequest.builder().build());
 
         // when
         when(reviewService.create(any(ReviewRequest.class), eq("9791158393083"), anyString()))
@@ -57,6 +57,49 @@ class ReviewControllerTest {
                 .andExpect(jsonPath("$.result.message").value("리뷰 등록 완료"));
 
         verify(reviewService).create(any(ReviewRequest.class), eq("9791158393083"), anyString());
+    }
+
+    @Test
+    @DisplayName("도서 리뷰 등록 실패 - 본문이 빈 값인 경우")
+    @WithMockUser
+    void create_body_is_null() throws Exception {
+        // given
+        ReviewRequest reviewRequest = new ReviewRequest(" ", false, ChartRequest.builder().build());
+
+        // then
+        mockMvc.perform(post("/api/v1/books/9791158393083/reviews")
+                        .with(csrf())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsBytes(reviewRequest)))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.resultCode").value("ERROR"))
+                .andExpect(jsonPath("$.result.errorCode").value("body 입력값 오류"))
+                .andExpect(jsonPath("$.result.message").value("본문은 반드시 작성되어야 하는 항목입니다."));
+    }
+
+    @Test
+    @DisplayName("도서 리뷰 등록 실패 - chart 잘못된 입력")
+    @WithMockUser
+    void create_chart_fault() throws Exception {
+        // given
+        ReviewRequest reviewRequest = new ReviewRequest("body", false,
+                ChartRequest.builder()
+                        .professionalism(0)
+                        .fun(5)
+                        .readability(5)
+                        .collectible(5)
+                        .difficulty(5)
+                        .build());
+
+        // then
+        mockMvc.perform(post("/api/v1/books/9791158393083/reviews")
+                        .with(csrf())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsBytes(reviewRequest)))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.resultCode").value("ERROR"))
+                .andExpect(jsonPath("$.result.errorCode").value("professionalism 입력값 오류"))
+                .andExpect(jsonPath("$.result.message").value("1 ~ 5점 사이의 점수만 부여할 수 있습니다."));
     }
 
     /* ========== 도서 리뷰 조회 ========== */
@@ -84,7 +127,7 @@ class ReviewControllerTest {
     @WithMockUser
     void update_success() throws Exception {
         // given
-        ReviewRequest reviewRequest = new ReviewRequest("new body", true, Chart.builder().build());
+        ReviewRequest reviewRequest = new ReviewRequest("new body", true, ChartRequest.builder().build());
 
         // when
         when(reviewService.update(any(ReviewRequest.class), eq(1L), anyString()))

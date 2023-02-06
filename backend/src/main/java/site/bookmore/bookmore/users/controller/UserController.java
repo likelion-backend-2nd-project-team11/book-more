@@ -73,12 +73,18 @@ public class UserController {
         return ResultResponse.success(userService.infoEdit(email, userUpdateRequest));
     }
 
-
+    @Authorized
     @ApiOperation(value = "내 정보 조회")
     @GetMapping("/me")
-    public ResultResponse<UserUpdateResponse> searchMyProfile(String email) {
+    public ResultResponse<UserUpdateResponse> searchMyProfile(@ApiIgnore Authentication authentication) {
+        String email = authentication.getName();
         UserUpdateResponse userUpdateResponse = userService.search(email);
         return ResultResponse.success(userUpdateResponse);
+
+    @ApiOperation(value = "회원 상세 정보")
+    @GetMapping("/{id}")
+    public ResultResponse<UserDetailResponse> detail(@PathVariable Long id) {
+        return ResultResponse.success(userService.detail(id));
     }
 }
 

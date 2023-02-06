@@ -14,9 +14,7 @@ import site.bookmore.bookmore.common.dto.ResultResponse;
 import javax.persistence.PersistenceException;
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import static site.bookmore.bookmore.common.exception.ErrorCode.DATABASE_ERROR;
@@ -40,29 +38,41 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(BindException.class)
-    public ResponseEntity<ResultResponse<Map>> handleBindExceptions(BindException e) {
+    public ResponseEntity<ResultResponse<ErrorResponse>> handleBindExceptions(BindException e) {
         BindingResult bindingResult = e.getBindingResult();
+        Map<String, String> result = new HashMap<>();
 
-        Map<String, List<String>> result = new HashMap<>();
+        String key;
+
         for (FieldError fieldError : bindingResult.getFieldErrors()) {
-            List<String> msg = result.getOrDefault(fieldError.getField(), new ArrayList<>());
-            msg.add(fieldError.getDefaultMessage());
-            result.put(fieldError.getField(), msg);
+            key = fieldError.getField();
+            if (key.lastIndexOf('.') != -1) {
+                key = key.substring(key.lastIndexOf('.') + 1);
+            }
+            result.put(key, fieldError.getDefaultMessage());
         }
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                .body(ResultResponse.error(result));
+                .body(ResultResponse.error(ErrorResponse.of(result)));
     }
 
     @ExceptionHandler(ConstraintViolationException.class)
-    public ResponseEntity<ResultResponse<Map>> handleValidationExceptions(ConstraintViolationException e) {
+    public ResponseEntity<ResultResponse<ErrorResponse>> handleValidationExceptions(ConstraintViolationException e) {
         Map<String, String> result = new HashMap<>();
 
+        String key;
+
         for (ConstraintViolation<?> cv : e.getConstraintViolations()) {
-            result.put(cv.getInvalidValue().toString(), cv.getMessage());
+
+            key = String.valueOf(cv.getPropertyPath());
+            if (key.lastIndexOf('.') != -1) {
+                key = key.substring(key.lastIndexOf('.') + 1);
+            }
+
+            result.put(key, cv.getMessage());
         }
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                .body(ResultResponse.error(result));
+                .body(ResultResponse.error(ErrorResponse.of(result)));
     }
 }

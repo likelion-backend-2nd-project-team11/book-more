@@ -21,15 +21,23 @@
 }
 
 :root {
-    --bs-family-color: #4D5DB3;
+    --bm-family-color: #4D5DB3;
 }
 
 .bg-family-color {
-    background: var(--bs-family-color);
+    background: var(--bm-family-color);
+}
+
+.text-family-color {
+    color: var(--bm-family-color);
+}
+
+.text-hover-family-color:hover {
+    color: var(--bm-family-color);
 }
 
 /* HannahO or HannahW: 운영체제에 맞춰 삽입 */
-.body-font {
+.side-bar-font {
     font-family: "HannahO";
 }
 
@@ -40,4 +48,9 @@
 
 #offcanvasRight {
     width: 300px;
+}
+
+.bm-scale-animation:hover {
+    transition: all 0.2s linear;
+    transform: scale(1.05);
 }

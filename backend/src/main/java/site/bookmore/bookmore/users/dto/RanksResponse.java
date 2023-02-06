@@ -17,13 +17,12 @@ public class RanksResponse {
     private Long id;
     private Integer point;
     private Long ranking;
+    private String nickName;
 
 
     public RanksResponse(Ranks ranks) {
         this.id = ranks.getId();
         this.point = ranks.getPoint();
         this.ranking = ranks.getRanking();
-
     }
-    
 }

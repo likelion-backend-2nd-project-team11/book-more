@@ -4,17 +4,21 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import site.bookmore.bookmore.books.entity.Book;
-import site.bookmore.bookmore.books.entity.Chart;
 import site.bookmore.bookmore.books.entity.Review;
 import site.bookmore.bookmore.users.entity.User;
+
+import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 public class ReviewRequest {
+    @NotBlank(message = "본문은 반드시 작성되어야 하는 항목입니다.")
     private String body;
     private boolean spoiler;
-    private Chart chart;
+    @Valid
+    private ChartRequest chart;
 
     // 도서 리뷰 등록
     public Review toEntity(User user, Book book) {
@@ -23,7 +27,7 @@ public class ReviewRequest {
                 .book(book)
                 .body(body)
                 .spoiler(spoiler)
-                .chart(chart)
+                .chart(chart.toEntity())
                 .likesCount(0)
                 .build();
     }
@@ -33,7 +37,7 @@ public class ReviewRequest {
         return Review.builder()
                 .body(body)
                 .spoiler(spoiler)
-                .chart(chart)
+                .chart(chart.toEntity())
                 .build();
     }
 }
