@@ -51,11 +51,13 @@ function fetchGetReviewsByBook(isbn) {
             `<article class="review-item mb-5 p-3 pb-5 shadow bg-white">
                     <div class="review-content  d-flex">
                     <canvas class="chart me-3" width="200px" height="200px" id="chart-${review.id}"></canvas>
-                    <div>
+                    <div style="width: 100%">
                         <h4>@${review.nickname}</h4>
-                        <p>
+                        <p class="spoiler" style="display: ${review.spoiler ? 'none' : 'block'}">
                             ${review.body}
                         </p>
+                        <p class="spoilerText" style="display: ${review.spoiler ? 'block' : 'none'}">스포일러가 포함된 내용입니다</p>
+                        <button type="button" onclick="more()" style="display: ${review.spoiler ? 'block' : 'none'};float:right;margin-top: 90px;border: none;border-radius:0.7em;padding: 6px;background-color: white;color: dimgrey">더보기</button>
                     </div>
                     </div>
                     <div class="review-footer">
@@ -93,6 +95,12 @@ function fetchGetReviewsByBook(isbn) {
             });
         })
     })
+}
+
+
+function more(){
+    document.querySelector('.spoiler').style.display = "block";
+    document.querySelector('.spoilerText').style.display = "none";
 }
 
 function fetchPostReviewLike(id, token) {
