@@ -1,9 +1,10 @@
-package site.bookmore.bookmore.books.entity;
+package site.bookmore.bookmore.reviews.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import site.bookmore.bookmore.books.entity.Book;
 import site.bookmore.bookmore.common.entity.BaseEntity;
 import site.bookmore.bookmore.users.entity.User;
 

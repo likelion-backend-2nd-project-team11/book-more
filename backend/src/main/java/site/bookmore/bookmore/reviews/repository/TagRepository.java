@@ -1,8 +1,8 @@
-package site.bookmore.bookmore.books.repository;
+package site.bookmore.bookmore.reviews.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import site.bookmore.bookmore.books.entity.Tag;
+import site.bookmore.bookmore.reviews.entity.Tag;
 
 import java.util.Optional;
 

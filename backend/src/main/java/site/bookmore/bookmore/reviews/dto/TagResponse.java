@@ -1,9 +1,9 @@
-package site.bookmore.bookmore.books.dto;
+package site.bookmore.bookmore.reviews.dto;
 
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import site.bookmore.bookmore.books.entity.Tag;
+import site.bookmore.bookmore.reviews.entity.Tag;
 
 @Getter
 @NoArgsConstructor

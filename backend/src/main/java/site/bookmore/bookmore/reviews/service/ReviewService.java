@@ -1,4 +1,4 @@
-package site.bookmore.bookmore.books.service;
+package site.bookmore.bookmore.reviews.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
@@ -7,8 +7,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import site.bookmore.bookmore.alarms.entity.AlarmType;
-import site.bookmore.bookmore.books.dto.ReviewPageResponse;
-import site.bookmore.bookmore.books.dto.ReviewRequest;
+import site.bookmore.bookmore.reviews.dto.ReviewPageResponse;
+import site.bookmore.bookmore.reviews.dto.ReviewRequest;
 import site.bookmore.bookmore.books.entity.*;
 import site.bookmore.bookmore.books.repository.*;
 import site.bookmore.bookmore.common.exception.forbidden.InvalidPermissionException;
@@ -18,6 +18,14 @@ import site.bookmore.bookmore.common.exception.not_found.ReviewTagRelationNotFou
 import site.bookmore.bookmore.common.exception.not_found.UserNotFoundException;
 import site.bookmore.bookmore.observer.event.alarm.AlarmCreate;
 import site.bookmore.bookmore.observer.event.alarm.AlarmListCreate;
+import site.bookmore.bookmore.reviews.entity.Likes;
+import site.bookmore.bookmore.reviews.entity.Review;
+import site.bookmore.bookmore.reviews.entity.ReviewTag;
+import site.bookmore.bookmore.reviews.entity.Tag;
+import site.bookmore.bookmore.reviews.repository.LikesRepository;
+import site.bookmore.bookmore.reviews.repository.ReviewRepository;
+import site.bookmore.bookmore.reviews.repository.ReviewTagRepository;
+import site.bookmore.bookmore.reviews.repository.TagRepository;
 import site.bookmore.bookmore.users.entity.Follow;
 import site.bookmore.bookmore.users.entity.User;
 import site.bookmore.bookmore.users.repositroy.FollowRepository;

@@ -1,4 +1,4 @@
-package site.bookmore.bookmore.books.dto;
+package site.bookmore.bookmore.reviews.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

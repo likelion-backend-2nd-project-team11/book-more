@@ -1,4 +1,4 @@
-package site.bookmore.bookmore.books.controller;
+package site.bookmore.bookmore.reviews.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
@@ -10,9 +10,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
-import site.bookmore.bookmore.books.dto.ChartRequest;
-import site.bookmore.bookmore.books.dto.ReviewRequest;
-import site.bookmore.bookmore.books.service.ReviewService;
+import site.bookmore.bookmore.reviews.dto.ChartRequest;
+import site.bookmore.bookmore.reviews.dto.ReviewRequest;
+import site.bookmore.bookmore.reviews.service.ReviewService;
 
 import java.util.Set;
 

@@ -1,10 +1,10 @@
-package site.bookmore.bookmore.books.dto;
+package site.bookmore.bookmore.reviews.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import site.bookmore.bookmore.books.entity.Review;
+import site.bookmore.bookmore.reviews.entity.Review;
 
 import java.time.format.DateTimeFormatter;
 import java.util.HashSet;

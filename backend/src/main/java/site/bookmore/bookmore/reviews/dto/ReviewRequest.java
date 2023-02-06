@@ -1,10 +1,10 @@
-package site.bookmore.bookmore.books.dto;
+package site.bookmore.bookmore.reviews.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import site.bookmore.bookmore.books.entity.Book;
-import site.bookmore.bookmore.books.entity.Review;
+import site.bookmore.bookmore.reviews.entity.Review;
 import site.bookmore.bookmore.users.entity.User;
 
 import javax.validation.Valid;

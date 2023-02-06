@@ -1,4 +1,4 @@
-package site.bookmore.bookmore.books.repository;
+package site.bookmore.bookmore.reviews.repository;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import site.bookmore.bookmore.books.entity.Book;
-import site.bookmore.bookmore.books.entity.Review;
+import site.bookmore.bookmore.reviews.entity.Review;
 import site.bookmore.bookmore.users.entity.User;
 
 import java.util.Optional;

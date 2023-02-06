@@ -1,27 +1,35 @@
-package site.bookmore.bookmore.books.service;
+package site.bookmore.bookmore.reviews.service;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.context.ApplicationEventPublisher;
-import site.bookmore.bookmore.books.dto.ChartRequest;
-import site.bookmore.bookmore.books.dto.ReviewRequest;
-import site.bookmore.bookmore.books.entity.*;
-import site.bookmore.bookmore.books.repository.*;
+import site.bookmore.bookmore.books.entity.Book;
+import site.bookmore.bookmore.books.repository.BookRepository;
 import site.bookmore.bookmore.common.exception.AbstractAppException;
 import site.bookmore.bookmore.common.exception.ErrorCode;
+import site.bookmore.bookmore.reviews.dto.ChartRequest;
+import site.bookmore.bookmore.reviews.dto.ReviewRequest;
+import site.bookmore.bookmore.reviews.entity.Likes;
+import site.bookmore.bookmore.reviews.entity.Review;
+import site.bookmore.bookmore.reviews.entity.ReviewTag;
+import site.bookmore.bookmore.reviews.entity.Tag;
+import site.bookmore.bookmore.reviews.repository.LikesRepository;
+import site.bookmore.bookmore.reviews.repository.ReviewRepository;
+import site.bookmore.bookmore.reviews.repository.ReviewTagRepository;
+import site.bookmore.bookmore.reviews.repository.TagRepository;
 import site.bookmore.bookmore.users.entity.User;
 import site.bookmore.bookmore.users.repositroy.FollowRepository;
 import site.bookmore.bookmore.users.repositroy.UserRepository;
 
 import java.util.HashSet;
-import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
 class ReviewServiceTest {

@@ -1,4 +1,4 @@
-package site.bookmore.bookmore.books.controller;
+package site.bookmore.bookmore.reviews.controller;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -9,10 +9,10 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
-import site.bookmore.bookmore.books.dto.ReviewPageResponse;
-import site.bookmore.bookmore.books.dto.ReviewRequest;
-import site.bookmore.bookmore.books.dto.ReviewResponse;
-import site.bookmore.bookmore.books.service.ReviewService;
+import site.bookmore.bookmore.reviews.dto.ReviewPageResponse;
+import site.bookmore.bookmore.reviews.dto.ReviewRequest;
+import site.bookmore.bookmore.reviews.dto.ReviewResponse;
+import site.bookmore.bookmore.reviews.service.ReviewService;
 import site.bookmore.bookmore.common.dto.ResultResponse;
 import site.bookmore.bookmore.common.support.annotation.Authorized;
 import springfox.documentation.annotations.ApiIgnore;

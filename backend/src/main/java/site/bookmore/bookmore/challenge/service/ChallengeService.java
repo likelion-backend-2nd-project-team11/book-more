@@ -5,7 +5,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import site.bookmore.bookmore.books.dto.ReviewPageResponse;
 import site.bookmore.bookmore.challenge.dto.ChallengeDetailResponse;
 import site.bookmore.bookmore.challenge.dto.ChallengeRequest;
 import site.bookmore.bookmore.challenge.dto.ChallengeResponse;
@@ -17,7 +16,6 @@ import site.bookmore.bookmore.users.entity.Role;
 import site.bookmore.bookmore.users.entity.User;
 import site.bookmore.bookmore.users.repositroy.UserRepository;
 
-import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 
 @Service

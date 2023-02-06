@@ -1,4 +1,4 @@
-package site.bookmore.bookmore.books.entity;
+package site.bookmore.bookmore.reviews.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
