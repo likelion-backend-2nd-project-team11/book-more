@@ -10,6 +10,7 @@ import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import site.bookmore.bookmore.common.exception.not_found.AlreadyDeletedUserException;
 import site.bookmore.bookmore.oauth2.util.mapper.UserMapper;
 import site.bookmore.bookmore.users.entity.Ranks;
 import site.bookmore.bookmore.users.entity.User;
@@ -58,6 +59,8 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
 
                     return saved;
                 });
+
+        if (!user.isEnabled() && user.getDeletedDatetime() != null) throw new AlreadyDeletedUserException();
 
         Map<String, Object> memberAttribute = oAuth2Attribute.convertToMap();
         memberAttribute.put("id", user.getId());

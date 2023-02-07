@@ -85,7 +85,7 @@ class ReviewServiceTest {
     @Test
     @DisplayName("도서 리뷰 등록 성공")
     void create_success() {
-        when(userRepository.findByEmail(user.getEmail()))
+        when(userRepository.findByEmailAndDeletedDatetimeIsNull(user.getEmail()))
                 .thenReturn(Optional.of(user));
         when(bookRepository.findById(book.getId()))
                 .thenReturn(Optional.of(book));
@@ -112,7 +112,7 @@ class ReviewServiceTest {
     @Test
     @DisplayName("도서 리뷰 등록 실패 - 책 정보가 없는 경우")
     void create_book_not_found() {
-        when(userRepository.findByEmail(user.getEmail()))
+        when(userRepository.findByEmailAndDeletedDatetimeIsNull(user.getEmail()))
                 .thenReturn(Optional.of(user));
         when(bookRepository.findById(book.getId()))
                 .thenReturn(Optional.empty());
@@ -127,7 +127,7 @@ class ReviewServiceTest {
     @Test
     @DisplayName("도서 리뷰 등록 성공 - 태그 모두 처음 저장되는 경우")
     void create_with_tag() {
-        when(userRepository.findByEmail(user.getEmail()))
+        when(userRepository.findByEmailAndDeletedDatetimeIsNull(user.getEmail()))
                 .thenReturn(Optional.of(user));
         when(bookRepository.findById(book.getId()))
                 .thenReturn(Optional.of(book));
@@ -151,7 +151,7 @@ class ReviewServiceTest {
     void update_review_exclude_chart() {
         when(reviewRepository.findByIdWithTags(review.getId()))
                 .thenReturn(Optional.of(review));
-        when(userRepository.findByEmail(user.getEmail()))
+        when(userRepository.findByEmailAndDeletedDatetimeIsNull(user.getEmail()))
                 .thenReturn(Optional.of(user));
 
         ReviewRequest reviewRequest = new ReviewRequest("body", false, null, new HashSet<>());
@@ -186,9 +186,9 @@ class ReviewServiceTest {
     void update_invalid_permission() {
         when(reviewRepository.findByIdWithTags(review.getId()))
                 .thenReturn(Optional.of(review));
-        when(userRepository.findByEmail(user.getEmail()))
+        when(userRepository.findByEmailAndDeletedDatetimeIsNull(user.getEmail()))
                 .thenReturn(Optional.of(user));
-        when(userRepository.findByEmail(user2.getEmail()))
+        when(userRepository.findByEmailAndDeletedDatetimeIsNull(user2.getEmail()))
                 .thenReturn(Optional.of(user2));
 
         AbstractAppException abstractAppException = Assertions.assertThrows(AbstractAppException.class, () -> reviewService.update(new ReviewRequest("new body", true, new ChartRequest(), null), review.getId(), user2.getEmail()));
@@ -223,9 +223,9 @@ class ReviewServiceTest {
     void delete_invalid_permission() {
         when(reviewRepository.findByIdAndDeletedDatetimeIsNull(review.getId()))
                 .thenReturn(Optional.of(review));
-        when(userRepository.findByEmail(user.getEmail()))
+        when(userRepository.findByEmailAndDeletedDatetimeIsNull(user.getEmail()))
                 .thenReturn(Optional.of(user));
-        when(userRepository.findByEmail(user2.getEmail()))
+        when(userRepository.findByEmailAndDeletedDatetimeIsNull(user2.getEmail()))
                 .thenReturn(Optional.of(user2));
 
         AbstractAppException abstractAppException = Assertions.assertThrows(AbstractAppException.class, () -> reviewService.delete(review.getId(), user2.getEmail()));
@@ -236,7 +236,7 @@ class ReviewServiceTest {
     @Test
     @DisplayName("도서 리뷰 좋아요 성공")
     void doLikes_success() {
-        when(userRepository.findByEmail(user.getEmail()))
+        when(userRepository.findByEmailAndDeletedDatetimeIsNull(user.getEmail()))
                 .thenReturn(Optional.of(user));
         when(reviewRepository.findByIdAndDeletedDatetimeIsNull(review.getId()))
                 .thenReturn(Optional.of(review));
@@ -252,7 +252,7 @@ class ReviewServiceTest {
     @Test
     @DisplayName("도서 리뷰 좋아요 취소 성공")
     void doLikes_cancel_success() {
-        when(userRepository.findByEmail(user.getEmail()))
+        when(userRepository.findByEmailAndDeletedDatetimeIsNull(user.getEmail()))
                 .thenReturn(Optional.of(user));
         when(reviewRepository.findByIdAndDeletedDatetimeIsNull(review.getId()))
                 .thenReturn(Optional.of(review));

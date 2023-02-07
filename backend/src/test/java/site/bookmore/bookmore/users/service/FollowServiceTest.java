@@ -56,10 +56,10 @@ class FollowServiceTest {
                 .follower(user)
                 .build();
 
-        Mockito.when(userRepository.findByEmail(user.getEmail()))
+        Mockito.when(userRepository.findByEmailAndDeletedDatetimeIsNull(user.getEmail()))
                 .thenReturn(Optional.of(user));
 
-        Mockito.when(userRepository.findById(targetUser.getId()))
+        Mockito.when(userRepository.findByIdAndDeletedDatetimeIsNull(targetUser.getId()))
                 .thenReturn(Optional.of(targetUser));
 
         Mockito.when(followRepository.findByFollowerAndFollowing(user, targetUser))
@@ -168,10 +168,10 @@ class FollowServiceTest {
                 .follower(user)
                 .build();
 
-        Mockito.when(userRepository.findByEmail(user.getEmail()))
+        Mockito.when(userRepository.findByEmailAndDeletedDatetimeIsNull(user.getEmail()))
                 .thenReturn(Optional.of(user));
 
-        Mockito.when(userRepository.findById(user.getId()))
+        Mockito.when(userRepository.findByIdAndDeletedDatetimeIsNull(user.getId()))
                 .thenReturn(Optional.of(user));
 
         Mockito.when(followRepository.findByFollowerAndFollowing(user, user))
@@ -210,10 +210,10 @@ class FollowServiceTest {
                 .follower(user)
                 .build();
 
-        Mockito.when(userRepository.findByEmail(user.getEmail()))
+        Mockito.when(userRepository.findByEmailAndDeletedDatetimeIsNull(user.getEmail()))
                 .thenReturn(Optional.of(user));
 
-        Mockito.when(userRepository.findById(targetUser.getId()))
+        Mockito.when(userRepository.findByIdAndDeletedDatetimeIsNull(targetUser.getId()))
                 .thenReturn(Optional.of(targetUser));
 
         Mockito.when(followRepository.findByFollowerAndFollowing(any(User.class), any(User.class)))
@@ -314,10 +314,10 @@ class FollowServiceTest {
                 .nickname("BB")
                 .build();
 
-        Mockito.when(userRepository.findByEmail(user.getEmail()))
+        Mockito.when(userRepository.findByEmailAndDeletedDatetimeIsNull(user.getEmail()))
                 .thenReturn(Optional.of(user));
 
-        Mockito.when(userRepository.findById(targetUser.getId()))
+        Mockito.when(userRepository.findByIdAndDeletedDatetimeIsNull(targetUser.getId()))
                 .thenReturn(Optional.of(targetUser));
 
         FollowNotFoundException exception = Assertions.assertThrows(FollowNotFoundException.class, () -> {
