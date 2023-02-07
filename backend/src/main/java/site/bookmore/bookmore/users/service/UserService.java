@@ -138,8 +138,7 @@ public class UserService implements UserDetailsService {
 
     public UserPersonalResponse search(String email) {
         User user = userRepository.findByEmailAndDeletedDatetimeIsNull(email).orElseThrow(UserNotFoundException::new);
-        UserPersonalResponse userPersonalResponse = new UserPersonalResponse(user);
-        return userPersonalResponse;
+        return UserPersonalResponse.of(user);
     }
 
 
