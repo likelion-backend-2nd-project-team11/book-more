@@ -32,14 +32,13 @@ public class AlarmService {
             Map<String, Object> source = new HashMap<>();
             switch (alarm.getAlarmType()) {
                 case NEW_FOLLOW_REVIEW:
-                    source.put("type", "BOOK");
-
+                case NEW_LIKE_ON_REVIEW:
                     Long reviewId = alarm.getSource();
                     Book book = reviewRepository.findById(reviewId)
                             .orElseThrow(ReviewNotFoundException::new)
                             .getBook();
 
-                    source.put("isbn", book.getId());
+                    source.put("reviewId", reviewId);
                     source.put("title", book.getTitle());
 
                 default:
