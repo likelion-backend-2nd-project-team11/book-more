@@ -7,7 +7,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import site.bookmore.bookmore.alarms.entity.Alarm;
 import site.bookmore.bookmore.alarms.entity.AlarmType;
-import site.bookmore.bookmore.users.dto.UserDetailResponse;
 
 import java.time.format.DateTimeFormatter;
 import java.util.Map;
@@ -20,7 +19,8 @@ public class AlarmResponse {
 
     private Long id;
     private AlarmType alarmType;
-    private UserDetailResponse fromUser;
+    private Long targetUserId;
+    private String fromUser;
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private Map<String, Object> source;
     private String createdDatetime;
@@ -29,7 +29,8 @@ public class AlarmResponse {
         return AlarmResponse.builder()
                 .id(alarm.getId())
                 .alarmType(alarm.getAlarmType())
-                .fromUser(UserDetailResponse.of(alarm.getFromUser()))
+                .targetUserId(alarm.getTargetUser().getId())
+                .fromUser(alarm.getFromUser().getNickname())
                 .source(source)
                 .createdDatetime(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss").format(alarm.getCreatedDatetime()))
                 .build();
