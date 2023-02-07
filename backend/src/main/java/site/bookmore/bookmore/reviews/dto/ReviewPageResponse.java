@@ -18,6 +18,8 @@ import java.util.stream.Collectors;
 public class ReviewPageResponse {
     private Long id;
     private String nickname;
+    private String isbn;
+    private String title;
     private String body;
     @Builder.Default
     private Set<TagResponse> tags = new HashSet<>();
@@ -34,6 +36,8 @@ public class ReviewPageResponse {
         return ReviewPageResponse.builder()
                 .id(review.getId())
                 .nickname(review.getAuthor().getNickname())
+                .isbn(review.getBook().getId())
+                .title(review.getBook().getTitle())
                 .body(review.getBody())
                 .tags(review.getTags().stream().map(TagResponse::of).collect(Collectors.toSet()))
                 .spoiler(review.getSpoiler())
