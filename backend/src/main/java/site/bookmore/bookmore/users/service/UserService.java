@@ -162,6 +162,7 @@ public class UserService implements UserDetailsService {
                 .orElseThrow(UserNotFoundException::new);
         return UserDetailResponse.builder()
                 .nickname(user.getNickname())
+                .profile(user.getProfile())
                 .followingCount(user.getFollowCount().getFollowingCount())
                 .followerCount(user.getFollowCount().getFollowerCount())
                 .build();
