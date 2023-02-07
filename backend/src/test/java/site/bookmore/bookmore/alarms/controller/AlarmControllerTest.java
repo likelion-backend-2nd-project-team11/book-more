@@ -47,7 +47,7 @@ class AlarmControllerTest {
     AlarmResponse response = AlarmResponse.builder()
             .id(1L)
             .alarmType(AlarmType.NEW_FOLLOW_REVIEW)
-            .fromUser(UserDetailResponse.of(user))
+            .fromUser("user2")
             .source(new HashMap<>())
             .build();
 
