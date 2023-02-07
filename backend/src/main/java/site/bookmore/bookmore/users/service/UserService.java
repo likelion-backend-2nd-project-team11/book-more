@@ -161,6 +161,7 @@ public class UserService implements UserDetailsService {
         User user = userRepository.findById(id)
                 .orElseThrow(UserNotFoundException::new);
         return UserDetailResponse.builder()
+                .id(user.getId())
                 .nickname(user.getNickname())
                 .profile(user.getProfile())
                 .followingCount(user.getFollowCount().getFollowingCount())
