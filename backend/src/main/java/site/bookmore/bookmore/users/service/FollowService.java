@@ -108,4 +108,16 @@ public class FollowService {
         User user = userRepository.findById(id).orElseThrow(UserNotFoundException::new);
         return followRepository.findByFollowingAndDeletedDatetimeIsNull(pageable, user).map(FollowerResponse::new);
     }
+
+    public Boolean isFollow(Long id, String email){
+        //나
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(UserNotFoundException::new);
+
+        //팔로우할 유저
+        User targetUser = userRepository.findById(id)
+                .orElseThrow(UserNotFoundException::new);
+
+        return followRepository.findByFollowerAndFollowingAndDeletedDatetimeIsNull(user, targetUser).isPresent();
+    }
 }
