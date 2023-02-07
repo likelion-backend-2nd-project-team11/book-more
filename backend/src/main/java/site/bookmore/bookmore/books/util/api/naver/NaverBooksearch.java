@@ -71,7 +71,10 @@ public class NaverBooksearch implements BookSearch<NaverSearchParams> {
                 .map(naverSearchResponse -> {
                     List<Item> items = naverSearchResponse.getItems();
                     if (items == null || items.size() != 1) return new Book();
-                    return BookMapper.of(items.get(0));
+                    Item item = items.get(0);
+                    Book book = BookMapper.of(item);
+                    Book crawl = NaverBookCrawler.execute(item.getLink());
+                    return book.merge(crawl);
                 })
                 .doOnSubscribe(subscription -> {
                     log.info("네이버 도서 상세조회");
