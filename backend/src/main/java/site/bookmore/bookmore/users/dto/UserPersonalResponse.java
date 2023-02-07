@@ -12,19 +12,23 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @Getter
 public class UserPersonalResponse {
+    private Long id;
     private String email;
     private String nickname;
     private LocalDate birth;
     private String profile;
 
     public UserPersonalResponse(User user) {
+        this.id = user.getId();
         this.email = user.getEmail();
         this.nickname = user.getNickname();
         this.birth = user.getBirth();
+        this.profile = user.getProfile();
     }
 
     public static UserPersonalResponse of(User user){
         return UserPersonalResponse.builder()
+                .id(user.getId())
                 .email(user.getEmail())
                 .nickname(user.getNickname())
                 .birth(user.getBirth())
