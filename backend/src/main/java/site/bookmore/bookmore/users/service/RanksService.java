@@ -31,7 +31,7 @@ public class RanksService {
 
     public RanksResponse findMyRanks(String email) {
 
-        User user = userRepository.findByEmail(email).orElseThrow(UserNotFoundException::new);
+        User user = userRepository.findByEmailAndDeletedDatetimeIsNull(email).orElseThrow(UserNotFoundException::new);
         Ranks ranks = ranksRepository.findByUser(user).orElseThrow(UserNotLoggedInException::new);
         return new RanksResponse(ranks);
     }
