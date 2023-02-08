@@ -13,6 +13,7 @@ import site.bookmore.bookmore.users.entity.User;
 public class UserDetailResponse {
     private Long id;
     private String nickname;
+    private String profile;
     private Integer followingCount;
     private Integer followerCount;
 
@@ -20,6 +21,7 @@ public class UserDetailResponse {
         return UserDetailResponse.builder()
                 .id(user.getId())
                 .nickname(user.getNickname())
+                .profile(user.getProfile())
                 .followingCount(user.getFollowCount().getFollowingCount())
                 .followerCount(user.getFollowCount().getFollowerCount())
                 .build();

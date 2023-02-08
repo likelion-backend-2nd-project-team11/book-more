@@ -16,6 +16,7 @@ public class FollowerResponse {
     private Long id;
     private Long followerId;
     private String nickname;
+    private String profile;
     private Integer followerCount;
     private Integer followingCount;
     private String createdDatetime;
@@ -24,6 +25,7 @@ public class FollowerResponse {
         this.id = follow.getId();
         this.followerId = follow.getFollower().getId();
         this.nickname = follow.getFollower().getNickname();
+        this.profile = follow.getFollower().getProfile();
         this.followerCount = follow.getFollower().getFollowCount().getFollowerCount();
         this.followingCount = follow.getFollower().getFollowCount().getFollowingCount();
         this.createdDatetime = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss").format(follow.getCreatedDatetime());
