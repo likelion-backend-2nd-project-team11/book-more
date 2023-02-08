@@ -45,5 +45,11 @@ public class Alarm {
     @JoinColumn(name = "from_user", nullable = false, foreignKey = @ForeignKey(name = "fk_alarm_from_user"))
     private User fromUser;
 
+    public void confirm() {
+        setConfirm();
+    }
 
+    private void setConfirm() {
+        this.confirmed = true;
+    }
 }

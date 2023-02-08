@@ -12,6 +12,7 @@ import site.bookmore.bookmore.users.service.RanksService;
 
 import java.util.List;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -29,7 +30,7 @@ class RanksControllerTest {
     @Test
     @DisplayName("랭킹 조회")
     @WithMockUser
-    void alarm_following_list() throws Exception {
+    void ranks_list_success() throws Exception {
 
 
         List<RanksResponse> ranksList = List.of(
@@ -42,6 +43,29 @@ class RanksControllerTest {
                         .with(csrf()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$..['id']").exists())
+                .andExpect(jsonPath("$..['point']").exists())
+                .andExpect(jsonPath("$..['ranking']").exists());
+
+    }
+
+    @Test
+    @DisplayName("개인 랭킹 조회")
+    @WithMockUser
+    void my_ranks_success() throws Exception {
+
+        RanksResponse response = RanksResponse.builder()
+                .id(1L)
+                .point(3)
+                .nickName("nickname")
+                .ranking(1L)
+                .build();
+        given(ranksService.findMyRanks(any())).willReturn(response);
+
+        mockMvc.perform(get("/api/v1/users/ranks/my")
+                        .with(csrf()))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$..['id']").exists())
+                .andExpect(jsonPath("$..['nickName']").exists())
                 .andExpect(jsonPath("$..['point']").exists())
                 .andExpect(jsonPath("$..['ranking']").exists());
 
