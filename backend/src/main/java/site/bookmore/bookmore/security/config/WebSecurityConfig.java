@@ -27,6 +27,7 @@ public class WebSecurityConfig {
             "^/api/v1/challenges/\\d*$",
             "^/api/v1/challenges$",
             "^/api/v1/alarms$",
+            "^/api/v1/alarms/new$",
     };
 
     public static final String[] POST_AUTHENTICATED_REGEX_LIST = {
@@ -37,6 +38,7 @@ public class WebSecurityConfig {
             "^/api/v1/challenges$",
             "^/api/v1/books/\\w*/reviews$",
             "^/api/v1/books/reviews/\\d*/likes$",
+            "^/api/v1/alarms/\\d*/confirm$",
     };
 
     public static final String[] PATCH_AUTHENTICATED_REGEX_LIST = {
