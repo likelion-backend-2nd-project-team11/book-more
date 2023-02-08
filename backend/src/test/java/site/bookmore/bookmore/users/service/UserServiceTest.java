@@ -169,15 +169,21 @@ class UserServiceTest {
     @Test
     @DisplayName("회원 정보 수정 - 실패(중복된 이름)")
     void infoUpdate_fail_2() {
+        User user2 = User.builder()
+                .email("test@test.com")
+                .nickname("nickname2")
+                .build();
+
+        UserUpdateRequest userUpdateRequest = new UserUpdateRequest("updatePw", "nickname2", null);
 
         when(userRepository.findByEmailAndDeletedDatetimeIsNull(user.getEmail()))
                 .thenReturn(Optional.of(user));
 
-        when(userRepository.findByNickname(user.getNickname()))
-                .thenReturn(Optional.of(user));
+        when(userRepository.findByNickname(userUpdateRequest.getNickname()))
+                .thenReturn(Optional.of(user2));
 
         AbstractAppException abstractAppException = assertThrows(DuplicateNicknameException.class, () -> {
-            userService.infoUpdate(user.getEmail(), 0L, new UserUpdateRequest("updatePw", "nickname", null));
+            userService.infoUpdate(user.getEmail(), 0L, userUpdateRequest);
         });
 
         assertThat(abstractAppException.getErrorCode()).isEqualTo(DUPLICATED_NICKNAME);
