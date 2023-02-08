@@ -30,7 +30,7 @@ const options = {
 }
 
 async function fetchGetReviewsByBook(isbn, getUserInfo) {
-    const userInfo = await getUserInfo;
+    let userInfo = await getUserInfo;
     return fetch(`${BASE_URL}/api/v1/books/${isbn}/reviews`, {
         method: 'GET'
     }).then((response) => response.json())
@@ -53,7 +53,7 @@ async function fetchGetReviewsByBook(isbn, getUserInfo) {
                 wrapper.insertAdjacentHTML('beforeend',
                     `<article class="review-item mb-5 p-3 pb-5 shadow bg-white">
                     <div class="review-content  d-flex">
-                    <canvas class="chart me-3" width="200px" height="200px" id="chart-${review.id}"></canvas>
+                    <canvas class="chart me-3" style="width: 35%" id="chart-${review.id}"></canvas>
                     <div style="width: 100%">
                         <h4>@${review.nickname}</h4>
                         <p id="spoiler-${review.id}" class="spoiler" style="display: ${review.spoiler ? 'none' : 'block'}">
@@ -61,7 +61,7 @@ async function fetchGetReviewsByBook(isbn, getUserInfo) {
                         </p>
                         <p id="spoilerText-${review.id}" class="spoilerText" style="display: ${review.spoiler ? 'block' : 'none'}">스포일러가 포함된 내용입니다</p>
                         <button type="button" onclick="more(${review.id})" style="display: ${review.spoiler ? 'block' : 'none'};float:right;margin-top: 90px;border: none;border-radius:0.7em;padding: 6px;background-color: white;color: dimgrey">더보기</button>
-                        ${review.nickname === userInfo.nickname ? `
+                        ${userInfo !== undefined && review.nickname === userInfo.nickname ? `
                             <div id="editDelete" style="margin-top: 110px;">                       
                                 <button type="button" id="edit-btn" onclick="modifyReview(reviews[${review.id}])" data-bs-toggle="modal" data-bs-target="#modifyModal" style="border: none; border-radius: 0.7em;padding-left: 10px; padding-right: 10px">수정</button>
                                 <button type="button" onclick="fetchDelete(${review.id}, token)" style="border: none; border-radius: 0.7em;padding-left: 10px; padding-right: 10px">삭제</button>
@@ -70,6 +70,9 @@ async function fetchGetReviewsByBook(isbn, getUserInfo) {
                     </div>
                     <div class="review-footer">
                         <hr/>
+                        <div class="mb-3">
+                            ${review.tags.map(tag => `<span class="bg-light p-2 rounded-2 me-2">#${tag.label}</span>`).join('')}
+                        </div>
                         <div class="float-start">${dateString}</div>
                         <button class="btn btn-outline-danger float-end" onclick="fetchPostReviewLike(${review.id}, token)">
                             ${review.likesCount} <i class="fa-regular fa-heart"></i>
@@ -123,7 +126,7 @@ function more(id) {
 //----------------------------------------------------------------------------------------------------------------------
 
 
-function modifyReview({id, spoiler, body, professionalism, fun, readability, collectible, difficulty}) {
+function modifyReview({id, spoiler, body, professionalism, fun, readability, collectible, difficulty, tags}) {
 
     document.getElementById("spoiler-check").checked = spoiler === true;
     document.getElementById("body-input").value = body;
@@ -138,6 +141,7 @@ function modifyReview({id, spoiler, body, professionalism, fun, readability, col
     document.getElementById("difficulty-value").value = difficulty;
     document.getElementById(`difficulty-score-${difficulty}`).checked = true;
     document.getElementById("modify-btn").setAttribute("onclick", `fetchReview(${id}, token)`)
+    document.getElementById('tags-input').value = tags.map(tag => tag.label).join(';');
 }
 
 function fetchReview(id, token) {
@@ -148,16 +152,24 @@ function fetchReview(id, token) {
     const readability = document.getElementById("readability-value").value;
     const collectible = document.getElementById("collectible-value").value;
     const difficulty = document.getElementById("difficulty-value").value;
+    var tags = document.getElementById('tags-input').value
+        .replaceAll(' ', '')
 
+    if (tags.lastIndexOf(';') === tags.length - 1) tags = tags.substring(0, tags.length - 1);
+
+    tags = tags.split(';');
 
     const data = {
         spoiler,
         body,
-        professionalism,
-        fun,
-        readability,
-        collectible,
-        difficulty
+        chart: {
+            professionalism,
+            fun,
+            readability,
+            collectible,
+            difficulty
+        },
+        tags
     }
 
     console.log(token);
@@ -242,6 +254,12 @@ function fetchPostReview(isbn) {
     const readability = document.getElementById('readability-value').value;
     const collectible = document.getElementById('collectible-value').value;
     const difficulty = document.getElementById('difficulty-value').value;
+    var tags = document.getElementById('tags-input').value
+                    .replaceAll(' ', '')
+
+    if (tags.lastIndexOf(';') === tags.length - 1) tags = tags.substring(0, tags.length - 1);
+
+    tags = tags.split(';');
 
     const data = {
         body,
@@ -252,7 +270,8 @@ function fetchPostReview(isbn) {
             readability,
             collectible,
             difficulty
-        }
+        },
+        tags
     };
 
     console.log(isbn);
