@@ -3,6 +3,7 @@ package site.bookmore.bookmore.users.controller;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -26,4 +27,10 @@ public class RanksController {
         return ResultResponse.success(ranksService.findTop100Ranks());
     }
 
+    @ApiOperation(value = "나의 랭킹 조회")
+    @GetMapping("/ranks/my")
+    public ResultResponse<RanksResponse> findMyRanks(Authentication authentication) {
+
+        return ResultResponse.success(ranksService.findMyRanks(authentication.getName()));
+    }
 }
