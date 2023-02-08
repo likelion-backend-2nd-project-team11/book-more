@@ -22,6 +22,6 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
     @Query(value = "SELECT sum (r.likesCount) FROM Review r WHERE r.author.id = :id ")
     Integer findSum(@Param("id") Long id);
 
-    @Query("select r from Review r join fetch r.reviewTags rt join fetch rt.tag where r.id = :id and r.deletedDatetime is null")
+    @Query("select r from Review r left join fetch r.reviewTags rt left join fetch rt.tag where r.id = :id and r.deletedDatetime is null")
     Optional<Review> findByIdWithTags(Long id);
 }
