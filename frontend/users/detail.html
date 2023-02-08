@@ -38,35 +38,36 @@
     <title>BookMore</title>
 </head>
 <body class="body-font bg-light py-5">
-<!-- ------------------------------------------------------------------------------------------------Top Bar-->
-<script src="../js/auth.js"></script>
-<script>
-    const token = getToken();
-    const isLoggedIn = !!token;
-    const id = urlSearchParams.get('id');
-</script>
-<nav class="navbar fixed-top bg-family-color">
-    <div class="container-fluid">
-        <a class="navbar-brand en-font" href="../index.html">BookMore</a>
+    <!-- ------------------------------------------------------------------------------------------------Top Bar-->
+    <script src="../js/auth.js"></script>
+    <script>
+        const token = getToken();
+        const isLoggedIn = !!token;
+    </script>
+    <nav class="navbar fixed-top bg-family-color">
+        <div class="container-fluid">
+            <a class="navbar-brand en-font" href="../index.html">BookMore</a>
 
-        <div class="d-md-block">
-            <!--로그인 드롭다운------------------>
-            <div class="dropdown-center bm-auth-dropdown" style="float:left;">
-                <button class="btn dropdown-toggle btn-lg" style="color: #FFFFFF" type="button"
-                        data-bs-toggle="dropdown" aria-expanded="false">
-                    <i class="fa-solid fa-right-to-bracket"></i>
-                </button>
-                <ul class="dropdown-menu dropdown-menu-end">
-                    <li class="unauthorized-component"><a class="dropdown-item" href="join.html">회원가입</a></li>
-                    <li class="unauthorized-component"><a class="dropdown-item" href="login.html">로그인</a></li>
-                    <li class="authorized-component"><a class="dropdown-item" onclick="deleteToken()">로그아웃</a></li>
-                </ul>
-            </div>
-            <!----------------------->
-            <div class="authorized-component" style="float:left;">
-                <a class="btn btn-lg" style="color: #FFFFFF" type="button" href="../notifications/index.html"><i
-                        class="fa-solid fa-bell"></i></a>
-            </div>
+            <div class="d-md-block">
+                <!--로그인 드롭다운------------------>
+                <div class="dropdown-center bm-auth-dropdown" style="float:left;">
+                    <button class="btn dropdown-toggle btn-lg" style="color: #FFFFFF" type="button"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fa-solid fa-right-to-bracket"></i>
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        <li class="unauthorized-component"><a class="dropdown-item"  href="join.html">회원가입</a></li>
+                        <li class="unauthorized-component"><a class="dropdown-item" href="login.html">로그인</a></li>
+                        <li class="authorized-component"><a class="dropdown-item" onclick="deleteToken()">로그아웃</a></li>
+                    </ul>
+                </div>
+                <!----------------------->
+                <div class="authorized-component" style="float:left;">
+                    <a class="btn btn-lg position-relative" style="color: #FFFFFF" type="button" href="../notifications/index.html"><i
+                            class="fa-solid fa-bell"></i>
+                        <span class="bm-checkAlarms-wrapper"></span>
+                    </a>
+                </div>
 
             <button class="btn btn-lg" style="color: #FFFFFF" type="button" data-bs-toggle="offcanvas"
                     data-bs-target="#offcanvasRight" aria-controls="offcanvasRight"><i
@@ -200,7 +201,9 @@
         </div>
     </div>
 </div>
+<script src="../js/notifications.js"></script>
 <script>
+    fetchCheckNewAlarms(token)
     if (!!id) {
         followingModal(id);
     } else {
