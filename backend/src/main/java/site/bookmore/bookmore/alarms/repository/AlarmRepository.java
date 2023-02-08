@@ -8,4 +8,5 @@ import site.bookmore.bookmore.users.entity.User;
 
 public interface AlarmRepository extends JpaRepository<Alarm, Long> {
     Page<Alarm> findByTargetUser(User target, Pageable pageable);
+    Page<Alarm> findByTargetUserAndConfirmedIsFalse(User target, Pageable pageable);
 }
