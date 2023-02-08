@@ -19,6 +19,7 @@ public class AlarmResponse {
 
     private Long id;
     private AlarmType alarmType;
+    private boolean confirmed;
     private Long targetUserId;
     private String fromUser;
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
@@ -29,6 +30,7 @@ public class AlarmResponse {
         return AlarmResponse.builder()
                 .id(alarm.getId())
                 .alarmType(alarm.getAlarmType())
+                .confirmed(alarm.isConfirmed())
                 .targetUserId(alarm.getTargetUser().getId())
                 .fromUser(alarm.getFromUser().getNickname())
                 .source(source)
