@@ -1,5 +1,6 @@
 package site.bookmore.bookmore.users.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -15,6 +16,7 @@ public class UserPersonalResponse {
     private Long id;
     private String email;
     private String nickname;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate birth;
     private String profile;
 
