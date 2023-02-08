@@ -31,6 +31,7 @@
     <link rel="stylesheet" href="../css/top-bar.css" />
     <link rel="stylesheet" href="../css/mypage.css">
     <script src="../js/constant.js"></script>
+    <script src="../js/mypage.js"></script>
 </head>
 
 <body class="body-font">
@@ -105,24 +106,9 @@
         </script>
     </nav>
     <!-- --------------------------------------------------------------------------------------------------------->
-
     <div class="bm-ALL">
-        <div class="bm-all">
-                <h3>NickName</h3>
-
-                <div class="bm-width">
-                    <button class="bm-editBtn" type="button">수정</button>
-                    <h4 class="bm-account">내 계정</h4>
-                    <p>아이디 : kim@naver.com</p>
-                    <p>비밀번호 : 2023.01.16</p>
-                    <p>생일 : 950819</p>
-                    <hr>
-                    <h4>내활동 내역</h4>
-                    <p>현재 리뷰 : 120</p>
-                    <p>받은 좋아요 : 15</p>
-                    <button class ="bm-button" type="button">회원 탈퇴</button>
-                </div>
-        </div>
+        <div class="bm-all" ></div>
+        <script>getMyPage(token)</script>
     </div>
     <script src="../js/notifications.js"></script>
     <script>
