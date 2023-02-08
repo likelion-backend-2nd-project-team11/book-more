@@ -176,7 +176,7 @@ public class ReviewService {
         likesRepository.save(likes);
 
         // 내가 작성한 리뷰에 좋아요가 달렸을 때의 알림 발생
-        if (likes.isLiked()) {
+        if (likes.isLiked() && !user.equals(review.getAuthor())) {
             publisher.publishEvent(AlarmCreate.of(AlarmType.NEW_LIKE_ON_REVIEW, review.getAuthor(), user, review.getId()));
         }
 
