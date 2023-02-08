@@ -51,35 +51,40 @@ function fetchSearchBooks(query, page, size) {
 function fetchSearchBookDetail(isbn) {
     if (isbn === '' || isbn === undefined) return;
     fetch(`${BASE_URL}/api/v1/books/${isbn}`)
-        .then(res => {
-            if (res.ok) return res.json();
-            else alert(res.json().result.message);
-        }).then(data => {
+        .then(res => res.json())
+        .then(data => {
         console.log(data)
-        const book = data.result;
-        const contentWrapper = document.querySelector('.contents-wrapper');
-        contentWrapper.innerHTML = `
-                <div class="container contents p-5 shadow bg-white">
-                    <div class="book-detail d-flex">
-                        <img class="me-5 shadow" height="240px" src="${book.image}"/>
-                        <div class="info">
-                            <h2>${book.title}</h2>
-                            <p>가격 : ${book.price || '-'}원</p>
-                            <p>페이지 : ${book.pages || '-'}</p>
-                            <p>저자 : ${book.authors || '-'}</p>
-                            <p>번역 : ${book.translators || '-'}</p>
-                            <p>출판사 : ${book.publisher || '-'}</p>
+        const resultCode = data.resultCode;
+        if (resultCode === 'SUCCESS') {
+            const book = data.result;
+            const contentWrapper = document.querySelector('.contents-wrapper');
+            contentWrapper.innerHTML = `
+                    <div class="container contents p-5 shadow bg-white">
+                        <div class="book-detail d-flex">
+                            <img class="me-5 shadow" height="240px" src="${book.image}"/>
+                            <div class="info">
+                                <h2>${book.title}</h2>
+                                <p>가격 : ${book.price || '-'}원</p>
+                                <p>페이지 : ${book.pages || '-'}</p>
+                                <p>저자 : ${book.authors || '-'}</p>
+                                <p>번역 : ${book.translators || '-'}</p>
+                                <p>출판사 : ${book.publisher || '-'}</p>
+                            </div>
                         </div>
-                    </div>
-                    <hr/>
-                    <div>
-                        <h4>책소개</h4>
-                        <textarea class="w-100 border-0 mb-3" readonly rows="12">${book.introduce || '-'}</textarea>
-                        <h4>목차</h4>
-                        <p class="desc">
-                            ${book.chapter || '-'}
-                        </p>
-                    </div>
-                </div>`;
+                        <hr/>
+                        <div>
+                            <h4>책소개</h4>
+                            <textarea class="w-100 border-0 mb-3" readonly rows="12">${book.introduce || '-'}</textarea>
+                            <h4>목차</h4>
+                            <p class="desc">
+                                ${book.chapter || '-'}
+                            </p>
+                        </div>
+                    </div>`;
+        } else if (resultCode === 'ERROR') {
+            document.querySelector('.bm-spinner').style.display = 'none';
+            alert(data.result.message);
+            window.location.href = '../index.html';
+        }
     })
 }

@@ -1,0 +1,17 @@
+@font-face{
+    src: url("../fonts/NotoSerifKR-Regular.otf");
+    font-family: "Noto Serif KR";
+}
+
+body{
+    font-family: 'Noto Serif KR', serif;
+}
+
+@font-face{
+    src: url("../fonts/NotoSerifKR-Bold.otf");
+    font-family: "Noto Serif Bold";
+}
+
+#myNickname{
+    font-family: "Noto Serif Bold", serif;
+}
