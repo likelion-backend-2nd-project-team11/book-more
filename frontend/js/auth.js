@@ -4,14 +4,18 @@ function getToken() {
 }
 
 function fetchVerifyToken(token) {
-    fetch(`${BASE_URL}/api/v1/users/verify`, {
+    return fetch(`${BASE_URL}/api/v1/users/verify`, {
         method: 'POST',
         headers: {
-            "Authorization": "Bearer " + token,
+            "Authorization": token ? "Bearer " + token : '',
         },
     }).then(response => response.json())
     .then(response => {
         if (response.resultCode !== 'SUCCESS') deleteToken();
+        const id = response.result.id;
+        const email = response.result.email;
+        const nickname = response.result.nickname;
+        return {id, email, nickname};
     });
 }
 

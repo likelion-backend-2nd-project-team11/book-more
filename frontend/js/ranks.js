@@ -37,11 +37,11 @@ function fetchGetRanks() {
 }
 
 function fetchGetMyRanks() {
-
+    if (!token) return;
     const result = fetch(`${BASE_URL}/api/v1/users/ranks/my`, {
         method: 'GET',
         headers: {
-            "Authorization": "Bearer " + token,
+            "Authorization": token ? "Bearer " + token : '',
         }
     }).then(res => {
         if (res.ok) return res.json();

@@ -2,7 +2,7 @@ function fetchGetAlarms(token) {
     fetch(`${BASE_URL}/api/v1/alarms`, {
         method: 'GET',
         headers: {
-            "Authorization": "Bearer " + token,
+            "Authorization": token ? "Bearer " + token : '',
         }
     }).then((response) => response.json())
         .then(getResponse())
@@ -12,7 +12,7 @@ function fetchGetNewAlarms(token) {
     fetch(`${BASE_URL}/api/v1/alarms/new`, {
         method: 'GET',
         headers: {
-            "Authorization": "Bearer " + token,
+            "Authorization": token ? "Bearer " + token : '',
         }
     }).then((response) => response.json())
         .then(getResponse())
@@ -94,7 +94,7 @@ function confirm(id) {
     fetch(`${BASE_URL}/api/v1/alarms/${id}/confirm`, {
         method: 'POST',
         headers: {
-            "Authorization": "Bearer " + token,
+            "Authorization": token ? "Bearer " + token : '',
         }
     }).then((response) => response.json())
 }
@@ -103,7 +103,7 @@ function fetchGetNewAlarmsCount(token) {
     fetch(`${BASE_URL}/api/v1/alarms/new`, {
         method: 'GET',
         headers: {
-            "Authorization": "Bearer " + token,
+            "Authorization": token ? "Bearer " + token : '',
         }
     }).then((response) => response.json())
         .then((res) => {
@@ -116,10 +116,11 @@ function fetchGetNewAlarmsCount(token) {
 }
 
 function fetchCheckNewAlarms(token) {
+    if (!token) return;
     fetch(`${BASE_URL}/api/v1/alarms/new`, {
         method: 'GET',
         headers: {
-            "Authorization": "Bearer " + token,
+            "Authorization": token ? "Bearer " + token : '',
         }
     }).then((response) => response.json())
         .then((res) => {

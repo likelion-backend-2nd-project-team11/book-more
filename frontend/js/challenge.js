@@ -15,7 +15,7 @@ function fetchCreateChallenge(token) {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
-            "Authorization": "Bearer " + token,
+            "Authorization": token ? "Bearer " + token : '',
         },
         body: JSON.stringify(data),
     }).then((response) => response.json())
@@ -37,7 +37,7 @@ function fetchGetChallenges(token) {
     const result = fetch(`${BASE_URL}/api/v1/challenges`, {
         method: 'GET',
         headers: {
-            "Authorization": "Bearer " + token,
+            "Authorization": token ? "Bearer " + token : '',
         }
     }).then((response) => response.json())
         .then((res) => {
@@ -99,7 +99,7 @@ function fetchModifyChallenge(id, token) {
         method: 'PATCH',
         headers: {
             'Content-Type': 'application/json',
-            "Authorization": "Bearer " + token,
+            "Authorization": token ? "Bearer " + token : '',
         },
         body: JSON.stringify(data),
     }).then((response) => response.json())
@@ -120,7 +120,7 @@ function fetchDeleteChallenge(id, token) {
     fetch(`${BASE_URL}/api/v1/challenges/${id}`, {
         method: 'DELETE',
         headers: {
-            "Authorization": "Bearer " + token,
+            "Authorization": token ? "Bearer " + token : '',
         }
     }).then((response) => response.json())
         .then((response) => {

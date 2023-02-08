@@ -40,9 +40,10 @@
     <!-- ------------------------------------------------------------------------------------------------Top Bar-->
     <script src="../js/auth.js"></script>
     <script>
+        let getUserInfo;
         const token = getToken();
         const isLoggedIn = !!token;
-        if(isLoggedIn) fetchVerifyToken(token);
+        if(isLoggedIn) getUserInfo = fetchVerifyToken(token);
         const isbn = urlSearchParams.get('isbn');
         if (!isbn) {
             alert("잘못된 접근입니다.");
@@ -223,7 +224,7 @@
 <script src="../js/review.js"></script>
 <script src="../js/notifications.js"></script>
 <script>
-    fetchGetReviewsByBook(isbn).then(result => reviews = result);
+    fetchGetReviewsByBook(isbn, getUserInfo).then(result => reviews = result);
     fetchSearchBookDetail(isbn);
     fetchCheckNewAlarms(token)
 </script>

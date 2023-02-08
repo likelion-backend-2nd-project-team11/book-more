@@ -19,7 +19,7 @@ function getMyPage(token){
                    <div class="text-center">
                         <hr>
                         <p>프로필 사진</p>
-                        <img src="https://www.bookmore.site/${data.result.profile}" width="150px" height="150px">
+                        <img class="rounded-circle" src="https://www.bookmore.site/${data.result.profile}" width="150px" height="150px">
                     </div>
                     <hr>
                     <button class="bm-editBtn" data-bs-toggle="modal" data-bs-target="#modifyModal" >수정</button>
@@ -94,7 +94,7 @@ function deleteUser(token){
         method: 'DELETE',
         headers: {
             // 'Content-Type': 'application/json',
-            "Authorization": "Bearer " + token,
+            "Authorization": token ? "Bearer " + token : '',
         },
     }).then(response => response.json())
         .then(data => {
@@ -127,7 +127,7 @@ function editUser(token) {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
-            "Authorization": "Bearer " + token,
+            "Authorization": token ? "Bearer " + token : '',
         },
         body: JSON.stringify(data),
     }).then((response) => response.json())
@@ -154,7 +154,7 @@ function updateImage(token) {
     fetch(`${BASE_URL}/api/v1/users/me/profile`, {
         method: 'POST',
         headers: {
-            "Authorization": "Bearer " + token,
+            "Authorization": token ? "Bearer " + token : '',
         },
         body: formData,
     }).then((response) => response.json())
@@ -162,6 +162,7 @@ function updateImage(token) {
             const resultCode = response.resultCode;
             if (resultCode === 'SUCCESS') {
                 alert("프로필 수정 완료");
+                window.location.reload();
             } else if (resultCode === 'ERROR') {
                 alert(response.result.message);
             } else {

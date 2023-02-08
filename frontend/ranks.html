@@ -62,7 +62,7 @@
                 </div>
                 <!----------------------->
                 <div class="authorized-component" style="float:left;">
-                    <a class="btn btn-lg position-relative" style="color: #FFFFFF" type="button" href="../notifications/index.html"><i
+                    <a class="btn btn-lg position-relative" style="color: #FFFFFF" type="button" href="notifications/index.html"><i
                             class="fa-solid fa-bell"></i>
                         <span class="bm-checkAlarms-wrapper"></span>
                     </a>
@@ -138,7 +138,7 @@
       authorizedComponent.forEach(ele => ele.style.display = isLoggedIn ? ele.style.display : 'none')
       unauthorizedComponent.forEach(ele => ele.style.display = !isLoggedIn ? ele.style.display : 'none')
   </script>
-  <script src="../js/notifications.js"></script>
+  <script src="js/notifications.js"></script>
   <script>
       fetchCheckNewAlarms(token)
       fetchGetRanks()

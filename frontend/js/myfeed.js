@@ -2,7 +2,7 @@ function fetchGetMyId(token) {
     return fetch(`${BASE_URL}/api/v1/users/me`, {
         method: 'GET',
         headers: {
-            "Authorization": "Bearer " + token,
+            "Authorization": token ? "Bearer " + token : '',
         },
     }).then((response) => response.json())
         .then((response) => {
@@ -15,13 +15,17 @@ function fetchGetMyImage(id) {
     return fetch(`${BASE_URL}/api/v1/users/${id}`, {
         method: 'GET',
         headers: {
-            "Authorization": "Bearer " + token,
+            "Authorization": token ? "Bearer " + token : '',
         },
     }).then((response) => response.json())
         .then((response) => {
-            const wrapper = document.querySelector(".bm-profile-wrapper");
-            wrapper.insertAdjacentHTML('afterbegin',
-                `<img class="bm-profile-imgrounded-circle ms-auto mt-4 me-3" style="width:200px; height:200px; border-radius: 70%;" src="https://www.bookmore.site/${response.result.profile}">`);
+            if (response.resultCode === 'SUCCESS') {
+                const wrapper = document.querySelector(".bm-profile-wrapper");
+                wrapper.insertAdjacentHTML('afterbegin',
+                    `<img class="bm-profile-imgrounded-circle ms-auto mt-4 me-3" style="width:200px; height:200px; border-radius: 70%;" src="https://www.bookmore.site/${response.result.profile}">`);
+            } else {
+                window.history.back();
+            }
         })
 }
 
@@ -64,7 +68,7 @@ function fetchDeleteUnfollow(id, token) {
     fetch(`${BASE_URL}/api/v1/users/${id}/follow`, {
         method: 'DELETE',
         headers: {
-            "Authorization": "Bearer " + token,
+            "Authorization": token ? "Bearer " + token : '',
         },
     }).then((response) => response.json())
         .then((response) => {
@@ -93,7 +97,7 @@ function fetchPostFollow(id, token) {
     fetch(`${BASE_URL}/api/v1/users/${id}/follow`, {
         method: 'POST',
         headers: {
-            "Authorization": "Bearer " + token,
+            "Authorization": token ? "Bearer " + token : '',
         },
     }).then((response) => response.json())
         .then((response) => {
@@ -121,7 +125,7 @@ function followButton(id, token) {
         fetch(`${BASE_URL}/api/v1/users/${id}/follow`, {
             method: 'GET',
             headers: {
-                "Authorization": "Bearer " + token,
+                "Authorization": token ? "Bearer " + token : '',
             },
         }).then((response) => response.json())
             .then((response) => {
@@ -226,7 +230,7 @@ function fetchGetReview(id) {
                     wrapper.insertAdjacentHTML('beforeend',
                         `<div class="bm-review-col p-3 bm-scale-animation " style="text-align: center">
                                     <div class="bm-review-item border border-secondary p-3 rounded-3">
-                                        <canvas class="chart me-3" width="240px" height="240px" id="chart-${review.id}"></canvas>
+                                        <canvas class="chart me-3" style="width:100%;" id="chart-${review.id}"></canvas>
                                         <hr/>
                                         <a class="d-flex align-items-center text-decoration-none text-dark" href="../books/detail.html?isbn=${review.isbn}">
                                         <div class="mx-auto overflow-hidden text-nowrap">${review.title}</div>
