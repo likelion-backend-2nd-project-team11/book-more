@@ -14,7 +14,7 @@ public interface RanksRepository extends JpaRepository<Ranks, Long> {
     @Query(value = "SELECT r.id,r.point, (Rank() over(order by r.point desc)) as ranking FROM ranks r WHERE r.ranking > -1", nativeQuery = true)
     List<RanksNativeVo> findAllRanking();
 
-    @Query("select r from Ranks r join fetch r.user where r.ranking <= 100 order by r.ranking asc")
+    @Query("select r from Ranks r join fetch r.user where r.ranking <= 100 and r.ranking > -1 order by r.ranking asc")
     List<Ranks> findTop100ByOrderByRankingAsc();
 
     Optional<Ranks> findTop1ByOrderByRankingDesc();
