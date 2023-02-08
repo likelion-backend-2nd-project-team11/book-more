@@ -59,8 +59,10 @@
                 </div>
                 <!----------------------->
                 <div class="authorized-component" style="float:left;">
-                    <a class="btn btn-lg" style="color: #FFFFFF" type="button" href="../notifications/index.html"><i
-                            class="fa-solid fa-bell"></i></a>
+                    <a class="btn btn-lg position-relative" style="color: #FFFFFF" type="button" href="../notifications/index.html"><i
+                            class="fa-solid fa-bell"></i>
+                        <span class="bm-checkAlarms-wrapper"></span>
+                    </a>
                 </div>
 
                 <button class="btn btn-lg" style="color: #FFFFFF" type="button" data-bs-toggle="offcanvas"
@@ -150,7 +152,9 @@
             </div>
         </div>
     </div>
+    <script src="../js/notifications.js"></script>
     <script>
+        fetchCheckNewAlarms(token)
         document.getElementById('birth').addEventListener('keyup', e => validBirth(e));
     </script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
