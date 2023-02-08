@@ -12,10 +12,28 @@
             crossorigin="anonymous"
             referrerpolicy="no-referrer"
     />
+    <link rel="apple-touch-icon" sizes="57x57" href="../asset/apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="../asset/apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="../asset/apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="../asset/apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="../asset/apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="../asset/apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="../asset/apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="../asset/apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="../asset/apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192"  href="../asset/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="../asset/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="../asset/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="../asset/favicon-16x16.png">
+    <link rel="manifest" href="../asset/manifest.json">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="../asset/ms-icon-144x144.png">
+    <meta name="theme-color" content="#ffffff">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="stylesheet" href="../css/index.css"/>
     <link rel="stylesheet" href="../css/top-bar.css"/>
     <script src="../js/constant.js"></script>
+<!--    <script src="../js/review.js"></script>-->
     <title>BookMore</title>
 </head>
 <body class="bg-light vh-100">
@@ -94,7 +112,11 @@
 <div class="container pt-5 w-100 d-block d-xxl-flex">
     <!-- 도서 상세 정보--------------------------------- -->
     <div class="container contents-wrapper w-100 mt-5 mb-xxl-5 me-xxl-5">
-
+        <div class="text-center bm-spinner">
+            <div class="spinner-border" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+        </div>
     </div>
     <!-- ------------------------------------- -->
     <!-- 리뷰 --------------------------------------- -->
@@ -102,13 +124,107 @@
         <button class="btn w-100 bg-white btn-light mb-4 shadow bm-scale-animation" onclick="window.location.href=`review.html?isbn=${urlSearchParams.get('isbn')}`" data-bs-toggle="modal" data-bs-target="#createModal"><img src="https://cdn-icons-png.flaticon.com/128/5150/5150518.png" width="30px" height="30px"></button>
     </div>
     <!-- ------------------------------------------- -->
+    <div class="modal fade" id="modifyModal" tabindex="-1" aria-labelledby="modifyModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="modifyModalLabel">리뷰 수정</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                        <div class="container">
+                            <div class="pt-5 d-flex mb-3">
+                                <label class="form-label-5 fs-3" style="float:left;">본문</label>
+                                <div class="form-check ms-auto my-auto" style="float:left;">
+                                    <input class="form-check-input" value="false" type="checkbox" id="spoiler-check">
+                                    <label class="form-check-label me-2" style="color: red;">
+                                        스포일러
+                                    </label>
+                                </div>
+                            </div>
+                            <textarea class="form-control" id="body-input" style="resize: none; width: 100%; height: 150px;"
+                                      placeholder="텍스트를 입력하세요."></textarea>
+                            <span style="color:#aaa;" id="counter" class="float-end me-2 mt-2">(0자 / 최대 300자)</span>
+
+                            <div class="pt-5">
+                                <label class="form-label fs-4">전문성</label>
+                            </div>
+
+                            <div>
+                                <input hidden type="number" value="0" id="professionalism-value">
+                                <label class="me-3"><input type="radio" id="professinalism-score-1" value="1" name="professionalism-score" onclick="document.getElementById('professionalism-value').value=event.target.value"> 1점</label>
+                                <label class="me-3"><input type="radio" id="professinalism-score-2" value="2" name="professionalism-score" onclick="document.getElementById('professionalism-value').value=event.target.value"> 2점</label>
+                                <label class="me-3"><input type="radio" id="professinalism-score-3" value="3" name="professionalism-score" onclick="document.getElementById('professionalism-value').value=event.target.value"> 3점</label>
+                                <label class="me-3"><input type="radio" id="professinalism-score-4" value="4" name="professionalism-score" onclick="document.getElementById('professionalism-value').value=event.target.value"> 4점</label>
+                                <label class="me-3"><input type="radio" id="professinalism-score-5" value="5" name="professionalism-score" onclick="document.getElementById('professionalism-value').value=event.target.value"> 5점</label>
+                            </div>
+
+                            <div class="pt-3">
+                                <label class="form-label fs-4">재미</label>
+                            </div>
+
+                            <div>
+                                <input hidden value="0" id="fun-value">
+                                <label class="me-3"><input type="radio" id="fun-score-1" value="1" name="fun-score" onclick="document.getElementById('fun-value').value=event.target.value"> 1점</label>
+                                <label class="me-3"><input type="radio" id="fun-score-2"value="2" name="fun-score" onclick="document.getElementById('fun-value').value=event.target.value"> 2점</label>
+                                <label class="me-3"><input type="radio" id="fun-score-3"value="3" name="fun-score" onclick="document.getElementById('fun-value').value=event.target.value"> 3점</label>
+                                <label class="me-3"><input type="radio" id="fun-score-4"value="4" name="fun-score" onclick="document.getElementById('fun-value').value=event.target.value"> 4점</label>
+                                <label class="me-3"><input type="radio" id="fun-score-5"value="5" name="fun-score" onclick="document.getElementById('fun-value').value=event.target.value"> 5점</label>
+                            </div>
+                            <div class="pt-3">
+                                <label class="form-label fs-4">가독성</label>
+                            </div>
+
+                            <div>
+                                <input hidden value="0" id="readability-value">
+                                <label class="me-3"><input type="radio" id="readability-score-1" value="1" name="readability-score" onclick="document.getElementById('readability-value').value=event.target.value"> 1점</label>
+                                <label class="me-3"><input type="radio" id="readability-score-2" value="2" name="readability-score" onclick="document.getElementById('readability-value').value=event.target.value"> 2점</label>
+                                <label class="me-3"><input type="radio" id="readability-score-3" value="3" name="readability-score" onclick="document.getElementById('readability-value').value=event.target.value"> 3점</label>
+                                <label class="me-3"><input type="radio" id="readability-score-4" value="4" name="readability-score" onclick="document.getElementById('readability-value').value=event.target.value"> 4점</label>
+                                <label class="me-3"><input type="radio" id="readability-score-5" value="5" name="readability-score" onclick="document.getElementById('readability-value').value=event.target.value"> 5점</label>
+                            </div>
+
+                            <div class="pt-3">
+                                <label class="form-label fs-4">소장 가치</label>
+                            </div>
+
+                            <div>
+                                <input hidden value="0" id="collectible-value">
+                                <label class="me-3"><input type="radio" id="collectible-score-1" value="1" name="collectible-score" onclick="document.getElementById('collectible-value').value=event.target.value"> 1점</label>
+                                <label class="me-3"><input type="radio" id="collectible-score-2" value="2" name="collectible-score" onclick="document.getElementById('collectible-value').value=event.target.value"> 2점</label>
+                                <label class="me-3"><input type="radio" id="collectible-score-3" value="3" name="collectible-score" onclick="document.getElementById('collectible-value').value=event.target.value"> 3점</label>
+                                <label class="me-3"><input type="radio" id="collectible-score-4" value="4" name="collectible-score" onclick="document.getElementById('collectible-value').value=event.target.value"> 4점</label>
+                                <label class="me-3"><input type="radio" id="collectible-score-5" value="5" name="collectible-score" onclick="document.getElementById('collectible-value').value=event.target.value"> 5점</label>
+                            </div>
+
+                            <div class="pt-3">
+                                <label class="form-label fs-4">난이도</label>
+                            </div>
+
+                            <div>
+                                <input hidden value="0" id="difficulty-value">
+                                <label class="me-3"><input type="radio" id="difficulty-score-1" value="1" name="difficulty-score" onclick="document.getElementById('difficulty-value').value=event.target.value"> 1점</label>
+                                <label class="me-3"><input type="radio" id="difficulty-score-2" value="2" name="difficulty-score" onclick="document.getElementById('difficulty-value').value=event.target.value"> 2점</label>
+                                <label class="me-3"><input type="radio" id="difficulty-score-3" value="3" name="difficulty-score" onclick="document.getElementById('difficulty-value').value=event.target.value"> 3점</label>
+                                <label class="me-3"><input type="radio" id="difficulty-score-4" value="4" name="difficulty-score" onclick="document.getElementById('difficulty-value').value=event.target.value"> 4점</label>
+                                <label class="me-3"><input type="radio" id="difficulty-score-5" value="5" name="difficulty-score" onclick="document.getElementById('difficulty-value').value=event.target.value"> 5점</label>
+                            </div>
+
+                            <div class="d-flex justify-content-center">
+                                <button type="button" id="modify-btn" class="btn btn-primary btn-lg mt-5 mb-3">리뷰 수정</button>
+                            </div>
+                        </div>
+                    </div>
+            </div>
+        </div>
+    </div>
 </div>
 <script src="../js/book.js"></script>
 <script src="../js/review.js"></script>
 <script src="../js/notifications.js"></script>
 <script>
+    fetchGetReviewsByBook(isbn).then(result => reviews = result);
     fetchSearchBookDetail(isbn);
-    fetchGetReviewsByBook(isbn);
     fetchCheckNewAlarms(token)
 </script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
