@@ -26,6 +26,8 @@ public enum ErrorCode {
     FOLLOW_NOT_ME(BAD_REQUEST, "나를 팔로우 할 수 없습니다."),
     FILE_NOT_EXISTS(BAD_REQUEST, "파일이 첨부되지 않았습니다."),
     FILE_SIZE_EXCEED(BAD_REQUEST, "업로드 가능한 파일 용량을 초과했습니다."),
+    RANKS_NOT_FOUND(NOT_FOUND, "해당 유저의 랭킹 정보를 찾을 수 없습니다."),
+    ALREADY_DELETED_USER(NOT_FOUND, "이미 탈퇴된 계정입니다."),
     DATABASE_ERROR(INTERNAL_SERVER_ERROR, "데이터베이스 에러");
 
     private final HttpStatus httpStatus;

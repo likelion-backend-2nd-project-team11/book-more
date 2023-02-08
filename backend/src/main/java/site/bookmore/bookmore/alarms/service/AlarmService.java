@@ -34,7 +34,7 @@ public class AlarmService {
      * 나의 모든 알림 조회
      */
     public Page<AlarmResponse> findByFollowingReview(Pageable pageable, String email) {
-        User target = userRepository.findByEmail(email).orElseThrow(UserNotFoundException::new);
+        User target = userRepository.findByEmailAndDeletedDatetimeIsNull(email).orElseThrow(UserNotFoundException::new);
         return alarmRepository.findByTargetUser(target, pageable).map(getAlarmResponse());
     }
 

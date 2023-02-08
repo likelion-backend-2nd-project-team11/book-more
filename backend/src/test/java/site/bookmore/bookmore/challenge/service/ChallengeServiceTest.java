@@ -8,7 +8,6 @@ import org.springframework.http.HttpStatus;
 import site.bookmore.bookmore.challenge.dto.ChallengeRequest;
 import site.bookmore.bookmore.challenge.entity.Challenge;
 import site.bookmore.bookmore.challenge.repository.ChallengeRepository;
-import site.bookmore.bookmore.common.exception.ErrorCode;
 import site.bookmore.bookmore.common.exception.not_found.ReviewNotFoundException;
 import site.bookmore.bookmore.common.exception.not_found.UserNotFoundException;
 import site.bookmore.bookmore.users.entity.User;
@@ -19,7 +18,6 @@ import java.util.Optional;
 
 import static java.util.Optional.of;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -32,8 +30,8 @@ class ChallengeServiceTest {
     UserRepository userRepository = mock(UserRepository.class);
 
     @BeforeEach
-    void setUp(){
-        challengeService = new ChallengeService(challengeRepository,userRepository);
+    void setUp() {
+        challengeService = new ChallengeService(challengeRepository, userRepository);
     }
 
 
@@ -43,18 +41,18 @@ class ChallengeServiceTest {
         ChallengeRequest challengeRequest = ChallengeRequest.builder()
                 .title("title")
                 .description("description")
-                .deadline(LocalDate.of(2023,01,20))
+                .deadline(LocalDate.of(2023, 01, 20))
                 .build();
         Challenge mockChallenge = mock(Challenge.class);
         User mockUser = mock(User.class);
 
-        when(userRepository.findByEmail(anyString()))
+        when(userRepository.findByEmailAndDeletedDatetimeIsNull(anyString()))
                 .thenReturn(of(mockUser));
 
         when(challengeRepository.save(any()))
                 .thenReturn(mockChallenge);
 
-        Assertions.assertDoesNotThrow(() -> challengeService.add("userName",challengeRequest));
+        Assertions.assertDoesNotThrow(() -> challengeService.add("userName", challengeRequest));
     }
 
     @Test
@@ -63,7 +61,7 @@ class ChallengeServiceTest {
         ChallengeRequest challengeRequest = ChallengeRequest.builder()
                 .title("title")
                 .description("description")
-                .deadline(LocalDate.of(2023,01,20))
+                .deadline(LocalDate.of(2023, 01, 20))
                 .build();
         //db에서 회원이 없다면 UserNotFoundException
         when(userRepository.findByEmail(anyString()))
@@ -85,7 +83,7 @@ class ChallengeServiceTest {
                 .nickname("nickname")
                 .build();
 
-        when(userRepository.findByEmail(anyString()))
+        when(userRepository.findByEmailAndDeletedDatetimeIsNull(anyString()))
                 .thenReturn(Optional.of(mockUser));
 
         when(challengeRepository.findById(anyLong()))
@@ -115,18 +113,18 @@ class ChallengeServiceTest {
     void challengeDeleteError1() {
 
         User mockUser = User.builder()
-                            .id(1L)
-                            .email("test@tes.com")
-                            .nickname("nickname")
-                            .build();
+                .id(1L)
+                .email("test@tes.com")
+                .nickname("nickname")
+                .build();
 
-        when(userRepository.findByEmail(anyString()))
+        when(userRepository.findByEmailAndDeletedDatetimeIsNull(anyString()))
                 .thenReturn(Optional.of(mockUser));
 
         when(challengeRepository.findById(anyLong()))
                 .thenReturn(Optional.empty());
 
-        ReviewNotFoundException reviewNotFoundException = Assertions.assertThrows(ReviewNotFoundException.class, () -> challengeService.delete("userName",1L));
+        ReviewNotFoundException reviewNotFoundException = Assertions.assertThrows(ReviewNotFoundException.class, () -> challengeService.delete("userName", 1L));
 
         assertThat(reviewNotFoundException.getErrorCode().getHttpStatus());
         assertThat(reviewNotFoundException.getErrorCode().getMessage());
@@ -139,7 +137,7 @@ class ChallengeServiceTest {
         when(userRepository.findByNickname("userName"))
                 .thenThrow(new UserNotFoundException());
 
-        UserNotFoundException userNotFoundException = Assertions.assertThrows(UserNotFoundException.class, () -> challengeService.delete("userName",1L));
+        UserNotFoundException userNotFoundException = Assertions.assertThrows(UserNotFoundException.class, () -> challengeService.delete("userName", 1L));
 
         assertThat(userNotFoundException.getErrorCode().getHttpStatus());
         assertThat(userNotFoundException.getErrorCode().getMessage());

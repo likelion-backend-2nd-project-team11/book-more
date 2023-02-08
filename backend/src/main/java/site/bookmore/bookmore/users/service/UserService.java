@@ -11,19 +11,24 @@ import org.springframework.web.multipart.MultipartFile;
 import site.bookmore.bookmore.common.exception.conflict.DuplicateEmailException;
 import site.bookmore.bookmore.common.exception.conflict.DuplicateNicknameException;
 import site.bookmore.bookmore.common.exception.conflict.DuplicateProfileException;
+import site.bookmore.bookmore.common.exception.not_found.AlreadyDeletedUserException;
+import site.bookmore.bookmore.common.exception.not_found.RanksNotFoundException;
 import site.bookmore.bookmore.common.exception.not_found.UserNotFoundException;
 import site.bookmore.bookmore.common.exception.unauthorized.InvalidPasswordException;
 import site.bookmore.bookmore.common.exception.unauthorized.InvalidTokenException;
 import site.bookmore.bookmore.s3.AwsS3Uploader;
 import site.bookmore.bookmore.security.provider.JwtProvider;
 import site.bookmore.bookmore.users.dto.*;
+import site.bookmore.bookmore.users.entity.Follow;
 import site.bookmore.bookmore.users.entity.Ranks;
 import site.bookmore.bookmore.users.entity.Role;
 import site.bookmore.bookmore.users.entity.User;
+import site.bookmore.bookmore.users.repositroy.FollowRepository;
 import site.bookmore.bookmore.users.repositroy.RanksRepository;
 import site.bookmore.bookmore.users.repositroy.UserRepository;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Objects;
 
 import static site.bookmore.bookmore.users.entity.User.DEFAULT_PROFILE_IMG_PATH;
@@ -37,11 +42,12 @@ public class UserService implements UserDetailsService {
     private final JwtProvider jwtProvider;
     private final UserRepository userRepository;
     private final RanksRepository ranksRepository;
+    private final FollowRepository followRepository;
     private final AwsS3Uploader awsS3Uploader;
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        return userRepository.findByEmail(email).orElseThrow(UserNotFoundException::new);
+        return userRepository.findByEmailAndDeletedDatetimeIsNull(email).orElseThrow(UserNotFoundException::new);
     }
 
     /**
@@ -79,6 +85,7 @@ public class UserService implements UserDetailsService {
      */
     public UserLoginResponse login(UserLoginRequest userLoginRequest) {
         User user = userRepository.findByEmail(userLoginRequest.getEmail()).orElseThrow(UserNotFoundException::new);
+        if (!user.isEnabled() && user.getDeletedDatetime() != null) throw new AlreadyDeletedUserException();
         if (!passwordEncoder.matches(userLoginRequest.getPassword(), user.getPassword()))
             throw new InvalidPasswordException();
         return new UserLoginResponse(jwtProvider.generateToken(user));
@@ -92,7 +99,7 @@ public class UserService implements UserDetailsService {
     @Transactional
     public UserResponse infoUpdate(String email, Long userId, UserUpdateRequest userUpdateRequest) {
 
-        User user = userRepository.findByEmail(email).orElseThrow(UserNotFoundException::new);
+        User user = userRepository.findByEmailAndDeletedDatetimeIsNull(email).orElseThrow(UserNotFoundException::new);
 
         // id, 토큰 아이디 확인
         if (!user.getId().equals(userId) && user.getRole() != Role.ROLE_ADMIN) throw new InvalidTokenException();
@@ -121,7 +128,7 @@ public class UserService implements UserDetailsService {
     @Transactional
     public UserPersonalResponse infoEdit(String email, UserUpdateRequest userUpdateRequest) {
 
-        User user = userRepository.findByEmail(email).orElseThrow(UserNotFoundException::new);
+        User user = userRepository.findByEmailAndDeletedDatetimeIsNull(email).orElseThrow(UserNotFoundException::new);
 
         infoUpdate(email, user.getId(), userUpdateRequest);
 
@@ -130,9 +137,8 @@ public class UserService implements UserDetailsService {
 
 
     public UserPersonalResponse search(String email) {
-        User user = userRepository.findByEmail(email).orElseThrow(UserNotFoundException::new);
-        UserPersonalResponse userPersonalResponse = new UserPersonalResponse(user);
-        return userPersonalResponse;
+        User user = userRepository.findByEmailAndDeletedDatetimeIsNull(email).orElseThrow(UserNotFoundException::new);
+        return UserPersonalResponse.of(user);
     }
 
 
@@ -141,24 +147,43 @@ public class UserService implements UserDetailsService {
      */
     @Transactional
     public UserResponse delete(String email, Long userId) {
-        User user = userRepository.findByEmail(email).orElseThrow(UserNotFoundException::new);
+        User user = userRepository.findByEmailAndDeletedDatetimeIsNull(email).orElseThrow(UserNotFoundException::new);
 
         if (!user.getId().equals(userId) && user.getRole() != Role.ROLE_ADMIN) throw new InvalidTokenException();
 
-        User userFindId = userRepository.findByIdAndDeletedDatetimeIsNull(userId).orElseThrow(UserNotFoundException::new);
+        // 팔로우 정리
+        List<Follow> follows = followRepository.findAllFollowOfUser(user.getId());
+        for (Follow follow : follows) {
+            User follower = follow.getFollower();
+            User following = follow.getFollowing();
+            if (follower.equals(user)) following.getFollowCount().minusFollowerCount(); // 삭제되는 유저가 팔로워인 경우
+            else follower.getFollowCount().minusFollowingCount(); // 삭제되는 유저가 팔로잉인 경우
+            follow.delete();
+        }
 
-        userFindId.delete();
+        // 랭킹 삭제 처리
+        Ranks rank = ranksRepository.findByUser(user).orElseThrow(RanksNotFoundException::new);
+        rank.delete();
+
+        user.deactivate();
+        user.delete();
 
         return UserResponse.of(user, "회원 탈퇴 완료.");
     }
 
+    @Transactional
+    public UserResponse delete(String email) {
+        User user = userRepository.findByEmailAndDeletedDatetimeIsNull(email).orElseThrow(UserNotFoundException::new);
+        return delete(email, user.getId());
+    }
+
     public UserJoinResponse verify(String email) {
-        User user = userRepository.findByEmail(email).orElseThrow(UserNotFoundException::new);
+        User user = userRepository.findByEmailAndDeletedDatetimeIsNull(email).orElseThrow(UserNotFoundException::new);
         return UserJoinResponse.of(user);
     }
 
     public UserDetailResponse detail(Long id) {
-        User user = userRepository.findById(id)
+        User user = userRepository.findByIdAndDeletedDatetimeIsNull(id)
                 .orElseThrow(UserNotFoundException::new);
         return UserDetailResponse.builder()
                 .nickname(user.getNickname())
@@ -170,7 +195,7 @@ public class UserService implements UserDetailsService {
     @Transactional
     public String updateProfile(MultipartFile multipartFile, String email) throws IOException {
 
-        User user = userRepository.findByEmail(email)
+        User user = userRepository.findByEmailAndDeletedDatetimeIsNull(email)
                 .orElseThrow(UserNotFoundException::new);
 
         String key = awsS3Uploader.upload(multipartFile);
@@ -182,7 +207,7 @@ public class UserService implements UserDetailsService {
     @Transactional
     public String updateProfileDefault(String email) {
 
-        User user = userRepository.findByEmail(email)
+        User user = userRepository.findByEmailAndDeletedDatetimeIsNull(email)
                 .orElseThrow(UserNotFoundException::new);
 
         if (Objects.equals(user.getProfile(), DEFAULT_PROFILE_IMG_PATH)) {

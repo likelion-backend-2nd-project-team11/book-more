@@ -54,7 +54,7 @@ public class ReviewService {
     // 도서 리뷰 등록
     @Transactional
     public Long create(ReviewRequest reviewRequest, String isbn, String email) {
-        User user = userRepository.findByEmail(email)
+        User user = userRepository.findByEmailAndDeletedDatetimeIsNull(email)
                 .orElseThrow(UserNotFoundException::new);
 
         Book book = bookRepository.findById(isbn)
@@ -103,7 +103,7 @@ public class ReviewService {
     public Long update(ReviewRequest reviewRequest, Long reviewId, String email) {
         Review review = readReviewWithTag(reviewId);
 
-        User user = userRepository.findByEmail(email)
+        User user = userRepository.findByEmailAndDeletedDatetimeIsNull(email)
                 .orElseThrow(UserNotFoundException::new);
 
         if (!Objects.equals(review.getAuthor().getEmail(), user.getEmail())) {
@@ -147,7 +147,7 @@ public class ReviewService {
         Review review = reviewRepository.findByIdAndDeletedDatetimeIsNull(reviewId)
                 .orElseThrow(ReviewNotFoundException::new);
 
-        User user = userRepository.findByEmail(email)
+        User user = userRepository.findByEmailAndDeletedDatetimeIsNull(email)
                 .orElseThrow(UserNotFoundException::new);
 
         if (!Objects.equals(review.getAuthor().getEmail(), user.getEmail())) {
@@ -162,7 +162,7 @@ public class ReviewService {
     // 도서 리뷰에 좋아요 | 취소
     @Transactional
     public boolean doLikes(String email, Long reviewId) {
-        User user = userRepository.findByEmail(email)
+        User user = userRepository.findByEmailAndDeletedDatetimeIsNull(email)
                 .orElseThrow(UserNotFoundException::new);
 
         Review review = reviewRepository.findByIdAndDeletedDatetimeIsNull(reviewId)
@@ -185,7 +185,7 @@ public class ReviewService {
 
     // 특정 유저의 리뷰 조회
     public Page<ReviewPageResponse> findByAuthor(Long authorId, Pageable pageable) {
-        User author = userRepository.findById(authorId)
+        User author = userRepository.findByIdAndDeletedDatetimeIsNull(authorId)
                 .orElseThrow(UserNotFoundException::new);
         return reviewRepository.findByAuthorAndDeletedDatetimeIsNull(pageable, author)
                 .map(ReviewPageResponse::of);
