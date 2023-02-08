@@ -105,7 +105,7 @@ public class UserService implements UserDetailsService {
         if (!user.getId().equals(userId) && user.getRole() != Role.ROLE_ADMIN) throw new InvalidTokenException();
 
         // 중복 이름 예외처리
-        if (userUpdateRequest.getNickname() != null) {
+        if (userUpdateRequest.getNickname() != null && !userUpdateRequest.getNickname().equals(user.getNickname())) {
             userRepository.findByNickname(userUpdateRequest.getNickname())
                     .ifPresent(user1 -> {
                         throw new DuplicateNicknameException();
