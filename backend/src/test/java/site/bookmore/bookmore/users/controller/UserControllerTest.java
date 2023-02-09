@@ -45,7 +45,7 @@ class UserControllerTest {
     private MockMvc mockMvc;
     UserJoinRequest userJoinRequest = new UserJoinRequest("email@gmail.com", "password", "nickname", testDate);
     UserLoginRequest userLoginRequest = new UserLoginRequest("email@gmail.com", "password");
-    UserUpdateRequest userUpdateRequest = new UserUpdateRequest("password1", null, null);
+    UserUpdateRequest userUpdateRequest = new UserUpdateRequest("password1", "nickname", LocalDate.of(2017, 5, 1));
 
 
     @Test
