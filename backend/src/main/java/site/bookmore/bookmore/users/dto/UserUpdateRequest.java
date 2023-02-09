@@ -29,4 +29,11 @@ public class UserUpdateRequest {
                 .build();
     }
 
+    public User toEntity() {
+        return User.builder()
+                .password(password)
+                .nickname(nickname)
+                .birth(birth)
+                .build();
+    }
 }

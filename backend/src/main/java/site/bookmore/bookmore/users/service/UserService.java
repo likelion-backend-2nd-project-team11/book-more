@@ -84,7 +84,7 @@ public class UserService implements UserDetailsService {
      * 로그인
      */
     public UserLoginResponse login(UserLoginRequest userLoginRequest) {
-        User user = userRepository.findByEmail(userLoginRequest.getEmail()).orElseThrow(UserNotFoundException::new);
+        User user = userRepository.findByEmailAndDeletedDatetimeIsNull(userLoginRequest.getEmail()).orElseThrow(UserNotFoundException::new);
         if (!user.isEnabled() && user.getDeletedDatetime() != null) throw new AlreadyDeletedUserException();
         if (!passwordEncoder.matches(userLoginRequest.getPassword(), user.getPassword()))
             throw new InvalidPasswordException();
@@ -113,13 +113,11 @@ public class UserService implements UserDetailsService {
         }
 
         // password encode
-        String encoded = userUpdateRequest.getPassword();
-        if (encoded == null) {
-            encoded = user.getPassword();
-        }
-        String encodedPw = passwordEncoder.encode(encoded);
+        String password = userUpdateRequest.getPassword();
 
-        user.update(userUpdateRequest.toEntity(encodedPw));
+        User updated = password == null ? userUpdateRequest.toEntity() : userUpdateRequest.toEntity(passwordEncoder.encode(password));
+
+        user.update(updated);
 
         return UserResponse.of(user, "수정 완료 했습니다.");
     }
