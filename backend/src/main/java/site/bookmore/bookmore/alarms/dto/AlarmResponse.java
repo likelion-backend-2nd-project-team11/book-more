@@ -20,8 +20,8 @@ public class AlarmResponse {
     private Long id;
     private AlarmType alarmType;
     private boolean confirmed;
-    private Long targetUserId;
-    private String fromUser;
+    private Long fromUserId;
+    private String fromUserNickname;
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private Map<String, Object> source;
     private String createdDatetime;
@@ -31,8 +31,8 @@ public class AlarmResponse {
                 .id(alarm.getId())
                 .alarmType(alarm.getAlarmType())
                 .confirmed(alarm.isConfirmed())
-                .targetUserId(alarm.getTargetUser().getId())
-                .fromUser(alarm.getFromUser().getNickname())
+                .fromUserId(alarm.getFromUser().getId())
+                .fromUserNickname(alarm.getFromUser().getNickname())
                 .source(source)
                 .createdDatetime(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss").format(alarm.getCreatedDatetime()))
                 .build();

@@ -10,12 +10,7 @@ function join() {
     const email = document.getElementById('email').value;
     const password = document.getElementById('password').value;
     const nickname = document.getElementById('name').value;
-    const birth = document.getElementById('birth').value;
-
-    if (!BIRTH_PATTERN.test(birth)) {
-        alert('생년월일 형식을 확인해주세요.')
-        return;
-    }
+    const birth = birthArr.join("-");
 
     // request api
     fetch(`${BASE_URL}/api/v1/users/join`, {
@@ -36,12 +31,4 @@ function join() {
             alert(response.result.message);
         }
     });
-}
-
-const BIRTH_PATTERN = /^\d{4}-\d{2}-\d{2}$/g
-
-function validBirth(e) {
-    const value = e.target.value;
-    if (BIRTH_PATTERN.test(value))  e.target.style.border = '';
-    else e.target.style.border = '1px solid red';
 }

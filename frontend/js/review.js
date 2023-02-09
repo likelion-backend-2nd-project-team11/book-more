@@ -55,12 +55,14 @@ async function fetchGetReviewsByBook(isbn, getUserInfo) {
                     <div class="review-content  d-flex">
                     <canvas class="chart me-3" style="width: 35%" id="chart-${review.id}"></canvas>
                     <div style="width: 100%">
+                        <a class="d-flex align-items-center text-decoration-none text-dark" href="../users/detail.html?id=${review.userId}">
                         <h4>@${review.nickname}</h4>
+                        </a>
                         <p id="spoiler-${review.id}" class="spoiler" style="display: ${review.spoiler ? 'none' : 'block'}">
                             ${review.body}
                         </p>
                         <p id="spoilerText-${review.id}" class="spoilerText" style="display: ${review.spoiler ? 'block' : 'none'}">스포일러가 포함된 내용입니다</p>
-                        <button type="button" onclick="more(${review.id})" style="display: ${review.spoiler ? 'block' : 'none'};float:right;margin-top: 90px;border: none;border-radius:0.7em;padding: 6px;background-color: white;color: dimgrey">더보기</button>
+                        <button type="button" id="spoiler-more-btn-${review.id}" onclick="more(${review.id})" style="display: ${review.spoiler ? 'block' : 'none'};float:right;margin-top: 90px;border: none;border-radius:0.7em;padding: 6px;background-color: white;color: dimgrey">더보기</button>
                         ${userInfo !== undefined && review.nickname === userInfo.nickname ? `
                             <div id="editDelete" style="margin-top: 110px;">                       
                                 <button type="button" id="edit-btn" onclick="modifyReview(reviews[${review.id}])" data-bs-toggle="modal" data-bs-target="#modifyModal" style="border: none; border-radius: 0.7em;padding-left: 10px; padding-right: 10px">수정</button>
@@ -154,10 +156,9 @@ function fetchReview(id, token) {
     const difficulty = document.getElementById("difficulty-value").value;
     var tags = document.getElementById('tags-input').value
         .replaceAll(' ', '')
+        .split(';');
 
-    if (tags.lastIndexOf(';') === tags.length - 1) tags = tags.substring(0, tags.length - 1);
-
-    tags = tags.split(';');
+    tags = tags.filter(ele => ele !== '');
 
     const data = {
         spoiler,
@@ -256,10 +257,9 @@ function fetchPostReview(isbn) {
     const difficulty = document.getElementById('difficulty-value').value;
     var tags = document.getElementById('tags-input').value
                     .replaceAll(' ', '')
+                    .split(';');
 
-    if (tags.lastIndexOf(';') === tags.length - 1) tags = tags.substring(0, tags.length - 1);
-
-    tags = tags.split(';');
+    tags = tags.filter(element => element !== '');
 
     const data = {
         body,
