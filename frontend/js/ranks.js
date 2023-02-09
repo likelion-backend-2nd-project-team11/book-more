@@ -22,7 +22,7 @@ function fetchGetRanks() {
                             <small class="d-block text-center">${rank.ranking}위</small>
                         </td>
                         <td>
-                            <small class="d-block text-center">${rank.nickName}</small>
+                            <a class="d-block text-center" style="text-decoration:none; color: black; font-weight : 600;" href="users/detail.html?id=${rank.id}">${rank.nickName}</a>
                         </td>
                         <td>
                             <small class="d-block text-center">${rank.point}</small>
@@ -66,7 +66,7 @@ function fetchGetMyRanks() {
                             <small class="d-block text-center">${ranks.ranking}위</small>
                         </td>
                         <td>
-                            <small class="d-block text-center">${ranks.nickName}</small>
+                            <a class="d-block text-center" style="text-decoration:none; color: black; font-weight : 600;" href="users/detail.html?id=${ranks.id}">${ranks.nickName}</a>
                         </td>
                         <td>
                             <small class="d-block text-center">${ranks.point}</small>
