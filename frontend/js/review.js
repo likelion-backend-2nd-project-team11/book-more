@@ -55,7 +55,9 @@ async function fetchGetReviewsByBook(isbn, getUserInfo) {
                     <div class="review-content  d-flex">
                     <canvas class="chart me-3" style="width: 35%" id="chart-${review.id}"></canvas>
                     <div style="width: 100%">
+                        <a class="d-flex align-items-center text-decoration-none text-dark" href="../users/detail.html?id=${review.userId}">
                         <h4>@${review.nickname}</h4>
+                        </a>
                         <p id="spoiler-${review.id}" class="spoiler" style="display: ${review.spoiler ? 'none' : 'block'}">
                             ${review.body}
                         </p>
