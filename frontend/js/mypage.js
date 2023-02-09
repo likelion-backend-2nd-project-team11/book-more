@@ -116,7 +116,7 @@ function editUser(token) {
 
     const data = {
         nickname,
-        password,
+        password : password === "" ? null : password,
         birth
     }
 
