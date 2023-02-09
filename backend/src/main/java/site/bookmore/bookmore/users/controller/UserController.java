@@ -71,7 +71,7 @@ public class UserController {
     @Authorized
     @ApiOperation(value = "내 정보 수정")
     @PostMapping("/me")
-    public ResultResponse<UserPersonalResponse> update(@RequestBody UserUpdateRequest userUpdateRequest, @ApiIgnore Authentication authentication) {
+    public ResultResponse<UserPersonalResponse> update(@Valid @RequestBody UserUpdateRequest userUpdateRequest, @ApiIgnore Authentication authentication) {
         String email = authentication.getName();
         return ResultResponse.success(userService.infoEdit(email, userUpdateRequest));
     }
