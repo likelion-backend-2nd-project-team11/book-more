@@ -64,7 +64,7 @@ public class ReviewService {
 
         Set<String> tagsLabel = reviewRequest.getTags();
 
-        if (tagsLabel.isEmpty()) {
+        if (tagsLabel == null || tagsLabel.isEmpty()) {
             // 나의 팔로잉이 리뷰를 등록했을 때의 알림 발생
             List<Follow> follows = followRepository.findAllByFollowingAndDeletedDatetimeIsNull(user);
             List<User> followers = follows.stream().map(Follow::getFollower).collect(Collectors.toList());
@@ -114,7 +114,7 @@ public class ReviewService {
 
         review.update(reviewRequest.toEntity());
 
-        if (updateTagsLabel.isEmpty()) return review.getId();
+        if (updateTagsLabel == null) return review.getId();
 
         Set<Tag> oldTags = review.getTags();
 
