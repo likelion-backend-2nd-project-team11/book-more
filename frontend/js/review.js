@@ -154,10 +154,9 @@ function fetchReview(id, token) {
     const difficulty = document.getElementById("difficulty-value").value;
     var tags = document.getElementById('tags-input').value
         .replaceAll(' ', '')
+        .split(';');
 
-    if (tags.lastIndexOf(';') === tags.length - 1) tags = tags.substring(0, tags.length - 1);
-
-    tags = tags.split(';');
+    tags = tags.filter(ele => ele !== '');
 
     const data = {
         spoiler,
@@ -256,10 +255,9 @@ function fetchPostReview(isbn) {
     const difficulty = document.getElementById('difficulty-value').value;
     var tags = document.getElementById('tags-input').value
                     .replaceAll(' ', '')
+                    .split(';');
 
-    if (tags.lastIndexOf(';') === tags.length - 1) tags = tags.substring(0, tags.length - 1);
-
-    tags = tags.split(';');
+    tags = tags.filter(element => element !== '');
 
     const data = {
         body,
