@@ -113,13 +113,11 @@ public class UserService implements UserDetailsService {
         }
 
         // password encode
-        String encoded = userUpdateRequest.getPassword();
-        if (encoded == null) {
-            encoded = user.getPassword();
-        }
-        String encodedPw = passwordEncoder.encode(encoded);
+        String password = userUpdateRequest.getPassword();
 
-        user.update(userUpdateRequest.toEntity(encodedPw));
+        User updated = password == null ? userUpdateRequest.toEntity() : userUpdateRequest.toEntity(passwordEncoder.encode(password));
+
+        user.update(updated);
 
         return UserResponse.of(user, "수정 완료 했습니다.");
     }
