@@ -26,22 +26,24 @@ function getResponse() {
         wrapper.innerHTML = alarms.map(alarm => {
             const alarmId = alarm.id;
             const alarmType = alarm.alarmType;
-            const fromUser = `<strong>${alarm.fromUser}</strong>`;
             const confirmed = alarm.confirmed;
+            const fromUserId = alarm.fromUserId;
+            const fromUserNickname = `<strong>${alarm.fromUserNickname}</strong>`;
+
 
             let alarmMessage = "";
             let source = "";
             let isbn = "";
 
             if (alarmType === "NEW_FOLLOW_REVIEW") {
-                alarmMessage = fromUser + " 님이 새로운 리뷰를 등록했어요.";
+                alarmMessage = fromUserNickname + " 님이 새로운 리뷰를 등록했어요.";
                 source = alarm.source.title
                 isbn = alarm.source.isbn;
             } else if (alarmType === "NEW_FOLLOW") {
-                alarmMessage = fromUser + " 님이 나를 팔로우했어요.";
+                alarmMessage = fromUserNickname + " 님이 나를 팔로우했어요.";
                 source = "팔로우 리스트 보기"
             } else {
-                alarmMessage = fromUser + " 님이 나의 리뷰에 좋아요를 눌렀어요.";
+                alarmMessage = fromUserNickname + " 님이 나의 리뷰에 좋아요를 눌렀어요.";
                 source = alarm.source.title;
                 isbn = alarm.source.isbn;
             }
@@ -58,7 +60,7 @@ function getResponse() {
 
             if (confirmed === true) {
                 return `
-                        <button type="button" onclick="locateDetail(${alarmId}, '${alarmType}', ${isbn})" class="list-group-item list-group-item-action" style="background: #f5f5f5;color: #bdbdbd">
+                        <button type="button" onclick="locateDetail(${alarmId}, '${alarmType}', ${fromUserId}, ${isbn})" class="list-group-item list-group-item-action" style="background: #f5f5f5;color: #bdbdbd">
                             <div class="d-flex w-100 justify-content-between">
                                 <h5 class="mb-1 me-5">${alarmMessage}</h5>
                                 <small class="float-end" style="color: #bdbdbd">${dateString}</small>
@@ -67,7 +69,7 @@ function getResponse() {
                         </button>`;
             } else {
                 return `
-                        <button type="button" onclick="locateDetail(${alarmId}, '${alarmType}', ${isbn})" class="list-group-item list-group-item-action">
+                        <button type="button" onclick="locateDetail(${alarmId}, '${alarmType}', ${fromUserId}, ${isbn})" class="list-group-item list-group-item-action">
                             <div class="d-flex w-100 justify-content-between">
                                 <h5 class="mb-1 me-5">${alarmMessage}</h5>
                                 <small class="text-muted float-end">${dateString}</small>
@@ -79,12 +81,12 @@ function getResponse() {
     }
 }
 
-function locateDetail(alarmId, alarmType, isbn) {
+function locateDetail(alarmId, alarmType, fromUserId, isbn) {
 
     confirm(alarmId);
 
     if (alarmType === "NEW_FOLLOW") {
-        window.location.href = "../users/detail.html";
+        window.location.href = "../users/detail.html?id=" + fromUserId;
     } else {
         window.location.href = "../books/detail.html?isbn=" + isbn;
     }
