@@ -42,7 +42,7 @@ public class UserController {
     }
 
     @Authorized
-    @ApiOperation(value = "회원 정보 수정")
+    @ApiOperation(value = "특정 유저 회원 정보 수정")
     @PostMapping("/{id}")
     public ResultResponse<UserResponse> update(@RequestBody UserUpdateRequest userUpdateRequest, @PathVariable Long id, @ApiIgnore Authentication authentication) {
         String email = authentication.getName();
@@ -50,7 +50,7 @@ public class UserController {
     }
 
     @Authorized
-    @ApiOperation(value = "회원 탈퇴")
+    @ApiOperation(value = "특정 유저 회원 탈퇴")
     @DeleteMapping("/{id}")
     public ResultResponse<UserResponse> delete(@PathVariable Long id, @ApiIgnore Authentication authentication) {
         String email = authentication.getName();
@@ -71,7 +71,7 @@ public class UserController {
     @Authorized
     @ApiOperation(value = "내 정보 수정")
     @PostMapping("/me")
-    public ResultResponse<UserPersonalResponse> update(@RequestBody UserUpdateRequest userUpdateRequest, @ApiIgnore Authentication authentication) {
+    public ResultResponse<UserPersonalResponse> update(@Valid @RequestBody UserUpdateRequest userUpdateRequest, @ApiIgnore Authentication authentication) {
         String email = authentication.getName();
         return ResultResponse.success(userService.infoEdit(email, userUpdateRequest));
     }
@@ -83,6 +83,14 @@ public class UserController {
         String email = authentication.getName();
         UserPersonalResponse userPersonalResponse = userService.search(email);
         return ResultResponse.success(userPersonalResponse);
+    }
+
+    @Authorized
+    @ApiOperation(value = "회원 탈퇴")
+    @DeleteMapping("/me")
+    public ResultResponse<UserResponse> deleteMe(@ApiIgnore Authentication authentication) {
+        String email = authentication.getName();
+        return ResultResponse.success(userService.delete(email));
     }
 
     @ApiOperation(value = "회원 상세 정보")

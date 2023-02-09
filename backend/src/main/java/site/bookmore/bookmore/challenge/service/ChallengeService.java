@@ -27,7 +27,7 @@ public class ChallengeService {
 
     public ChallengeResponse add(String email, ChallengeRequest challengeRequest) {
         //  토큰으로 로그인한 아이디 비교
-        User user = userRepository.findByEmail(email)
+        User user = userRepository.findByEmailAndDeletedDatetimeIsNull(email)
                 .orElseThrow(UserNotFoundException::new);
         Challenge savedChallenge = challengeRequest.toEntity(user);
         challengeRepository.save(savedChallenge);
@@ -38,7 +38,7 @@ public class ChallengeService {
     @Transactional
     public ChallengeResponse modify(String email, Long challengeId, ChallengeRequest challengeRequest) {
         // #1 토큰으로 로그인한 아이디 없을 경우
-        User user = userRepository.findByEmail(email)
+        User user = userRepository.findByEmailAndDeletedDatetimeIsNull(email)
                 .orElseThrow(UserNotFoundException::new);
         // #2 수정할 포스트가 없을 경우
         Challenge challenge = challengeRepository.findById(challengeId).orElseThrow(ReviewNotFoundException::new);
@@ -54,7 +54,7 @@ public class ChallengeService {
 
     public ChallengeResponse delete(String email, Long challengeId) {
         // #1 토큰으로 로그인한 아이디가 없을 경우
-        User user = userRepository.findByEmail(email)
+        User user = userRepository.findByEmailAndDeletedDatetimeIsNull(email)
                 .orElseThrow(UserNotFoundException::new);
         // #2 삭제할 포스트가 없을 경우
         Challenge challenge = challengeRepository.findById(challengeId).orElseThrow(ReviewNotFoundException::new);
@@ -69,7 +69,7 @@ public class ChallengeService {
 
     public ChallengeDetailResponse get(String email, Long challengeId) {
         // #1 토큰으로 로그인한 아이디가 없을 경우
-        User user = userRepository.findByEmail(email)
+        User user = userRepository.findByEmailAndDeletedDatetimeIsNull(email)
                 .orElseThrow(UserNotFoundException::new);
         // #2 해당 게시글이 존재하지 않을 경우
         Challenge challenge = challengeRepository.findById(challengeId).orElseThrow(ReviewNotFoundException::new);
@@ -80,8 +80,8 @@ public class ChallengeService {
 
 
     public Page<ChallengeDetailResponse> list(Pageable pageable, String email) {
-        Page<Challenge> page = challengeRepository.findByOwner_Email(pageable,email);
-//        return page.map(ChallengeDetailResponse::of);
-        return challengeRepository.findByOwner_Email(pageable,email).map(ChallengeDetailResponse::of);
+        User user = userRepository.findByEmailAndDeletedDatetimeIsNull(email)
+                .orElseThrow(UserNotFoundException::new);
+        return challengeRepository.findByOwner(pageable,user).map(ChallengeDetailResponse::of);
     }
 }

@@ -34,11 +34,11 @@ public class FollowService {
     public String following(Long id, String email) {
 
         //나
-        User user = userRepository.findByEmail(email)
+        User user = userRepository.findByEmailAndDeletedDatetimeIsNull(email)
                 .orElseThrow(UserNotFoundException::new);
 
         //팔로우할 유저
-        User targetUser = userRepository.findById(id)
+        User targetUser = userRepository.findByIdAndDeletedDatetimeIsNull(id)
                 .orElseThrow(UserNotFoundException::new);
 
         //자기 자신을 팔로우한 경우
@@ -73,11 +73,11 @@ public class FollowService {
     @Transactional
     public String unfollowing(Long id, String email) {
         //나
-        User user = userRepository.findByEmail(email)
+        User user = userRepository.findByEmailAndDeletedDatetimeIsNull(email)
                 .orElseThrow(UserNotFoundException::new);
 
         //팔로우할 유저
-        User targetUser = userRepository.findById(id)
+        User targetUser = userRepository.findByIdAndDeletedDatetimeIsNull(id)
                 .orElseThrow(UserNotFoundException::new);
 
         //팔로우 하지 않은 사람을 언팔로우 하는 경우
@@ -99,13 +99,25 @@ public class FollowService {
 
     public Page<FollowingResponse> findAllFollowing(Long id, Pageable pageable) {
 
-        User user = userRepository.findById(id).orElseThrow(UserNotFoundException::new);
+        User user = userRepository.findByIdAndDeletedDatetimeIsNull(id).orElseThrow(UserNotFoundException::new);
         return followRepository.findByFollowerAndDeletedDatetimeIsNull(pageable, user).map(FollowingResponse::new);
     }
 
     public Page<FollowerResponse> findAllFollower(Long id, Pageable pageable) {
 
-        User user = userRepository.findById(id).orElseThrow(UserNotFoundException::new);
+        User user = userRepository.findByIdAndDeletedDatetimeIsNull(id).orElseThrow(UserNotFoundException::new);
         return followRepository.findByFollowingAndDeletedDatetimeIsNull(pageable, user).map(FollowerResponse::new);
+    }
+
+    public Boolean isFollow(Long id, String email){
+        //나
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(UserNotFoundException::new);
+
+        //팔로우할 유저
+        User targetUser = userRepository.findById(id)
+                .orElseThrow(UserNotFoundException::new);
+
+        return followRepository.findByFollowerAndFollowingAndDeletedDatetimeIsNull(user, targetUser).isPresent();
     }
 }

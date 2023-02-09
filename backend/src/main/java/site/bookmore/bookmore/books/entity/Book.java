@@ -20,6 +20,7 @@ import java.util.Set;
 @EntityListeners(AuditingEntityListener.class)
 public class Book {
     public static final int INTRODUCE_LENGTH = 2000;
+    public static final int CHAPTER_LENGTH = 4000;
     @Id
     private String id;
 
@@ -42,6 +43,7 @@ public class Book {
 
     private String image;
 
+    @Column(length = CHAPTER_LENGTH)
     private String chapter;
 
     @Column(length = INTRODUCE_LENGTH)
@@ -75,5 +77,9 @@ public class Book {
     public void addTranslators(Set<Translator> translators) {
         translators.forEach(translator -> translator.setBook(this));
         this.translators.addAll(translators);
+    }
+
+    public static Book empty() {
+        return Book.builder().build();
     }
 }

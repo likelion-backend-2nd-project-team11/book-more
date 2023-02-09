@@ -71,6 +71,10 @@ public class User extends BaseEntity implements UserDetails {
         this.profile = DEFAULT_PROFILE_IMG_PATH;
     }
 
+    public void deactivate() {
+        this.enabled = false;
+    }
+
     public void update(User user) {
         updatePassword(user.getPassword());
         updateNickname(user.getNickname());

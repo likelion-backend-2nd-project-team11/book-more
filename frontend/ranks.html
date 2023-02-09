@@ -12,9 +12,27 @@
             crossorigin="anonymous"
             referrerpolicy="no-referrer"
     />
+    <link rel="apple-touch-icon" sizes="57x57" href="asset/apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="asset/apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="asset/apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="asset/apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="asset/apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="asset/apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="asset/apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="asset/apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="asset/apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192"  href="asset/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="asset/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="asset/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="asset/favicon-16x16.png">
+    <link rel="manifest" href="asset/manifest.json">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="asset/ms-icon-144x144.png">
+    <meta name="theme-color" content="#ffffff">
     <link rel="stylesheet" href="css/index.css"/>
     <link rel="stylesheet" href="css/top-bar.css"/>
     <script src="js/constant.js"></script>
+    <script src="js/ranks.js"></script>
     <title>BookMore</title>
 </head>
 <body class="bg-light pt-5">
@@ -44,180 +62,92 @@
                 </div>
                 <!----------------------->
                 <div class="authorized-component" style="float:left;">
-                    <a class="btn btn-lg" style="color: #FFFFFF" type="button" href="notifications/index.html"><i
-                            class="fa-solid fa-bell"></i></a>
+                    <a class="btn btn-lg position-relative" style="color: #FFFFFF" type="button" href="notifications/index.html"><i
+                            class="fa-solid fa-bell"></i>
+                        <span class="bm-checkAlarms-wrapper"></span>
+                    </a>
                 </div>
 
                 <button class="btn btn-lg" style="color: #FFFFFF" type="button" data-bs-toggle="offcanvas"
                         data-bs-target="#offcanvasRight" aria-controls="offcanvasRight"><i
                         class="fa-solid fa-bars"></i></button>
-            </div>
-        </div>
 
-        <div class="offcanvas offcanvas-end side-bar-font" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
-            <div class="offcanvas-header pb-5">
-                <button type="button" class="btn-close ms-auto" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-            </div>
-
-            <div>
-                <a class="bm-scale-animation py-3 text-hover-family-color btn w-100 authorized-component fs-5 fw-bold" href="users/mypage.html">
-                    마이페이지
-                </a>
-                <a class="bm-scale-animation py-3 text-hover-family-color btn w-100 authorized-component fs-5 fw-bold" href="users/detail.html">
-                    마이피드
-                </a>
-                <a class="bm-scale-animation py-3 text-hover-family-color btn w-100 fs-5 fw-bold" href="ranks.html">
-                    랭킹
-                </a>
-                <a class="bm-scale-animation py-3 text-hover-family-color btn w-100 authorized-component fs-5 fw-bold" href="challenge/index.html">
-                    챌린지
-                </a>
-            </div>
-        </div>
-        <script>
-            const authorizedComponent = document.querySelectorAll(".authorized-component");
-            const unauthorizedComponent = document.querySelectorAll(".unauthorized-component");
-            authorizedComponent.forEach(ele => ele.style.display = isLoggedIn ? ele.style.display : 'none')
-            unauthorizedComponent.forEach(ele => ele.style.display = !isLoggedIn ? ele.style.display : 'none')
-        </script>
-    </nav>
-    <!-- --------------------------------------------------------------------------------------------------------->
-
-    <div class="container w-75 bg-white shadow mt-5 py-4">
-        <div class="mx-auto w-75">
-            <div class="text-center h2 ">Board</div>
-            <div class="mx-auto mt-3 border rounded-2">
-                <table class="bm-top-100-board table table-striped custom-table mb-0">
-                    <thead>
-                    <tr>
-                        <th scope="col" class="text-center col-2">순위</th>
-                        <th scope="col" class="text-center col-4">닉네임</th>
-                        <th scope="col" class="text-center col-4">포인트</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr>
-                        <td>
-                            <small class="d-block text-center">1위</small>
-                        </td>
-                        <td>
-                            <small class="d-block text-center">test1</small>
-                        </td>
-                        <td>
-                            <small class="d-block text-center">6</small>
-                        </td>
-                    </tr>
-
-                    <tr>
-
-                        <td>
-                            <small class="d-block text-center">2위</small>
-                        </td>
-                        <td>
-                            <small class="d-block text-center">test3</small>
-                        </td>
-                        <td>
-                            <small class="d-block text-center">4</small>
-                        </td>
-                    </tr>
-
-                    <tr>
-
-                        <td>
-                            <small class="d-block text-center">3위</small>
-                        </td>
-                        <td>
-                            <small class="d-block text-center">test2</small>
-                        </td>
-                        <td>
-                            <small class="d-block text-center">1</small>
-                        </td>
-                    </tr>
-
-                    <tr>
-
-                        <td>
-                            <small class="d-block text-center">3위</small>
-                        </td>
-                        <td>
-                            <small class="d-block text-center">test5</small>
-                        </td>
-                        <td>
-                            <small class="d-block text-center">1</small>
-                        </td>
-                    </tr>
-
-                    <tr>
-                        <td>
-                            <small class="d-block text-center">5위</small>
-                        </td>
-                        <td>
-                            <small class="d-block text-center">test7</small>
-                        </td>
-                        <td>
-                            <small class="d-block text-center">0</small>
-                        </td>
-                    </tr>
-
-                    <tr>
-                        <td>
-                            <small class="d-block text-center">5위</small>
-                        </td>
-                        <td>
-                            <small class="d-block text-center">test4</small>
-                        </td>
-                        <td>
-                            <small class="d-block text-center">0</small>
-                        </td>
-                    </tr>
-
-                    <tr>
-                        <td>
-                            <small class="d-block text-center">5위</small>
-                        </td>
-                        <td>
-                            <small class="d-block text-center">test8</small>
-                        </td>
-                        <td>
-                            <small class="d-block text-center">0</small>
-                        </td>
-                    </tr>
-
-                    <tr>
-                        <td>
-                            <small class="d-block text-center">5위</small>
-                        </td>
-                        <td>
-                            <small class="d-block text-center">test6</small>
-                        </td>
-                        <td>
-                            <small class="d-block text-center">0</small>
-                        </td>
-                    </tr>
-                    </tbody>
-                </table>
-            </div>
-            <div class="mx-auto mt-3 border rounded-2">
-                <table class="bm-my-rank table table-striped mb-0">
-                    <tr>
-                        <td class="col-2">
-                            <small class="d-block text-center">5위</small>
-                        </td>
-                        <td class="col-4">
-                            <small class="d-block text-center">myNickname</small>
-                        </td>
-                        <td class="col-4">
-                            <small class="d-block text-center">0</small>
-                        </td>
-                    </tr>
-                </table>
-            </div>
         </div>
     </div>
-    <!-- --------------------------------- -->
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
-            integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4"
-            crossorigin="anonymous"></script>
+    <div class="offcanvas offcanvas-end side-bar-font" tabindex="-1" id="offcanvasRight"
+         aria-labelledby="offcanvasRightLabel">
+        <div class="offcanvas-header pb-5">
+            <button type="button" class="btn-close ms-auto" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+
+        <div>
+            <a class="bm-scale-animation py-3 text-hover-family-color btn w-100 authorized-component fs-5 fw-bold"
+               href="users/mypage.html">
+                마이페이지
+            </a>
+            <a class="bm-scale-animation py-3 text-hover-family-color btn w-100 authorized-component fs-5 fw-bold"
+               href="users/detail.html">
+                마이피드
+            </a>
+            <a class="bm-scale-animation py-3 text-hover-family-color btn w-100 fs-5 fw-bold" href="ranks.html">
+                랭킹
+            </a>
+            <a class="bm-scale-animation py-3 text-hover-family-color btn w-100 authorized-component fs-5 fw-bold"
+               href="challenge/index.html">
+                챌린지
+            </a>
+        </div>
+    </div>
+
+</nav>
+<!-- --------------------------------------------------------------------------------------------------------->
+
+<div class="container w-75 bg-white shadow mt-5 py-4">
+    <div class="mx-auto w-75">
+        <div class="text-center h2 ">Top 100</div>
+        <div class="mx-auto mt-3 border rounded-2">
+
+
+            <table class="bm-top-100-board table table-striped custom-table mb-0">
+                <thead>
+                <!--  랭크 리스트  --------------------------------------------------------------->
+                <tr>
+                    <th scope="col" class="text-center col-2">순위</th>
+                    <th scope="col" class="text-center col-4">닉네임</th>
+                    <th scope="col" class="text-center col-4">포인트</th>
+                </tr>
+                </thead>
+
+                <tbody class="bm-rank-wrapper">
+                </tbody>
+
+            </table>
+
+        </div>
+
+        <div class="mx-auto mt-3 border rounded-2 bm-my-rank-wrapper">
+
+        </div>
+    </div>
+  </div>
+  <!-- --------------------------------- -->
+  <script>
+      const authorizedComponent = document.querySelectorAll(".authorized-component");
+      const unauthorizedComponent = document.querySelectorAll(".unauthorized-component");
+      authorizedComponent.forEach(ele => ele.style.display = isLoggedIn ? ele.style.display : 'none')
+      unauthorizedComponent.forEach(ele => ele.style.display = !isLoggedIn ? ele.style.display : 'none')
+  </script>
+  <script src="js/notifications.js"></script>
+  <script>
+      fetchCheckNewAlarms(token)
+      fetchGetRanks()
+      if (getToken()) {
+          fetchGetMyRanks()
+      }
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
+          integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4"
+          crossorigin="anonymous"></script>
 </body>
 </html>

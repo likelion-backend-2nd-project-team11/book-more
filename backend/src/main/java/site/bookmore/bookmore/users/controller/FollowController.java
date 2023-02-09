@@ -49,4 +49,10 @@ public class FollowController {
     public ResultResponse<Page<FollowerResponse>> findAllFollower(@PathVariable Long id, Pageable pageable) {
         return ResultResponse.success(followService.findAllFollower(id, pageable));
     }
+    @ApiOperation(value = "팔로우 중 인지 확인")
+    @GetMapping("/{id}/follow")
+    public ResultResponse<Boolean> isFollow(@PathVariable Long id, Authentication authentication){
+        String email = authentication.getName();
+        return ResultResponse.success(followService.isFollow(id, email));
+    }
 }

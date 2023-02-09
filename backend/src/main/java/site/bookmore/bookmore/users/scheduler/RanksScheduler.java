@@ -27,7 +27,7 @@ public class RanksScheduler {
     @Transactional
     public void scheduleRankTask() {
         log.info("랭킹 스케쥴러 시작");
-        List<User> users = userRepository.findAll();
+        List<User> users = userRepository.findAllByDeletedDatetimeIsNull();
 
         // 유저 좋아요 수 정산
         for (User user : users) {

@@ -14,7 +14,9 @@ import site.bookmore.bookmore.security.provider.JwtProvider;
 import site.bookmore.bookmore.users.dto.UserJoinRequest;
 import site.bookmore.bookmore.users.dto.UserLoginRequest;
 import site.bookmore.bookmore.users.dto.UserUpdateRequest;
+import site.bookmore.bookmore.users.entity.Ranks;
 import site.bookmore.bookmore.users.entity.User;
+import site.bookmore.bookmore.users.repositroy.FollowRepository;
 import site.bookmore.bookmore.users.repositroy.RanksRepository;
 import site.bookmore.bookmore.users.repositroy.UserRepository;
 import site.bookmore.bookmore.s3.AwsS3Uploader;
@@ -35,13 +37,14 @@ class UserServiceTest {
     private final UserRepository userRepository = mock(UserRepository.class);
 
     private final RanksRepository ranksRepository = mock(RanksRepository.class);
+    private final FollowRepository followRepository = mock(FollowRepository.class);
 
     private final JwtProvider jwtProvider = mock(JwtProvider.class);
 
     private final PasswordEncoder passwordEncoder = mock(PasswordEncoder.class);
     private final AwsS3Uploader awsS3Uploader = mock(AwsS3Uploader.class);
 
-    private final UserService userService = new UserService(passwordEncoder, jwtProvider, userRepository, ranksRepository, awsS3Uploader);
+    private final UserService userService = new UserService(passwordEncoder, jwtProvider, userRepository, ranksRepository, followRepository, awsS3Uploader);
 
     private final User user = User.builder()
             .id(0L)
@@ -143,7 +146,7 @@ class UserServiceTest {
     @Test
     @DisplayName("회원 정보 수정 - 성공")
     void infoUpdate_success() {
-        when(userRepository.findByEmail(user.getEmail()))
+        when(userRepository.findByEmailAndDeletedDatetimeIsNull(user.getEmail()))
                 .thenReturn(Optional.of(user));
 
         Assertions.assertDoesNotThrow(() -> userService.infoUpdate(user.getEmail(), 0L, new UserUpdateRequest("updatePw", null, null)));
@@ -152,7 +155,7 @@ class UserServiceTest {
     @Test
     @DisplayName("회원 정보 수정 - 실패(잘못된 토큰)")
     void infoUpdate_fail_1() {
-        when(userRepository.findByEmail(user.getEmail()))
+        when(userRepository.findByEmailAndDeletedDatetimeIsNull(user.getEmail()))
                 .thenReturn(Optional.of(user));
 
         AbstractAppException abstractAppException = assertThrows(InvalidTokenException.class, () -> {
@@ -166,15 +169,21 @@ class UserServiceTest {
     @Test
     @DisplayName("회원 정보 수정 - 실패(중복된 이름)")
     void infoUpdate_fail_2() {
+        User user2 = User.builder()
+                .email("test@test.com")
+                .nickname("nickname2")
+                .build();
 
-        when(userRepository.findByEmail(user.getEmail()))
+        UserUpdateRequest userUpdateRequest = new UserUpdateRequest("updatePw", "nickname2", null);
+
+        when(userRepository.findByEmailAndDeletedDatetimeIsNull(user.getEmail()))
                 .thenReturn(Optional.of(user));
 
-        when(userRepository.findByNickname(user.getNickname()))
-                .thenReturn(Optional.of(user));
+        when(userRepository.findByNickname(userUpdateRequest.getNickname()))
+                .thenReturn(Optional.of(user2));
 
         AbstractAppException abstractAppException = assertThrows(DuplicateNicknameException.class, () -> {
-            userService.infoUpdate(user.getEmail(), 0L, new UserUpdateRequest("updatePw", "nickname", null));
+            userService.infoUpdate(user.getEmail(), 0L, userUpdateRequest);
         });
 
         assertThat(abstractAppException.getErrorCode()).isEqualTo(DUPLICATED_NICKNAME);
@@ -185,10 +194,12 @@ class UserServiceTest {
     @DisplayName("회원 정보 삭제 - 성공")
     void userDelete_success() {
 
-        when(userRepository.findByEmail(user.getEmail()))
+        when(userRepository.findByEmailAndDeletedDatetimeIsNull(user.getEmail()))
                 .thenReturn(Optional.of(user));
         when(userRepository.findByIdAndDeletedDatetimeIsNull(0L))
                 .thenReturn(Optional.of(user));
+        when(ranksRepository.findByUser(any(User.class)))
+                .thenReturn(Optional.of(Ranks.of(0, 1L, user)));
 
 
         Assertions.assertDoesNotThrow(() -> userService.delete(user.getEmail(), 0L));
@@ -198,7 +209,7 @@ class UserServiceTest {
     @DisplayName("회원 정보 삭제 - 실패(잘못된 토큰)")
     void userDelete_fail() {
 
-        when(userRepository.findByEmail(user.getEmail()))
+        when(userRepository.findByEmailAndDeletedDatetimeIsNull(user.getEmail()))
                 .thenReturn(Optional.of(user));
 
 
@@ -212,7 +223,7 @@ class UserServiceTest {
     @Test
     @DisplayName("회원 정보 검증 - 성공")
     void verify_success() {
-        when(userRepository.findByEmail(user.getEmail()))
+        when(userRepository.findByEmailAndDeletedDatetimeIsNull(user.getEmail()))
                 .thenReturn(Optional.of(user));
 
         Assertions.assertDoesNotThrow(() -> userService.verify(user.getEmail()));

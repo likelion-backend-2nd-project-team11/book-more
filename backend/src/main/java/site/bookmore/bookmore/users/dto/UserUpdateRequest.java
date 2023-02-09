@@ -14,7 +14,6 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @Getter
 public class UserUpdateRequest {
-    @NotBlank(message = "패스워드를 입력해주세요")
     @Size(min = 8, message = "최소 8자리 이상의 패스워드를 입력해주세요.")
     private String password;
     @NotBlank(message = "닉네임을 입력해주세요.")

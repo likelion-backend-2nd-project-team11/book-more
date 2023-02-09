@@ -34,6 +34,10 @@ public class Ranks {
         if (ranking != null) this.ranking = ranking;
     }
 
+    public void delete() {
+        this.ranking = -1L;
+    }
+
     public static Ranks of(Integer point, Long ranking, User user) {
         return Ranks.builder()
                 .point(point)
