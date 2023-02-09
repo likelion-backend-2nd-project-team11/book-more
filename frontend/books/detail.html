@@ -122,7 +122,9 @@
     <!-- ------------------------------------- -->
     <!-- 리뷰 --------------------------------------- -->
     <div class="container bm-reviews-wrapper w-100 mb-5 p-0 py-5">
-        <button class="btn w-100 bg-white btn-light mb-4 shadow bm-scale-animation" onclick="window.location.href=`review.html?isbn=${urlSearchParams.get('isbn')}`" data-bs-toggle="modal" data-bs-target="#createModal"><img src="https://cdn-icons-png.flaticon.com/128/5150/5150518.png" width="30px" height="30px"></button>
+        <button class="btn w-100 bg-white btn-light mb-4 shadow bm-scale-animation" onclick="window.location.href=`review.html?isbn=${urlSearchParams.get('isbn')}`">
+            <img src="https://cdn-icons-png.flaticon.com/128/5150/5150518.png" width="30px" height="30px">
+        </button>
     </div>
     <!-- ------------------------------------------- -->
     <div class="modal fade" id="modifyModal" tabindex="-1" aria-labelledby="modifyModalLabel" aria-hidden="true">
@@ -134,7 +136,7 @@
                 </div>
                 <div class="modal-body">
                         <div class="container">
-                            <div class="pt-5 d-flex mb-3">
+                            <div class="d-flex mb-3">
                                 <label class="form-label-5 fs-3" style="float:left;">본문</label>
                                 <div class="form-check ms-auto my-auto" style="float:left;">
                                     <input class="form-check-input" value="false" type="checkbox" id="spoiler-check">
