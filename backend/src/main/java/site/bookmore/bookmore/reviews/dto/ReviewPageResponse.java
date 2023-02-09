@@ -17,6 +17,7 @@ import java.util.stream.Collectors;
 @Getter
 public class ReviewPageResponse {
     private Long id;
+    private Long userId;
     private String nickname;
     private String isbn;
     private String title;
@@ -35,6 +36,7 @@ public class ReviewPageResponse {
     public static ReviewPageResponse of(Review review) {
         return ReviewPageResponse.builder()
                 .id(review.getId())
+                .userId(review.getAuthor().getId())
                 .nickname(review.getAuthor().getNickname())
                 .isbn(review.getBook().getId())
                 .title(review.getBook().getTitle())
