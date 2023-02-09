@@ -47,7 +47,7 @@ class AlarmControllerTest {
     AlarmResponse response = AlarmResponse.builder()
             .id(1L)
             .alarmType(AlarmType.NEW_FOLLOW_REVIEW)
-            .fromUser("user2")
+            .fromUserNickname("user2")
             .source(new HashMap<>())
             .build();
 
@@ -64,7 +64,7 @@ class AlarmControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$..['id']").exists())
                 .andExpect(jsonPath("$..['alarmType']").exists())
-                .andExpect(jsonPath("$..['fromUser']").exists());
+                .andExpect(jsonPath("$..['fromUserNickname']").exists());
 
         verify(alarmService).findByFollowingReview(any(Pageable.class), eq("user2"));
     }
