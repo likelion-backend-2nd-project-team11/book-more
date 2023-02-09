@@ -10,6 +10,7 @@ import site.bookmore.bookmore.common.exception.conflict.DuplicateNicknameExcepti
 import site.bookmore.bookmore.common.exception.not_found.UserNotFoundException;
 import site.bookmore.bookmore.common.exception.unauthorized.InvalidPasswordException;
 import site.bookmore.bookmore.common.exception.unauthorized.InvalidTokenException;
+import site.bookmore.bookmore.s3.AwsS3Uploader;
 import site.bookmore.bookmore.security.provider.JwtProvider;
 import site.bookmore.bookmore.users.dto.UserJoinRequest;
 import site.bookmore.bookmore.users.dto.UserLoginRequest;
@@ -19,7 +20,6 @@ import site.bookmore.bookmore.users.entity.User;
 import site.bookmore.bookmore.users.repositroy.FollowRepository;
 import site.bookmore.bookmore.users.repositroy.RanksRepository;
 import site.bookmore.bookmore.users.repositroy.UserRepository;
-import site.bookmore.bookmore.s3.AwsS3Uploader;
 
 import java.time.LocalDate;
 import java.util.Optional;
@@ -104,7 +104,7 @@ class UserServiceTest {
     @Test
     @DisplayName("로그인 - 성공")
     void login_success() {
-        when(userRepository.findByEmail(user.getEmail()))
+        when(userRepository.findByEmailAndDeletedDatetimeIsNull(user.getEmail()))
                 .thenReturn(Optional.of(user));
 
         when(!passwordEncoder.matches(user.getPassword(), "password"))
@@ -129,7 +129,7 @@ class UserServiceTest {
     @Test
     @DisplayName("로그인 - 실패(비밀번호 틀림)")
     void login_fail_2() {
-        when(userRepository.findByEmail(user.getEmail()))
+        when(userRepository.findByEmailAndDeletedDatetimeIsNull(user.getEmail()))
                 .thenReturn(Optional.of(user));
 
         when(!passwordEncoder.matches(user.getPassword(), "password"))
