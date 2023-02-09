@@ -4,22 +4,38 @@
  *  3. 닉네임 중복 에러
  *  4. null 값 에러
  */
-function getMyPage(token){
+function getMyPage(token) {
     fetch(`${BASE_URL}/api/v1/users/me`, {
         method: 'GET',
-            headers: {
-        "Authorization": token ? "Bearer " + token : '',
-    },
+        headers: {
+            "Authorization": token ? "Bearer " + token : '',
+        },
     }).then(response => response.json())
-        .then(data =>
-        {
+        .then(data => {
             document.querySelector('.bm-all').innerHTML = `
             <h3>${data.result.nickname}</h3>
                 <div class="bm-width">
-                   <div class="text-center">
+                   <div class="text-center" style="position: relative;">
                         <hr>
                         <p>프로필 사진</p>
-                        <img class="rounded-circle" src="https://www.bookmore.site/${data.result.profile}" width="150px" height="150px">
+                        <div>
+                        <button type="button" data-bs-toggle="modal" data-bs-target="#myprofileModal" style="border: none; border-radius: 0.7em; position: absolute; bottom: 0;margin-left: 35px;">Edit</button>
+                        </div>
+                        
+                        
+<!--                         <div class="form-floating mb-3 text-center">-->
+<!--                                            <input type="file" id="update-image" name="avatar" accept="image/png, image/jpeg">-->
+<!--                                            <button class="btn btn-primary w-70" onclick="updateImage(token)">프로필 변경</button>-->
+<!--                                        </div>-->
+
+<!--                                       <div class="filebox">-->
+<!--                                            <input id="update-image" name="avatar" accept="image/png, image/jpeg" class="upload-name" style="display: inline-block;height: 40px;padding: 0 10px;vertical-align: middle;border:1px solid #dddddd; width: 62%; color: #999999;float: right;" value="첨부파일" placeholder="첨부파일">-->
+<!--                                            <label style="display:inline-block;padding: 10px 20px; color: #fff;vertical-align: middle; background-color: #999999;cursor: pointer;height: 40px;margin-left: 10px;" for="file">파일찾기</label> -->
+<!--                                            <input style="position: absolute; width: 0;height: 0;padding: 0;overflow: hidden;border: 0;" type="file" id="file">-->
+<!--                                            <button class="w-70" style="float: right; border: none; border-radius: 0.7em;" onclick="updateImage(token)">프로필 변경</button>-->
+<!--                                        </div>-->
+                        
+                        <img style="margin: 0 auto;" class="rounded-circle" src="https://www.bookmore.site/${data.result.profile}" width="150px" height="150px">
                     </div>
                     <hr>
                     <button class="bm-editBtn" data-bs-toggle="modal" data-bs-target="#modifyModal" >수정</button>
@@ -44,12 +60,7 @@ function getMyPage(token){
                                 <div class="input-form col-md-12 mx-auto">
                                     <div>
         
-                                        <div class="form-floating mb-3 text-center">
-        
-                                            <input type="file" id="update-image" name="avatar" accept="image/png, image/jpeg">
-                                            <button class="btn btn-primary w-100" onclick="updateImage(token)">프로필 변경</button>
-        
-                                        </div>
+ 
         
                                         <div class="form-floating mb-3">
                                             <input type="text" class="form-control" id="update-nickname" value="${data.result.nickname}" placeholder="제목을 입력하세요." required>
@@ -83,14 +94,26 @@ function getMyPage(token){
                     </div>
                 </div>
             </div>
+            
 `;
         });
 };
 
+// $("#file").on('change',function(){
+//     var fileName = $("#file").val();
+//     $(".upload-name").val(fileName);
+// });
 
 
-function deleteUser(token){
-    fetch(`${BASE_URL}/api/v1/users/me`,{
+
+
+
+
+
+
+
+function deleteUser(token) {
+    fetch(`${BASE_URL}/api/v1/users/me`, {
         method: 'DELETE',
         headers: {
             // 'Content-Type': 'application/json',
@@ -170,3 +193,4 @@ function updateImage(token) {
             }
         })
 }
+
