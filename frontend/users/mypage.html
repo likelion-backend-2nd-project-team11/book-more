@@ -175,8 +175,9 @@
                 </div>
                 <div class="modal-body">
                     <div class="form-floating mb-3 text-center">
-                        <img id="preview" src="#" alt="Preview"
-                             style="display: none; margin: 0 auto; width: 75%; height: 75%;" class="rounded-circle">
+                        <div class="ratio ratio-1x1 mx-auto w-50 my-4">
+                            <img id="preview" src="" alt="Preview" class="rounded-circle">
+                        </div>
                         <input type="file" id="update-image" onchange="fileTypeCheck(this)" name="avatar"
                                accept="image/png, image/jpeg, image/jpg, image/gif">
                         <button class="btn btn-primary w-70" onclick="updateImage(token)">프로필 변경</button>
@@ -207,6 +208,7 @@
     <script>
         getMyPage(token).then(data => {
             document.getElementById('update-nickname').value = data.result.nickname;
+            document.getElementById('preview').src = `https://www.bookmore.site/${data.result.profile}`;
             birthSelectInit();
             setMyBirth(data.result.birth);
         })
