@@ -8,8 +8,9 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import site.bookmore.bookmore.oauth2.OAuth2SuccessHandler;
 import site.bookmore.bookmore.oauth2.CustomOAuth2UserService;
+import site.bookmore.bookmore.oauth2.OAuth2SuccessHandler;
+import site.bookmore.bookmore.oauth2.Oauth2FailureHandler;
 import site.bookmore.bookmore.security.entrypoint.CustomAccessDeniedEntryPoint;
 import site.bookmore.bookmore.security.entrypoint.CustomAuthenticationEntryPoint;
 import site.bookmore.bookmore.security.fiter.JwtAuthenticationFilter;
@@ -20,6 +21,7 @@ import site.bookmore.bookmore.security.provider.JwtProvider;
 public class WebSecurityConfig {
     private final CustomOAuth2UserService oAuth2UserService;
     private final OAuth2SuccessHandler successHandler;
+    private final Oauth2FailureHandler failureHandler;
     private final JwtProvider jwtProvider;
 
     public static final String[] GET_AUTHENTICATED_REGEX_LIST = {
@@ -75,6 +77,7 @@ public class WebSecurityConfig {
         http.oauth2Login().userInfoEndpoint().userService(oAuth2UserService)
                 .and()
                 .successHandler(successHandler)
+                .failureHandler(failureHandler)
                 .userInfoEndpoint().userService(oAuth2UserService);
         http.addFilterBefore(new JwtAuthenticationFilter(jwtProvider), UsernamePasswordAuthenticationFilter.class);
 
