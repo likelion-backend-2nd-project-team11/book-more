@@ -9,6 +9,7 @@ import site.bookmore.bookmore.users.entity.User;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 import java.util.Set;
 
 @AllArgsConstructor
@@ -16,6 +17,7 @@ import java.util.Set;
 @Getter
 public class ReviewRequest {
     @NotBlank(message = "본문은 반드시 작성되어야 하는 항목입니다.")
+    @Size(max = 300)
     private String body;
     private boolean spoiler;
     @Valid
