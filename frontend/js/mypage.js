@@ -120,3 +120,15 @@ function updateImage(token) {
         })
 }
 
+function fileTypeCheck(file) {
+    let index = file.value.lastIndexOf('.');
+    let filetype = file.value.substring(index + 1, file.length).toLowerCase();
+
+    if (filetype === 'jpg' || filetype === 'gif' || filetype === 'png' || filetype === 'jpeg') {
+    } else {
+        alert("프로필 사진은 이미지 파일만 업로드할 수 있습니다.");
+        let parentObj = file.parentNode
+        let node = parentObj.replaceChild(file.cloneNode(true), file);
+        return false;
+    }
+}
