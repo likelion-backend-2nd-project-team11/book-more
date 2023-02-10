@@ -88,7 +88,7 @@ public class UserService implements UserDetailsService {
      * 로그인
      */
     public UserLoginResponse login(UserLoginRequest userLoginRequest) {
-        User user = userRepository.findByEmailAndDeletedDatetimeIsNull(userLoginRequest.getEmail()).orElseThrow(UserNotFoundException::new);
+        User user = userRepository.findByEmail(userLoginRequest.getEmail()).orElseThrow(UserNotFoundException::new);
         if (!user.isEnabled() && user.getDeletedDatetime() != null) throw new AlreadyDeletedUserException();
         if (!passwordEncoder.matches(userLoginRequest.getPassword(), user.getPassword()))
             throw new InvalidPasswordException();
