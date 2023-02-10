@@ -108,7 +108,7 @@ class UserServiceTest {
     @Test
     @DisplayName("로그인 - 성공")
     void login_success() {
-        when(userRepository.findByEmailAndDeletedDatetimeIsNull(user.getEmail()))
+        when(userRepository.findByEmail(user.getEmail()))
                 .thenReturn(Optional.of(user));
 
         when(!passwordEncoder.matches(user.getPassword(), "password"))
@@ -133,7 +133,7 @@ class UserServiceTest {
     @Test
     @DisplayName("로그인 - 실패(비밀번호 틀림)")
     void login_fail_2() {
-        when(userRepository.findByEmailAndDeletedDatetimeIsNull(user.getEmail()))
+        when(userRepository.findByEmail(user.getEmail()))
                 .thenReturn(Optional.of(user));
 
         when(!passwordEncoder.matches(user.getPassword(), "password"))
