@@ -24,7 +24,6 @@ public class ChallengeRequest {
     private String description;
     @NotNull(message = "기한을 입력해주세요")
     @Future
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate deadline;
     @NotNull
     @Range(min = 0, max = 100)
