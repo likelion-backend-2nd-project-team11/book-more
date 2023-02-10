@@ -45,7 +45,7 @@
             fetchVerifyToken(token);
         } else {
             alert("로그인이 필요합니다.");
-            window.history.back();
+            window.location.href = "../users/login.html"
         }
     </script>
     <nav class="navbar fixed-top bg-family-color">
@@ -176,7 +176,7 @@
                 <div class="modal-body">
                     <div class="form-floating mb-3 text-center">
                         <img id="preview" src="#" alt="Preview"
-                             style="display: none; margin: 0 auto; width: 450px; height: 450px;" class="rounded-circle">
+                             style="display: none; margin: 0 auto; width: 75%; height: 75%;" class="rounded-circle">
                         <input type="file" id="update-image" onchange="fileTypeCheck(this)" name="avatar"
                                accept="image/png, image/jpeg, image/jpg, image/gif">
                         <button class="btn btn-primary w-70" onclick="updateImage(token)">프로필 변경</button>
