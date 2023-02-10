@@ -5,6 +5,8 @@ import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -120,7 +122,7 @@ public class UserController {
 
     @ApiOperation(value = "회원 리뷰 조회")
     @GetMapping("/{id}/reviews")
-    public ResultResponse<Page<ReviewPageResponse>> findReviewsByAuthor(@ApiIgnore Pageable pageable, @PathVariable Long id) {
+    public ResultResponse<Page<ReviewPageResponse>> findReviewsByAuthor(@ApiIgnore @PageableDefault(size = 20, sort = "createdDatetime", direction = Sort.Direction.DESC) Pageable pageable, @PathVariable Long id) {
         return ResultResponse.success(reviewService.findByAuthor(id, pageable));
     }
 }
