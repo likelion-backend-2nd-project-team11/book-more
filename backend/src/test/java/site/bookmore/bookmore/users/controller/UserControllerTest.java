@@ -9,12 +9,12 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
-import site.bookmore.bookmore.reviews.service.ReviewService;
 import site.bookmore.bookmore.common.exception.conflict.DuplicateEmailException;
 import site.bookmore.bookmore.common.exception.conflict.DuplicateNicknameException;
 import site.bookmore.bookmore.common.exception.not_found.UserNotFoundException;
 import site.bookmore.bookmore.common.exception.unauthorized.InvalidPasswordException;
 import site.bookmore.bookmore.common.exception.unauthorized.InvalidTokenException;
+import site.bookmore.bookmore.reviews.service.ReviewService;
 import site.bookmore.bookmore.users.dto.*;
 import site.bookmore.bookmore.users.service.UserService;
 
@@ -57,9 +57,9 @@ class UserControllerTest {
         given(userService.join(any(UserJoinRequest.class))).willReturn(userJoinResponse);
 
         mockMvc.perform(post("/api/v1/users/join")
-                .with(csrf())
-                .content(objectMapper.writeValueAsBytes(userJoinRequest))
-                .contentType(MediaType.APPLICATION_JSON))
+                        .with(csrf())
+                        .content(objectMapper.writeValueAsBytes(userJoinRequest))
+                        .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.resultCode").value("SUCCESS"))
                 .andExpect(jsonPath("$.result.id").value(0L))
@@ -76,9 +76,9 @@ class UserControllerTest {
         given(userService.join(any(UserJoinRequest.class))).willThrow(new DuplicateEmailException());
 
         mockMvc.perform(post("/api/v1/users/join")
-                .with(csrf())
-                .content(objectMapper.writeValueAsBytes(userJoinRequest))
-                .contentType(MediaType.APPLICATION_JSON))
+                        .with(csrf())
+                        .content(objectMapper.writeValueAsBytes(userJoinRequest))
+                        .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isConflict())
                 .andExpect(jsonPath("$.resultCode").value("ERROR"))
                 .andExpect(jsonPath("$.result.errorCode").value("DUPLICATED_EMAIL"))
@@ -93,9 +93,9 @@ class UserControllerTest {
         given(userService.join(any(UserJoinRequest.class))).willThrow(new DuplicateNicknameException());
 
         mockMvc.perform(post("/api/v1/users/join")
-                .with(csrf())
-                .content(objectMapper.writeValueAsBytes(userJoinRequest))
-                .contentType(MediaType.APPLICATION_JSON))
+                        .with(csrf())
+                        .content(objectMapper.writeValueAsBytes(userJoinRequest))
+                        .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isConflict())
                 .andExpect(jsonPath("$.resultCode").value("ERROR"))
                 .andExpect(jsonPath("$.result.errorCode").value("DUPLICATED_NICKNAME"))
@@ -111,9 +111,9 @@ class UserControllerTest {
         UserJoinRequest errorEmailFormat = new UserJoinRequest("email", "password", "nickname", testDate);
 
         mockMvc.perform(post("/api/v1/users/join")
-                .with(csrf())
-                .content(objectMapper.writeValueAsBytes(errorEmailFormat))
-                .contentType(MediaType.APPLICATION_JSON))
+                        .with(csrf())
+                        .content(objectMapper.writeValueAsBytes(errorEmailFormat))
+                        .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.resultCode").value("ERROR"));
 
@@ -129,9 +129,9 @@ class UserControllerTest {
         given(userService.login(any(UserLoginRequest.class))).willReturn(userLoginResponse);
 
         mockMvc.perform(post("/api/v1/users/login")
-                .with(csrf())
-                .content(objectMapper.writeValueAsBytes(userLoginRequest))
-                .contentType(MediaType.APPLICATION_JSON))
+                        .with(csrf())
+                        .content(objectMapper.writeValueAsBytes(userLoginRequest))
+                        .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.resultCode").value("SUCCESS"))
                 .andExpect(jsonPath("$.result.jwt").value("token"));
@@ -146,9 +146,9 @@ class UserControllerTest {
         given(userService.login(any(UserLoginRequest.class))).willThrow(new InvalidPasswordException());
 
         mockMvc.perform(post("/api/v1/users/login")
-                .with(csrf())
-                .content(objectMapper.writeValueAsBytes(userLoginRequest))
-                .contentType(MediaType.APPLICATION_JSON))
+                        .with(csrf())
+                        .content(objectMapper.writeValueAsBytes(userLoginRequest))
+                        .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isUnauthorized())
                 .andExpect(jsonPath("$.resultCode").value("ERROR"))
                 .andExpect(jsonPath("$.result.errorCode").value("INVALID_PASSWORD"))
@@ -164,9 +164,9 @@ class UserControllerTest {
         given(userService.login(any(UserLoginRequest.class))).willThrow(new UserNotFoundException());
 
         mockMvc.perform(post("/api/v1/users/login")
-                .with(csrf())
-                .content(objectMapper.writeValueAsBytes(userLoginRequest))
-                .contentType(MediaType.APPLICATION_JSON))
+                        .with(csrf())
+                        .content(objectMapper.writeValueAsBytes(userLoginRequest))
+                        .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.resultCode").value("ERROR"))
                 .andExpect(jsonPath("$.result.errorCode").value("USER_NOT_FOUND"))
@@ -187,9 +187,9 @@ class UserControllerTest {
         given(userService.infoEdit(any(), any(UserUpdateRequest.class))).willReturn(userPersonalResponse);
 
         mockMvc.perform(post("/api/v1/users/me")
-                .with(csrf())
-                .content(objectMapper.writeValueAsBytes(userUpdateRequest))
-                .contentType(MediaType.APPLICATION_JSON))
+                        .with(csrf())
+                        .content(objectMapper.writeValueAsBytes(userUpdateRequest))
+                        .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
     }
 
@@ -202,9 +202,9 @@ class UserControllerTest {
         given(userService.infoUpdate(any(), any(), any(UserUpdateRequest.class))).willReturn(userResponse);
 
         mockMvc.perform(post("/api/v1/users/0")
-                .with(csrf())
-                .content(objectMapper.writeValueAsBytes(userUpdateRequest))
-                .contentType(MediaType.APPLICATION_JSON))
+                        .with(csrf())
+                        .content(objectMapper.writeValueAsBytes(userUpdateRequest))
+                        .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.resultCode").value("SUCCESS"))
                 .andExpect(jsonPath("$.result.id").value(0L))
@@ -221,9 +221,9 @@ class UserControllerTest {
         given(userService.infoUpdate(any(), any(), any(UserUpdateRequest.class))).willThrow(new DuplicateNicknameException());
 
         mockMvc.perform(post("/api/v1/users/0")
-                .with(csrf())
-                .content(objectMapper.writeValueAsBytes(userUpdateRequest))
-                .contentType(MediaType.APPLICATION_JSON))
+                        .with(csrf())
+                        .content(objectMapper.writeValueAsBytes(userUpdateRequest))
+                        .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isConflict())
                 .andExpect(jsonPath("$.resultCode").value("ERROR"))
                 .andExpect(jsonPath("$.result.errorCode").value("DUPLICATED_NICKNAME"))
@@ -242,8 +242,8 @@ class UserControllerTest {
         given(userService.delete(any(), any())).willReturn(userDeleteResponse);
 
         mockMvc.perform(delete("/api/v1/users/0")
-                .with(csrf())
-                .contentType(MediaType.APPLICATION_JSON))
+                        .with(csrf())
+                        .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.resultCode").value("SUCCESS"))
                 .andExpect(jsonPath("$.result.id").value(0L))
@@ -259,8 +259,8 @@ class UserControllerTest {
         given(userService.delete(any(), any())).willThrow(new InvalidTokenException());
 
         mockMvc.perform(delete("/api/v1/users/0")
-                .with(csrf())
-                .contentType(MediaType.APPLICATION_JSON))
+                        .with(csrf())
+                        .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isUnauthorized())
                 .andExpect(jsonPath("$.resultCode").value("ERROR"))
                 .andExpect(jsonPath("$.result.errorCode").value("INVALID_TOKEN"))
@@ -280,9 +280,9 @@ class UserControllerTest {
         given(userService.verify(any())).willReturn(userJoinResponse);
 
         mockMvc.perform(post("/api/v1/users/verify")
-                .with(csrf())
-                .content(objectMapper.writeValueAsBytes(userJoinRequest))
-                .contentType(MediaType.APPLICATION_JSON))
+                        .with(csrf())
+                        .content(objectMapper.writeValueAsBytes(userJoinRequest))
+                        .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.resultCode").value("SUCCESS"))
                 .andExpect(jsonPath("$.result.id").value(0L))
@@ -300,13 +300,45 @@ class UserControllerTest {
         given(userService.verify(any())).willThrow(new UserNotFoundException());
 
         mockMvc.perform(post("/api/v1/users/verify")
-                .with(csrf())
-                .contentType(MediaType.APPLICATION_JSON))
+                        .with(csrf())
+                        .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.resultCode").value("ERROR"))
                 .andExpect(jsonPath("$.result.errorCode").value("USER_NOT_FOUND"))
                 .andExpect(jsonPath("$.result.message").value("해당하는 유저를 찾을 수 없습니다."));
 
         verify(userService).verify(any());
+    }
+
+    @Test
+    @DisplayName("회원 상세 조회 - 성공")
+    void detail_success() throws Exception {
+
+        UserDetailResponse userDetailResponse = new UserDetailResponse(0L, "nickname", "/images/profile.png", 1, 1);
+
+        given(userService.detail(any())).willReturn(userDetailResponse);
+
+        mockMvc.perform(get("/api/v1/users/0")
+                        .with(csrf())
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.resultCode").value("SUCCESS"))
+                .andExpect(jsonPath("$.result").exists());
+    }
+
+
+    @Test
+    @DisplayName("회원 상세 조회 - 실패(토큰이 다를경우)")
+    void detail_fail() throws Exception {
+
+        given(userService.detail(any())).willThrow(new UserNotFoundException());
+
+        mockMvc.perform(get("/api/v1/users/0")
+                        .with(csrf())
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.resultCode").value("ERROR"))
+                .andExpect(jsonPath("$.result.errorCode").value("USER_NOT_FOUND"))
+                .andExpect(jsonPath("$.result.message").value("해당하는 유저를 찾을 수 없습니다."));
     }
 }
