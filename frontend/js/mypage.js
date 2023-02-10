@@ -19,6 +19,9 @@ function getMyPage(token) {
                         <hr>
                         <p>프로필 사진</p>
                         <div>
+                        <button onclick=updateDefault(token) style="border: none; border-radius: 0.7em; position: absolute; bottom: 60%;margin-left: -60px;">X</button>
+                        </div>    
+                        <div>
                         <button type="button" data-bs-toggle="modal" data-bs-target="#myprofileModal" style="border: none; border-radius: 0.7em; position: absolute; bottom: 0;margin-left: 35px;">Edit</button>
                         </div>                        
                         <img style="margin: 0 auto;" class="rounded-circle" src="https://www.bookmore.site/${data.result.profile}" width="150px" height="150px">
@@ -134,5 +137,28 @@ function fileTypeCheck(file) {
     } else {
         alert("프로필 사진은 이미지 파일만 업로드할 수 있습니다.");
         window.location.reload();
+    }
+}
+
+function updateDefault(token) {
+    const updateConfirm = window.confirm("프로필 사진을 기본 사진으로 변경하시겠습니까?");
+    if (updateConfirm) {
+        fetch(`${BASE_URL}/api/v1/users/me/profile`, {
+            method: 'DELETE',
+            headers: {
+                "Authorization": token ? "Bearer " + token : '',
+            },
+        }).then((response) => response.json())
+            .then((response) => {
+                const resultCode = response.resultCode;
+                if (resultCode === 'SUCCESS') {
+                    alert("변경 완료");
+                    window.location.reload();
+                } else if (resultCode === 'ERROR') {
+                    alert(response.result.message);
+                } else {
+                    console.log(response);
+                }
+            })
     }
 }
