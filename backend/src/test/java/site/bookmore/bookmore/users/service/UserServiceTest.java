@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import site.bookmore.bookmore.alarms.repository.AlarmRepository;
 import site.bookmore.bookmore.common.exception.AbstractAppException;
 import site.bookmore.bookmore.common.exception.ErrorCode;
 import site.bookmore.bookmore.common.exception.conflict.DuplicateEmailException;
@@ -45,8 +46,9 @@ class UserServiceTest {
 
     private final PasswordEncoder passwordEncoder = mock(PasswordEncoder.class);
     private final AwsS3Uploader awsS3Uploader = mock(AwsS3Uploader.class);
+    private final AlarmRepository alarmRepository = mock(AlarmRepository.class);
 
-    private final UserService userService = new UserService(passwordEncoder, jwtProvider, userRepository, ranksRepository, followRepository, awsS3Uploader);
+    private final UserService userService = new UserService(passwordEncoder, jwtProvider, userRepository, ranksRepository, followRepository, awsS3Uploader, alarmRepository);
 
     private final User user = User.builder()
             .id(0L)

@@ -8,6 +8,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+import site.bookmore.bookmore.alarms.entity.Alarm;
+import site.bookmore.bookmore.alarms.repository.AlarmRepository;
 import site.bookmore.bookmore.common.exception.conflict.DuplicateEmailException;
 import site.bookmore.bookmore.common.exception.conflict.DuplicateNicknameException;
 import site.bookmore.bookmore.common.exception.conflict.DuplicateProfileException;
@@ -31,6 +33,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
 
+import static site.bookmore.bookmore.alarms.entity.AlarmType.NEW_FOLLOW;
 import static site.bookmore.bookmore.users.entity.User.DEFAULT_PROFILE_IMG_PATH;
 
 
@@ -44,6 +47,7 @@ public class UserService implements UserDetailsService {
     private final RanksRepository ranksRepository;
     private final FollowRepository followRepository;
     private final AwsS3Uploader awsS3Uploader;
+    private final AlarmRepository alarmRepository;
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
@@ -162,6 +166,14 @@ public class UserService implements UserDetailsService {
         // 랭킹 삭제 처리
         Ranks rank = ranksRepository.findByUser(user).orElseThrow(RanksNotFoundException::new);
         rank.delete();
+
+        // 알림 삭제 처리
+        List<Alarm> alarms = alarmRepository.findByTargetUser(user);
+        for (Alarm alarm : alarms) {
+            if (alarm.getAlarmType().equals(NEW_FOLLOW)) {
+                alarm.delete();
+            }
+        }
 
         user.deactivate();
         user.delete();

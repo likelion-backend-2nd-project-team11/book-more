@@ -35,7 +35,7 @@ public class AlarmService {
      */
     public Page<AlarmResponse> findByFollowingReview(Pageable pageable, String email) {
         User target = userRepository.findByEmailAndDeletedDatetimeIsNull(email).orElseThrow(UserNotFoundException::new);
-        return alarmRepository.findByTargetUser(target, pageable).map(getAlarmResponse());
+        return alarmRepository.findByTargetUserAndDeletedDatetimeIsNull(target, pageable).map(getAlarmResponse());
     }
 
     /**
@@ -43,7 +43,7 @@ public class AlarmService {
      */
     public Page<AlarmResponse> getNewAlarms(Pageable pageable, String email) {
         User target = userRepository.findByEmail(email).orElseThrow(UserNotFoundException::new);
-        return alarmRepository.findByTargetUserAndConfirmedIsFalse(target, pageable).map(getAlarmResponse());
+        return alarmRepository.findByTargetUserAndConfirmedIsFalseAndDeletedDatetimeIsNull(target, pageable).map(getAlarmResponse());
     }
 
     @Transactional
