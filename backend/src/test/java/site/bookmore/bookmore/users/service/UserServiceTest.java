@@ -5,6 +5,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import site.bookmore.bookmore.common.exception.AbstractAppException;
+import site.bookmore.bookmore.common.exception.ErrorCode;
 import site.bookmore.bookmore.common.exception.conflict.DuplicateEmailException;
 import site.bookmore.bookmore.common.exception.conflict.DuplicateNicknameException;
 import site.bookmore.bookmore.common.exception.not_found.UserNotFoundException;
@@ -25,6 +26,7 @@ import java.time.LocalDate;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
@@ -240,6 +242,26 @@ class UserServiceTest {
         });
 
         assertThat(abstractAppException.getErrorCode()).isEqualTo(USER_NOT_FOUND);
+    }
+
+    @Test
+    @DisplayName("유저 상세 조회 성공")
+    void detail_success() {
+        when(userRepository.findByIdAndDeletedDatetimeIsNull(user.getId()))
+                .thenReturn(Optional.of(user));
+
+        Assertions.assertDoesNotThrow(() -> userService.detail(user.getId()));
+    }
+
+    @Test
+    @DisplayName("유저 상세 조회 실패(1) - 없는 유저를 조회 한 경우")
+    void detail_fail() {
+
+        UserNotFoundException exception = Assertions.assertThrows(UserNotFoundException.class, () ->
+                userService.detail(user.getId()));
+
+        assertEquals(ErrorCode.USER_NOT_FOUND, exception.getErrorCode());
+
     }
 
 }
