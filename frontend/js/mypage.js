@@ -30,31 +30,32 @@ function getMyPage(token) {
                     <p>비밀번호 : ********** </p>
 <!--                    <p>생년월일 : ${data.result.birth[0]}년 ${data.result.birth[1]}월 ${data.result.birth[2]}일</p>-->
                     <p>생년월일 : ${data.result.birth}</p>
-
-                    <button class ="bm-button" type="button" onclick=deleteUser(token)>회원 탈퇴</button>
+                     <button class ="bm-button" type="button" onclick=deleteUser(token)>회원 탈퇴</button>                
                 </div>`;
             return data;
         });
 }
 
 function deleteUser(token) {
-    fetch(`${BASE_URL}/api/v1/users/me`, {
-        method: 'DELETE',
-        headers: {
-            // 'Content-Type': 'application/json',
-            "Authorization": token ? "Bearer " + token : '',
-        },
-    }).then(response => response.json())
-        .then(data => {
-            if (data.resultCode === 'SUCCESS') {
-                alert("탈퇴 완료");
-                location.href = "../index.html";
-            } else if (data.resultCode === 'ERROR') {
-                alert(data.result.message);
-            } else {
-                console.log(data);
-            }
-        })
+    const delConfirm = window.confirm("회원 탈퇴를 계속 진행하시겠습니까?");
+    if (delConfirm) {
+        fetch(`${BASE_URL}/api/v1/users/me`, {
+            method: 'DELETE',
+            headers: {
+                "Authorization": token ? "Bearer " + token : '',
+            },
+        }).then(response => response.json())
+            .then(data => {
+                if (data.resultCode === 'SUCCESS') {
+                    alert("탈퇴 완료");
+                    location.href = "../index.html";
+                } else if (data.resultCode === 'ERROR') {
+                    alert(data.result.message);
+                } else {
+                    console.log(data);
+                }
+            });
+    }
 }
 
 function editUser(token) {
