@@ -228,10 +228,10 @@ function fetchGetReview(id) {
                     wrapper.insertAdjacentHTML('beforeend',
                         `<div class="bm-review-col p-3 bm-scale-animation " style="text-align: center">
                                     <div class="bm-review-item border border-secondary p-3 rounded-3">
-                                        <canvas class="chart me-3" style="width:100%;" id="chart-${review.id}"></canvas>
-                                        <hr/>
-                                        <a class="d-flex align-items-center text-decoration-none text-dark" href="../books/detail.html?isbn=${review.isbn}">
-                                        <div class="mx-auto overflow-hidden text-nowrap">${review.title}</div>
+                                        <a class="text-decoration-none text-dark" href="../books/detail.html?isbn=${review.isbn}">
+                                            <canvas class="chart me-3" style="width:100%;" id="chart-${review.id}"></canvas>
+                                            <hr/>
+                                            <div class="mx-auto overflow-hidden text-nowrap">${review.title}</div>
                                         </a>
                                     </div>
                                 </div>`);
