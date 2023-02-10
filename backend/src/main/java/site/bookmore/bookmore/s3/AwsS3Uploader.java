@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 import site.bookmore.bookmore.common.exception.bad_request.FileNotExistsException;
+import site.bookmore.bookmore.common.exception.unauthorized.InvalidFileFormatException;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -38,18 +39,22 @@ public class AwsS3Uploader {
         int index = originalFileName.lastIndexOf(".");
         String ext = originalFileName.substring(index + 1); // 확장자
 
-        String storedFileName = UUID.randomUUID() + "." + ext;
+        if (ext.equals("png") || ext.equals("jpg") || ext.equals("jpeg") || ext.equals("gif")) {
+            String storedFileName = UUID.randomUUID() + "." + ext;
 
-        String key = "images/" + storedFileName;
+            String key = "images/" + storedFileName;
 
-        try (InputStream inputStream = multipartFile.getInputStream()) {
-            amazonS3Client.putObject(new PutObjectRequest(bucket, key, inputStream, objectMetadata)
-                    .withCannedAcl(CannedAccessControlList.PublicRead));
-        } catch (IOException e) {
-            throw new FileUploadException();
+            try (InputStream inputStream = multipartFile.getInputStream()) {
+                amazonS3Client.putObject(new PutObjectRequest(bucket, key, inputStream, objectMetadata)
+                        .withCannedAcl(CannedAccessControlList.PublicRead));
+            } catch (IOException e) {
+                throw new FileUploadException();
+            }
+
+            return key;
+        } else {
+            throw new InvalidFileFormatException();
         }
-
-        return key;
     }
 
     public void delete(String filePath) {
