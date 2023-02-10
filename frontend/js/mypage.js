@@ -61,7 +61,13 @@ function deleteUser(token) {
 function editUser(token) {
     const nickname = document.getElementById("update-nickname").value;
     const password = document.getElementById("update-password").value;
+    const passwordCheck = document.getElementById("update-passwordCheck").value;
     const birth = birthArr.join("-");
+
+    if(password != passwordCheck){
+        alert('비밀번호가 일치하지 않습니다.')
+        return;
+    }
 
     const data = {
         nickname,
