@@ -110,7 +110,7 @@ function fetchPostFollow(id, token) {
                     window.location.href = '../users/detail.html';
                 } else {
                     alert("로그인이 필요합니다.");
-                    window.location.href = '../users/detail.html';
+                    window.location.href = '../users/login.html';
                 }
             } else {
                 console.log(response);
