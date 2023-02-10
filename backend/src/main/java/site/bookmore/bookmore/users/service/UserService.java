@@ -210,6 +210,10 @@ public class UserService implements UserDetailsService {
         User user = userRepository.findByEmailAndDeletedDatetimeIsNull(email)
                 .orElseThrow(UserNotFoundException::new);
 
+        if (!Objects.equals(user.getProfile(), DEFAULT_PROFILE_IMG_PATH)) {
+            awsS3Uploader.delete(user.getProfile());
+        }
+
         String key = awsS3Uploader.upload(multipartFile);
 
         user.updateProfile(key);
