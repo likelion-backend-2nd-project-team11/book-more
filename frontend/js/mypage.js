@@ -19,7 +19,7 @@ function getMyPage(token) {
                         <hr>
                         <p>프로필 사진</p>
                         <div>
-                        <button onclick=updateDefault(token) style="border: none; border-radius: 0.7em; position: absolute; bottom: 60%;margin-left: -60px;">X</button>
+                        <button onclick=updateDefault(token) class="rounded-circle" style="border: none; position: absolute; bottom: 60%; margin-left: -60px;">X</button>
                         </div>    
                         <div>
                         <button type="button" data-bs-toggle="modal" data-bs-target="#myprofileModal" style="border: none; border-radius: 0.7em; position: absolute; bottom: 0;margin-left: 35px;">Edit</button>
