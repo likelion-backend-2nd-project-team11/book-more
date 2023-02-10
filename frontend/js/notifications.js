@@ -83,7 +83,7 @@ function getResponse() {
 
 function locateDetail(alarmId, alarmType, fromUserId, isbn) {
 
-    confirm(alarmId);
+    confirmNotification(alarmId);
 
     if (alarmType === "NEW_FOLLOW") {
         window.location.href = "../users/detail.html?id=" + fromUserId;
@@ -92,7 +92,7 @@ function locateDetail(alarmId, alarmType, fromUserId, isbn) {
     }
 }
 
-function confirm(id) {
+function confirmNotification(id) {
     fetch(`${BASE_URL}/api/v1/alarms/${id}/confirm`, {
         method: 'POST',
         headers: {
