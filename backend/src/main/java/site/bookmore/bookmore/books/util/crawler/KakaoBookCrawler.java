@@ -9,7 +9,9 @@ public class KakaoBookCrawler extends AbstractBookCrawler {
 
     @Override
     public Integer parsePage(String originPage) {
-        originPage =  originPage.replaceAll(" ", "").split("\\|")[0];
+        originPage =  originPage.replaceAll(" ", "")
+                .replaceAll(",", "")
+                .split("\\|")[0];
         try {
             return Integer.parseInt(originPage);
         } catch (NumberFormatException e) {
