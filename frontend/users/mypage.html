@@ -175,8 +175,10 @@
                 </div>
                 <div class="modal-body">
                     <div class="form-floating mb-3 text-center">
-                        <img id="preview" src="#" alt="Preview" style="display: none; margin: 0 auto;" class="rounded-circle">
-                        <input type="file" id="update-image" name="avatar" accept="image/png, image/jpeg">
+                        <img id="preview" src="#" alt="Preview"
+                             style="display: none; margin: 0 auto; width: 450px; height: 450px;" class="rounded-circle">
+                        <input type="file" id="update-image" onchange="fileTypeCheck(this)" name="avatar"
+                               accept="image/png, image/jpeg, image/jpg, image/gif">
                         <button class="btn btn-primary w-70" onclick="updateImage(token)">프로필 변경</button>
                         <script>
                             const fileInput = document.getElementById('update-image');
