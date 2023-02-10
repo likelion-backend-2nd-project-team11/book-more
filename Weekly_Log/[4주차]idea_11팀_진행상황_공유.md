@@ -57,4 +57,4 @@
 # 개발 결과물 공유
 - Github Repository URL: [book-more.git](https://github.com/likelion-backend-2nd-project-team11/book-more)
 - Team Notion URL: [중요한 건 꺾이지 않는 민우](https://menu-hwang.notion.site/20389849506f486f8e59acd448848e32)
-- 배포 주소: [www.bookmore.site](http://ec2-43-201-77-193.ap-northeast-2.compute.amazonaws.com:8080)
+- 배포 주소: [www.bookmore.site](https://www.bookmore.site)
