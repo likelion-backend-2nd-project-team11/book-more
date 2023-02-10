@@ -13,5 +13,5 @@ public interface AlarmRepository extends JpaRepository<Alarm, Long> {
 
     Page<Alarm> findByTargetUserAndConfirmedIsFalseAndDeletedDatetimeIsNull(User target, Pageable pageable);
 
-    List<Alarm> findByTargetUser(User fromUser);
+    List<Alarm> findByFromUser(User fromUser);
 }

@@ -168,7 +168,7 @@ public class UserService implements UserDetailsService {
         rank.delete();
 
         // 알림 삭제 처리
-        List<Alarm> alarms = alarmRepository.findByTargetUser(user);
+        List<Alarm> alarms = alarmRepository.findByFromUser(user);
         for (Alarm alarm : alarms) {
             if (alarm.getAlarmType().equals(NEW_FOLLOW)) {
                 alarm.delete();
