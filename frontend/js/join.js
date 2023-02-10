@@ -9,9 +9,14 @@ function join() {
 
     const email = document.getElementById('email').value;
     const password = document.getElementById('password').value;
+    const passwordCheck = document.getElementById('passwordCheck').value;
     const nickname = document.getElementById('name').value;
     const birth = birthArr.join("-");
 
+    if(password != passwordCheck){
+        alert('비밀번호가 일치하지 않습니다.')
+        return;
+    }
     // request api
     fetch(`${BASE_URL}/api/v1/users/join`, {
         method: "POST",
