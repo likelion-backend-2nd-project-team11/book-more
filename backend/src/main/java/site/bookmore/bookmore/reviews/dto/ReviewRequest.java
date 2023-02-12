@@ -17,7 +17,7 @@ import java.util.Set;
 @Getter
 public class ReviewRequest {
     @NotBlank(message = "본문은 반드시 작성되어야 하는 항목입니다.")
-    @Size(max = 300)
+    @Size(max = 300, message = "본문은 300자 이하로 작성해 주세요.")
     private String body;
     private boolean spoiler;
     @Valid

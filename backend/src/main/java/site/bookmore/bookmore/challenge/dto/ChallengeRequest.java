@@ -20,17 +20,17 @@ import java.time.LocalDate;
 @Getter
 @Builder
 public class ChallengeRequest {
-    @NotBlank(message = "제목을 입력해주세요")
-    @Size(max = 50)
+    @NotBlank(message = "제목을 입력해 주세요.")
+    @Size(max = 50, message = "제목은 50자 이하로 작성해 주세요.")
     private String title;
-    @NotBlank(message = "내용을 입력해주세요")
-    @Size(max = 300)
+    @NotBlank(message = "내용을 입력해 주세요.")
+    @Size(max = 300, message = "본문은 300자 이하로 작성해 주세요.")
     private String description;
-    @NotNull(message = "기한을 입력해주세요")
-    @Future
+    @NotNull(message = "기한을 입력해 주세요.")
+    @Future(message = "기한을 현재 날짜 이후로 설정해 주세요.")
     private LocalDate deadline;
-    @NotNull
-    @Range(min = 0, max = 100)
+    @NotNull(message = "진행도를 입력해 주세요.")
+    @Range(min = 0, max = 100, message = "진행도는 0부터 100사이의 정수만 입력해 주세요.")
     private Integer progress;
 
     public Challenge toEntity(User owner) {
