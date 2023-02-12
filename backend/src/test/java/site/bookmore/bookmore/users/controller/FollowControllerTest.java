@@ -177,4 +177,35 @@ class FollowControllerTest {
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isUnauthorized());
     }
+
+    @Test
+    @DisplayName("팔로우 중 인지 확인 성공")
+    @WithMockUser
+    void isFollow_success() throws Exception {
+
+        when(followService.isFollow(any(), any())).thenReturn(true);
+
+        mockMvc.perform(get("/api/v1/users/1/follow")
+                        .with(csrf())
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.resultCode").value("SUCCESS"))
+                .andExpect(jsonPath("$.result").exists());
+    }
+
+    @Test
+    @DisplayName("팔로우 중 인지 확인 실패(1) - 확인 할 대상이 없는 경우")
+    @WithMockUser
+    void isFollow_fail_1() throws Exception {
+
+        when(followService.isFollow(any(), any())).thenThrow(new UserNotFoundException());
+
+        mockMvc.perform(get("/api/v1/users/1/follow")
+                        .with(csrf())
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.resultCode").value("ERROR"))
+                .andExpect(jsonPath("$.result.errorCode").exists())
+                .andExpect(jsonPath("$.result.message").exists());
+    }
 }

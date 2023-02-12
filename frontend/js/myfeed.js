@@ -92,8 +92,6 @@ function fetchDeleteUnfollow(id, token) {
 }
 
 function fetchPostFollow(id, token) {
-    console.log("함수에서 id" + id);
-    console.log("함수에서 token" + token);
     fetch(`${BASE_URL}/api/v1/users/${id}/follow`, {
         method: 'POST',
         headers: {
@@ -107,12 +105,12 @@ function fetchPostFollow(id, token) {
                 alert("팔로우 되었습니다.");
                 window.location.href = `detail.html?id=${id}`;
             } else if (resultCode === 'ERROR') {
-                alert(response.result.message);
                 if (errorCode === 'USER_NOT_FOUND' || errorCode === 'FOLLOW_NOT_ME' || errorCode === 'DUPLICATED_FOLLOW') {
+                    alert(response.result.message);
                     window.location.href = '../users/detail.html';
                 } else {
-                    alert("잘못된 요청입니다.");
-                    window.location.href = '../users/detail.html';
+                    alert("로그인이 필요합니다.");
+                    window.location.href = '../users/login.html';
                 }
             } else {
                 console.log(response);
@@ -230,10 +228,10 @@ function fetchGetReview(id) {
                     wrapper.insertAdjacentHTML('beforeend',
                         `<div class="bm-review-col p-3 bm-scale-animation " style="text-align: center">
                                     <div class="bm-review-item border border-secondary p-3 rounded-3">
-                                        <canvas class="chart me-3" style="width:100%;" id="chart-${review.id}"></canvas>
-                                        <hr/>
-                                        <a class="d-flex align-items-center text-decoration-none text-dark" href="../books/detail.html?isbn=${review.isbn}">
-                                        <div class="mx-auto overflow-hidden text-nowrap">${review.title}</div>
+                                        <a class="text-decoration-none text-dark" href="../books/detail.html?isbn=${review.isbn}">
+                                            <canvas class="chart me-3" style="width:100%;" id="chart-${review.id}"></canvas>
+                                            <hr/>
+                                            <div class="mx-auto overflow-hidden text-nowrap">${review.title}</div>
                                         </a>
                                     </div>
                                 </div>`);

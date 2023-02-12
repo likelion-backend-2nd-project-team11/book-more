@@ -45,7 +45,7 @@
             fetchVerifyToken(token);
         } else {
             alert("로그인이 필요합니다.");
-            window.history.back();
+            window.location.href = "../users/login.html"
         }
     </script>
     <nav class="navbar fixed-top bg-family-color">
@@ -137,6 +137,11 @@
                                     <input type="password" class="form-control"  id="update-password" placeholder="제목을 입력하세요." required>
                                     <label for="update-password">비밀번호</label>
                                 </div>
+
+                                <div class="form-floating mb-3">
+                                    <input type="password" class="form-control"  id="update-passwordCheck" placeholder="제목을 입력하세요." required>
+                                    <label for="update-password">비밀번호 확인</label>
+                                </div>
 <!--                                <div class="form-floating mb-3">-->
 <!--                                    <input type="password" class="form-control"  id="pass check" placeholder="제목을 입력하세요." required>-->
 <!--                                    <label for="update-password">비밀번호 확인</label>-->
@@ -175,8 +180,11 @@
                 </div>
                 <div class="modal-body">
                     <div class="form-floating mb-3 text-center">
-                        <img id="preview" src="#" alt="Preview" style="display: none; margin: 0 auto;" class="rounded-circle">
-                        <input type="file" id="update-image" name="avatar" accept="image/png, image/jpeg">
+                        <div class="ratio ratio-1x1 mx-auto w-50 my-4">
+                            <img id="preview" src="" alt="Preview" class="rounded-circle">
+                        </div>
+                        <input type="file" id="update-image" onchange="fileTypeCheck(this)" name="avatar"
+                               accept="image/png, image/jpeg, image/jpg, image/gif">
                         <button class="btn btn-primary w-70" onclick="updateImage(token)">프로필 변경</button>
                         <script>
                             const fileInput = document.getElementById('update-image');
@@ -205,6 +213,7 @@
     <script>
         getMyPage(token).then(data => {
             document.getElementById('update-nickname').value = data.result.nickname;
+            document.getElementById('preview').src = `https://www.bookmore.site/${data.result.profile}`;
             birthSelectInit();
             setMyBirth(data.result.birth);
         })

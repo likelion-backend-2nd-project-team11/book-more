@@ -34,7 +34,7 @@
     <link rel="stylesheet" href="../css/top-bar.css"/>
     <script src="../js/constant.js"></script>
 <!--    <script src="../js/review.js"></script>-->
-    <title>BookMore</title>
+    <title>BookMore : Book Detail</title>
 </head>
 <body class="bg-light vh-100">
     <!-- ------------------------------------------------------------------------------------------------Top Bar-->
@@ -45,6 +45,7 @@
         const isLoggedIn = !!token;
         if(isLoggedIn) getUserInfo = fetchVerifyToken(token);
         const isbn = urlSearchParams.get('isbn');
+        const page = urlSearchParams.get('page');
         if (!isbn) {
             alert("잘못된 접근입니다.");
             window.history.back();
@@ -225,11 +226,23 @@
         </div>
     </div>
 </div>
+    <script>
+        document.getElementById("body-input").addEventListener('keyup', event => {
+            var content = event.target.value;
+            document.getElementById("counter").innerText = `(${content.length} / 최대 300자)`;
+
+            if (content.length > 300) {
+                alert("최대 300자까지 입력 가능합니다.");
+                event.target.value = content.substring(0, 300);
+                document.getElementById("counter").innerText = "(300 / 최대 300자)";
+            }
+        });
+    </script>
 <script src="../js/book.js"></script>
 <script src="../js/review.js"></script>
 <script src="../js/notifications.js"></script>
 <script>
-    fetchGetReviewsByBook(isbn, getUserInfo).then(result => reviews = result);
+    fetchGetReviewsByBook(isbn, page, getUserInfo).then(result => reviews = result);
     fetchSearchBookDetail(isbn);
     fetchCheckNewAlarms(token)
 </script>

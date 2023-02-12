@@ -4,7 +4,9 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import site.bookmore.bookmore.alarms.repository.AlarmRepository;
 import site.bookmore.bookmore.common.exception.AbstractAppException;
+import site.bookmore.bookmore.common.exception.ErrorCode;
 import site.bookmore.bookmore.common.exception.conflict.DuplicateEmailException;
 import site.bookmore.bookmore.common.exception.conflict.DuplicateNicknameException;
 import site.bookmore.bookmore.common.exception.not_found.UserNotFoundException;
@@ -25,6 +27,7 @@ import java.time.LocalDate;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
@@ -43,8 +46,9 @@ class UserServiceTest {
 
     private final PasswordEncoder passwordEncoder = mock(PasswordEncoder.class);
     private final AwsS3Uploader awsS3Uploader = mock(AwsS3Uploader.class);
+    private final AlarmRepository alarmRepository = mock(AlarmRepository.class);
 
-    private final UserService userService = new UserService(passwordEncoder, jwtProvider, userRepository, ranksRepository, followRepository, awsS3Uploader);
+    private final UserService userService = new UserService(passwordEncoder, jwtProvider, userRepository, ranksRepository, followRepository, awsS3Uploader, alarmRepository);
 
     private final User user = User.builder()
             .id(0L)
@@ -104,7 +108,7 @@ class UserServiceTest {
     @Test
     @DisplayName("로그인 - 성공")
     void login_success() {
-        when(userRepository.findByEmailAndDeletedDatetimeIsNull(user.getEmail()))
+        when(userRepository.findByEmail(user.getEmail()))
                 .thenReturn(Optional.of(user));
 
         when(!passwordEncoder.matches(user.getPassword(), "password"))
@@ -129,7 +133,7 @@ class UserServiceTest {
     @Test
     @DisplayName("로그인 - 실패(비밀번호 틀림)")
     void login_fail_2() {
-        when(userRepository.findByEmailAndDeletedDatetimeIsNull(user.getEmail()))
+        when(userRepository.findByEmail(user.getEmail()))
                 .thenReturn(Optional.of(user));
 
         when(!passwordEncoder.matches(user.getPassword(), "password"))
@@ -240,6 +244,26 @@ class UserServiceTest {
         });
 
         assertThat(abstractAppException.getErrorCode()).isEqualTo(USER_NOT_FOUND);
+    }
+
+    @Test
+    @DisplayName("유저 상세 조회 성공")
+    void detail_success() {
+        when(userRepository.findByIdAndDeletedDatetimeIsNull(user.getId()))
+                .thenReturn(Optional.of(user));
+
+        Assertions.assertDoesNotThrow(() -> userService.detail(user.getId()));
+    }
+
+    @Test
+    @DisplayName("유저 상세 조회 실패(1) - 없는 유저를 조회 한 경우")
+    void detail_fail() {
+
+        UserNotFoundException exception = Assertions.assertThrows(UserNotFoundException.class, () ->
+                userService.detail(user.getId()));
+
+        assertEquals(ErrorCode.USER_NOT_FOUND, exception.getErrorCode());
+
     }
 
 }

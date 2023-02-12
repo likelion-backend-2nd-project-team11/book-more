@@ -1,7 +1,7 @@
 function fetchCreateChallenge(token) {
     const title = document.getElementById("create-title").value;
     const description = document.getElementById("create-description").value;
-    const deadline = document.getElementById("create-deadline").value;
+    const deadline = deadlineArr.join("-");
     const progress = document.getElementById("create-progress").value;
 
     const data = {
@@ -73,7 +73,7 @@ function fetchGetChallenges(token) {
 function modifyChallenge({id, title, description, deadline, progress}) {
     document.getElementById("modify-title").value = title;
     document.getElementById("modify-description").value = description;
-    document.getElementById("modify-deadline").value = deadline;
+    setMydeadline(deadline);
     document.getElementById("modify-progress").value = progress;
     document.getElementById("modify-progress-value").innerText = progress;
     document.getElementById("modify-submit-btn").setAttribute("onclick", `fetchModifyChallenge(${id}, token)`)
@@ -82,7 +82,7 @@ function modifyChallenge({id, title, description, deadline, progress}) {
 function fetchModifyChallenge(id, token) {
     const title = document.getElementById("modify-title").value;
     const description = document.getElementById("modify-description").value;
-    const deadline = document.getElementById("modify-deadline").value;
+    const deadline = editDeadlineArr.join("-");
     const progress = document.getElementById("modify-progress").value;
 
     const data = {
@@ -94,7 +94,6 @@ function fetchModifyChallenge(id, token) {
 
     console.log(token);
     console.log(data);
-
     fetch(`${BASE_URL}/api/v1/challenges/${id}`, {
         method: 'PATCH',
         headers: {

@@ -19,6 +19,9 @@ function getMyPage(token) {
                         <hr>
                         <p>프로필 사진</p>
                         <div>
+                        <button onclick=updateDefault(token) class="rounded-circle" style="border: none; position: absolute; bottom: 60%; margin-left: -60px;">X</button>
+                        </div>    
+                        <div>
                         <button type="button" data-bs-toggle="modal" data-bs-target="#myprofileModal" style="border: none; border-radius: 0.7em; position: absolute; bottom: 0;margin-left: 35px;">Edit</button>
                         </div>                        
                         <img style="margin: 0 auto;" class="rounded-circle" src="https://www.bookmore.site/${data.result.profile}" width="150px" height="150px">
@@ -30,37 +33,44 @@ function getMyPage(token) {
                     <p>비밀번호 : ********** </p>
 <!--                    <p>생년월일 : ${data.result.birth[0]}년 ${data.result.birth[1]}월 ${data.result.birth[2]}일</p>-->
                     <p>생년월일 : ${data.result.birth}</p>
-
-                    <button class ="bm-button" type="button" onclick=deleteUser(token)>회원 탈퇴</button>
+                     <button class ="bm-button" type="button" onclick=deleteUser(token)>회원 탈퇴</button>                
                 </div>`;
             return data;
         });
 }
 
 function deleteUser(token) {
-    fetch(`${BASE_URL}/api/v1/users/me`, {
-        method: 'DELETE',
-        headers: {
-            // 'Content-Type': 'application/json',
-            "Authorization": token ? "Bearer " + token : '',
-        },
-    }).then(response => response.json())
-        .then(data => {
-            if (data.resultCode === 'SUCCESS') {
-                alert("탈퇴 완료");
-                location.href = "../index.html";
-            } else if (data.resultCode === 'ERROR') {
-                alert(data.result.message);
-            } else {
-                console.log(data);
-            }
-        })
+    const delConfirm = window.confirm("회원 탈퇴를 계속 진행하시겠습니까?");
+    if (delConfirm) {
+        fetch(`${BASE_URL}/api/v1/users/me`, {
+            method: 'DELETE',
+            headers: {
+                "Authorization": token ? "Bearer " + token : '',
+            },
+        }).then(response => response.json())
+            .then(data => {
+                if (data.resultCode === 'SUCCESS') {
+                    alert("탈퇴 완료");
+                    location.href = "../index.html";
+                } else if (data.resultCode === 'ERROR') {
+                    alert(data.result.message);
+                } else {
+                    console.log(data);
+                }
+            });
+    }
 }
 
 function editUser(token) {
     const nickname = document.getElementById("update-nickname").value;
     const password = document.getElementById("update-password").value;
+    const passwordCheck = document.getElementById("update-passwordCheck").value;
     const birth = birthArr.join("-");
+
+    if(password != passwordCheck){
+        alert('비밀번호가 일치하지 않습니다.')
+        return;
+    }
 
     const data = {
         nickname,
@@ -119,3 +129,36 @@ function updateImage(token) {
         })
 }
 
+function fileTypeCheck(file) {
+    let index = file.value.lastIndexOf('.');
+    let filetype = file.value.substring(index + 1, file.length).toLowerCase();
+
+    if (filetype === 'jpg' || filetype === 'gif' || filetype === 'png' || filetype === 'jpeg') {
+    } else {
+        alert("프로필 사진은 이미지 파일만 업로드할 수 있습니다.");
+        window.location.reload();
+    }
+}
+
+function updateDefault(token) {
+    const updateConfirm = window.confirm("프로필 사진을 기본 사진으로 변경하시겠습니까?");
+    if (updateConfirm) {
+        fetch(`${BASE_URL}/api/v1/users/me/profile`, {
+            method: 'DELETE',
+            headers: {
+                "Authorization": token ? "Bearer " + token : '',
+            },
+        }).then((response) => response.json())
+            .then((response) => {
+                const resultCode = response.resultCode;
+                if (resultCode === 'SUCCESS') {
+                    alert("변경 완료");
+                    window.location.reload();
+                } else if (resultCode === 'ERROR') {
+                    alert(response.result.message);
+                } else {
+                    console.log(response);
+                }
+            })
+    }
+}

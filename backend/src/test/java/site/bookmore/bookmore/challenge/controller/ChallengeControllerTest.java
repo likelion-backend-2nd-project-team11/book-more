@@ -99,7 +99,12 @@ class ChallengeControllerTest {
     @Test
     @WithMockUser
     public void Test3() throws Exception {
-        ChallengeRequest challengeRequest = ChallengeRequest.builder().title("title").description("description").build();
+        ChallengeRequest challengeRequest = ChallengeRequest.builder()
+                .title("title")
+                .description("description")
+                .deadline(LocalDate.parse("2300-01-01"))
+                .progress(0)
+                .build();
 
         when(challengeService.modify(any(), any(), any())).thenReturn(new ChallengeResponse("Message", 1L));
 
@@ -132,8 +137,12 @@ class ChallengeControllerTest {
     @DisplayName("challenge 1개 수정 실패 : 선택 게시글 불일치")
     void modify_fail2() throws Exception {
 
-        ChallengeRequest challengeRequest = ChallengeRequest.builder().title("title").description("description").build();
-
+        ChallengeRequest challengeRequest = ChallengeRequest.builder()
+                .title("title")
+                .description("description")
+                .deadline(LocalDate.parse("2300-01-01"))
+                .progress(0)
+                .build();
         when(challengeService.modify(any(), any(), any()))
                 .thenThrow(new ReviewNotFoundException());
 
@@ -150,7 +159,13 @@ class ChallengeControllerTest {
     void modify_fail3() throws Exception {
 
 
-        ChallengeRequest challengeRequest = ChallengeRequest.builder().title("title").description("description").build();
+        ChallengeRequest challengeRequest = ChallengeRequest.builder()
+                .title("title")
+                .description("description")
+                .deadline(LocalDate.parse("2300-01-01"))
+                .progress(0)
+                .build();
+
         when(challengeService.modify(any(), any(), any()))
                 .thenThrow(new UserNotFoundException());
 
@@ -166,7 +181,12 @@ class ChallengeControllerTest {
     @DisplayName("challenge 1개 수정 실패 : 데이터베이스 에러")
     void modify_fail4() throws Exception {
 
-        ChallengeRequest challengeRequest = ChallengeRequest.builder().title("title").description("description").build();
+        ChallengeRequest challengeRequest = ChallengeRequest.builder()
+                .title("title")
+                .description("description")
+                .deadline(LocalDate.parse("2300-01-01"))
+                .progress(0)
+                .build();
 
         when(challengeService.modify(any(), any(), any()))
                 .thenThrow(new DatabaseException());

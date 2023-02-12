@@ -17,6 +17,8 @@ import site.bookmore.bookmore.books.util.api.kakao.dto.Document;
 import site.bookmore.bookmore.books.util.api.kakao.dto.KakaoSearchParams;
 import site.bookmore.bookmore.books.util.api.kakao.dto.KakaoSearchResponse;
 import site.bookmore.bookmore.books.util.api.kakao.dto.Meta;
+import site.bookmore.bookmore.books.util.crawler.BookCrawler;
+import site.bookmore.bookmore.books.util.crawler.KakaoBookCrawler;
 import site.bookmore.bookmore.books.util.mapper.BookMapper;
 
 import java.lang.reflect.InvocationTargetException;
@@ -33,11 +35,13 @@ public class KakaoBookSearch implements BookSearch<KakaoSearchParams> {
     private static final String BASE_URL = "http://dapi.kakao.com";
     private static final String SEARCH_ENDPOINT = "/v3/search/book";
     private final String token;
+    private final BookCrawler bookCrawler;
 
     private final WebClient webClient = WebClient.create(BASE_URL);
 
-    public KakaoBookSearch(@Value("${api.token.kakao}") String kakaoToken) {
+    public KakaoBookSearch(@Value("${api.token.kakao}") String kakaoToken, KakaoBookCrawler bookCrawler) {
         this.token = kakaoToken;
+        this.bookCrawler = bookCrawler;
     }
 
     // Todo. 타임아웃 시간 설정
@@ -71,7 +75,10 @@ public class KakaoBookSearch implements BookSearch<KakaoSearchParams> {
                 .map(kakaoSearchResponse -> {
                     List<Document> documents = kakaoSearchResponse.getDocuments();
                     if (documents == null || documents.size() != 1) return new Book();
-                    return BookMapper.of(documents.get(0));
+                    Document document = documents.get(0);
+                    Book book = BookMapper.of(document);
+                    Book crawl = bookCrawler.execute(document.getUrl());
+                    return book.merge(crawl);
                 })
                 .doOnSubscribe(subscription -> {
                     log.info("카카오 도서 상세조회");

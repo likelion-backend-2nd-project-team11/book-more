@@ -31,6 +31,7 @@ public class Review extends BaseEntity {
     @JoinColumn(name = "book_id", foreignKey = @ForeignKey(name = "fk_review_book"))
     private Book book;
 
+    @Column(length = 300)
     private String body;
     private Boolean spoiler;
 

@@ -21,5 +21,5 @@ function fetchVerifyToken(token) {
 
 function deleteToken() {
     window.localStorage.removeItem("token");
-    window.location.reload();
+    window.location.href = 'https://www.bookmore.site';
 }
