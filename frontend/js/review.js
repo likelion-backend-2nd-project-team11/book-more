@@ -29,9 +29,9 @@ const options = {
     }
 }
 
-async function fetchGetReviewsByBook(isbn, getUserInfo) {
+async function fetchGetReviewsByBook(isbn, page, getUserInfo) {
     let userInfo = await getUserInfo;
-    return fetch(`${BASE_URL}/api/v1/books/${isbn}/reviews`, {
+    return fetch(`${BASE_URL}/api/v1/books/${isbn}/reviews?page=${page}`, {
         method: 'GET'
     }).then((response) => response.json())
         .then((res) => {
@@ -109,6 +109,13 @@ async function fetchGetReviewsByBook(isbn, getUserInfo) {
                     options
                 });
             })
+            wrapper.insertAdjacentHTML('beforeend',`
+        <nav aria-label="Page navigation example">
+            <ul class="pagination justify-content-center">
+                <li class="page-item ${res.result.number === 0 ? "disabled" : ""}"><a class="page-link" href="./detail.html?isbn=${isbn}&page=${res.result.number-1}">이전</a></li>
+                <li class="page-item ${res.result.last === true ? "disabled" : ""}"><a class="page-link" href="./detail.html?isbn=${isbn}&page=${res.result.number+1}">다음</a></li>
+            </ul>
+        </nav>`)
             return result;
         })
 }
