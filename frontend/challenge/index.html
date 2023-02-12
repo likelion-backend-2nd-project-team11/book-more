@@ -132,11 +132,21 @@
                                     </div>
 
                                     <div class="form-floating mb-3">
-                                        <textarea maxlength="300" class="form-control" id="create-description" style="height: 200px; resize: none" placeholder="내용을 입력하세요." required></textarea>
+                                        <textarea maxlength="300" onkeyup="counter(this,300)" class="form-control" id="create-description" style="height: 200px; resize: none" placeholder="내용을 입력하세요." required></textarea>
                                         <label for="create-description">내용</label>
                                         <span style="color:#aaa;" id="counter" class="float-end me-2 mt-2">(0자 / 최대 300자)</span>
                                     </div>
-
+                                    <script>
+                                        function counter(text,length){
+                                            var limit = length;
+                                            var str = text.value.length;
+                                            if(str > limit){
+                                                text.value = text.value.substring(0,limit);
+                                                text.focus();
+                                            }
+                                            document.getElementById("counter").innerHTML = text.value.length + " / " + limit;
+                                        }
+                                    </script>
                                     <div class="mb-3">
                                         <label>기한</label>
                                         <div class="d-flex" id="create-deadline">
@@ -196,11 +206,21 @@
                                     </div>
 
                                     <div class="form-floating mb-3">
-                                        <textarea maxlength="300" class="form-control" id="modify-description" style="height: 200px; resize: none" placeholder="내용을 입력하세요." required></textarea>
+                                        <textarea maxlength="300" onkeyup="counter2(this,300)" class="form-control" id="modify-description" style="height: 200px; resize: none" placeholder="내용을 입력하세요." required></textarea>
                                         <label for="modify-description">내용</label>
-                                        <span style="color:#aaa;" class="float-end me-2 mt-2">(0자 / 최대 300자)</span>
+                                        <span style="color:#aaa;" id="counter2" class="float-end me-2 mt-2">(0자 / 최대 300자)</span>
                                     </div>
-
+                                    <script>
+                                        function counter2(text,length){
+                                            var limit = length;
+                                            var str = text.value.length;
+                                            if(str > limit){
+                                                text.value = text.value.substring(0,limit);
+                                                text.focus();
+                                            }
+                                            document.getElementById("counter2").innerHTML = text.value.length + " / " + limit;
+                                        }
+                                    </script>
 <!--                                    <div class="form-floating mb-3">-->
 <!--                                        <input type="text" class="form-control" id="modify-deadline" placeholder="1900-01-01" required>-->
 <!--                                        <label for="modify-deadline">기한 (ex:1900-01-01)</label>-->
