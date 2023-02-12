@@ -10,10 +10,10 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import site.bookmore.bookmore.reviews.dto.ReviewPageResponse;
-import site.bookmore.bookmore.reviews.service.ReviewService;
 import site.bookmore.bookmore.common.dto.ResultResponse;
 import site.bookmore.bookmore.common.support.annotation.Authorized;
+import site.bookmore.bookmore.reviews.dto.ReviewPageResponse;
+import site.bookmore.bookmore.reviews.service.ReviewService;
 import site.bookmore.bookmore.users.dto.*;
 import site.bookmore.bookmore.users.service.UserService;
 import springfox.documentation.annotations.ApiIgnore;
@@ -46,7 +46,7 @@ public class UserController {
     @Authorized
     @ApiOperation(value = "특정 유저 회원 정보 수정")
     @PostMapping("/{id}")
-    public ResultResponse<UserResponse> update(@RequestBody UserUpdateRequest userUpdateRequest, @PathVariable Long id, @ApiIgnore Authentication authentication) {
+    public ResultResponse<UserResponse> update(@RequestBody @Valid UserUpdateRequest userUpdateRequest, @PathVariable Long id, @ApiIgnore Authentication authentication) {
         String email = authentication.getName();
         return ResultResponse.success(userService.infoUpdate(email, id, userUpdateRequest));
     }
@@ -65,7 +65,7 @@ public class UserController {
     @Authorized
     @ApiOperation(value = "회원 검증")
     @PostMapping("/verify")
-    public ResultResponse<UserJoinResponse> verify(Authentication authentication) {
+    public ResultResponse<UserJoinResponse> verify(@ApiIgnore Authentication authentication) {
         String email = authentication.getName();
         return ResultResponse.success(userService.verify(email));
     }
@@ -104,7 +104,7 @@ public class UserController {
     @Authorized
     @ApiOperation(value = "회원 프로필 사진 변경")
     @PostMapping("/me/profile")
-    public ResultResponse<UserProfileResponse> updateProfile(@RequestPart MultipartFile multipartFile, Authentication authentication) throws IOException {
+    public ResultResponse<UserProfileResponse> updateProfile(@RequestPart MultipartFile multipartFile, @ApiIgnore Authentication authentication) throws IOException {
         String email = authentication.getName();
         String userNickname = userService.updateProfile(multipartFile, email);
         return ResultResponse.success(new UserProfileResponse(userNickname, "프로필 사진 변경 완료"));
@@ -113,7 +113,7 @@ public class UserController {
     @Authorized
     @ApiOperation(value = "회원 프로필 기본 사진으로 변경")
     @DeleteMapping("/me/profile")
-    public ResultResponse<UserProfileResponse> updateProfileDefault(Authentication authentication) {
+    public ResultResponse<UserProfileResponse> updateProfileDefault(@ApiIgnore Authentication authentication) {
         String email = authentication.getName();
         String userNickname = userService.updateProfileDefault(email);
         return ResultResponse.success(new UserProfileResponse(userNickname, "프로필 기본 사진으로 변경 완료"));

@@ -15,6 +15,7 @@ import site.bookmore.bookmore.books.util.api.kakao.KakaoBookSearch;
 import site.bookmore.bookmore.books.util.api.kolis.KolisBookSearch;
 import site.bookmore.bookmore.books.util.api.naver.NaverBooksearch;
 import site.bookmore.bookmore.books.util.api.naver.dto.NaverSearchParams;
+import site.bookmore.bookmore.common.exception.not_found.BookNotFoundException;
 
 import java.util.List;
 import java.util.Optional;
@@ -22,6 +23,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
@@ -116,6 +118,27 @@ class BookServiceTest {
         assertEquals(book2.getPrice(), result.getPrice());
         assertEquals(book3.getPages(), result.getPages());
         assertEquals(book3.getImage(), result.getImage());
+
+        verify(bookRepository).findById("10001");
+        verify(naverBooksearch).searchByISBN(anyString());
+        verify(kakaoBookSearch).searchByISBN(anyString());
+        verify(kolisBookSearch).searchByISBN(anyString());
+    }
+
+    @Test
+    void searchByISBN_from_api_failed() {
+        Book book1 = Book.empty();
+
+        Book book2 = Book.empty();
+
+        Book book3 = Book.empty();
+
+        given(bookRepository.findById("10001")).willReturn(Optional.empty());
+        given(naverBooksearch.searchByISBN("10001")).willReturn(Mono.just(book1));
+        given(kakaoBookSearch.searchByISBN("10001")).willReturn(Mono.just(book2));
+        given(kolisBookSearch.searchByISBN("10001")).willReturn(Mono.just(book3));
+
+        assertThrows(BookNotFoundException.class, () -> bookService.searchByISBN("10001"));
 
         verify(bookRepository).findById("10001");
         verify(naverBooksearch).searchByISBN(anyString());
