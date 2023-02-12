@@ -39,7 +39,7 @@ public class BookController {
     @GetMapping("/{isbn}")
     public ResultResponse<BookDetailResponse> searchByISBN(
             @PathVariable("isbn")
-            @Size(min = 13, max = 13, message = "13자리의 isbn으로 검색해주세요.")
+            @Size(min = 10, max = 13, message = "10자리 또는 13자리의 isbn으로 검색해주세요.")
             String isbn
     ) {
         log.info("도서 상세 조회 요청 ISBN : {}", isbn);
