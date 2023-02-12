@@ -63,8 +63,8 @@ async function fetchGetReviewsByBook(isbn, getUserInfo) {
                             <p id="spoiler-${review.id}" class="spoiler h-100" style="display: ${review.spoiler ? 'none' : 'block'}">
                                 ${review.body}
                             </p>
-                            <p id="spoilerText-${review.id}" class="spoilerText" style="display: ${review.spoiler ? 'block' : 'none'}">스포일러가 포함된 내용입니다</p>
-                            <button type="button" id="spoiler-more-btn-${review.id}" onclick="more(${review.id})" style="display: ${review.spoiler ? 'block' : 'none'};float:right;margin-top: 90px;border: none;border-radius:0.7em;padding: 6px;background-color: white;color: dimgrey">더보기</button>
+                            <p id="spoilerText-${review.id}" class="spoilerText h-100" style="display: ${review.spoiler ? 'block' : 'none'}">스포일러가 포함된 내용입니다</p>
+                            <button type="button" class="ms-auto" id="spoiler-more-btn-${review.id}" onclick="more(${review.id})" style="display: ${review.spoiler ? 'block' : 'none'};border: none;background-color: white;color: dimgrey">내용보기</button>
                             ${userInfo !== undefined && review.nickname === userInfo.nickname ? `
                                 <div id="editDelete">                       
                                     <button type="button" id="edit-btn" onclick="modifyReview(reviews[${review.id}])" data-bs-toggle="modal" data-bs-target="#modifyModal" style="border: none; border-radius: 0.7em;padding-left: 10px; padding-right: 10px">수정</button>
@@ -123,7 +123,7 @@ function more(id) {
     } else {
         document.getElementById('spoiler-' + id).style.display = "none";
         document.getElementById('spoilerText-' + id).style.display = "block";
-        document.getElementById('spoiler-more-btn-' + id).innerText = "더보기";
+        document.getElementById('spoiler-more-btn-' + id).innerText = "내용보기";
     }
 }
 
