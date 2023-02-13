@@ -26,6 +26,7 @@ public class WebSecurityConfig {
 
     public static final String[] GET_AUTHENTICATED_REGEX_LIST = {
             "^/api/v1/users/me$",
+            "^/api/v1/users/\\d*/follow$",
             "^/api/v1/challenges/\\d*$",
             "^/api/v1/challenges$",
             "^/api/v1/alarms$",
