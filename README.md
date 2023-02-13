@@ -11,29 +11,6 @@
 - [Swagger](https://api.bookmore.site/swagger-ui/index.html)
 - [홈페이지](https://www.bookmore.site)
 
-### ⚒️ 개발 환경
-
-- 에디터 : Intellij Ultimate
-- 개발 툴 : SpringBoot 2.7.5
-- 자바 : JAVA 11
-- 빌드 : Gradle 6.8
-- 서버 : AWS EC2
-- 배포 : Docker
-- 데이터베이스 : MySql 8.0
-- 필수 라이브러리 : SpringBoot Web, MySQL, Spring Data JPA, Lombok, Spring Security
-
-<br>
-
-### 📍 ERD
-
-![ERD](assets/bookmore-erd.png)
-
-<br>
-
-### 🌊Workflow
-
-![Infra](assets/infra.png)
-
 <br>
 
 ### 📄 기능 명세서
@@ -99,3 +76,37 @@
 | GET    | /api/v1/alarms | 팔로잉의 리뷰 등록 알림 |
 | GET    | /api/v1/alarms | 나를 팔로잉하면 알림   |
 | GET    | /api/v1/alarms | 내 리뷰에 좋아요 알림  |
+
+
+
+
+
+<p align="middle" >
+  <img width="250px;" src="file:///Users/jangseohyeon/Downloads/icon.png"/>
+</p>
+
+<div align="center">
+<h1> 📚 BookMore[북: 모아] </h1>
+<h3> 리뷰를 모아모아 독서량을 늘리자!</h3>
+</div>
+
+# 📝 프로젝트 소개
+
+## ⚒️ 기술 스택
+![Stack1](assets/stack1.png)
+![Stack2](assets/stack2.png)
+
+### 📍 ERD
+![ERD](assets/bookmore-erd.png)
+
+##  🪜 Architecture
+![Architecture](assets/architecture.png)
+
+# 🙋🏻‍♂️🙋🏻‍♀️ 팀원 소개
+
+|                  CTO, Backend                  |                Infra, Backend                 |           Project Manager, Backend           |                    Backend                     |                     Backend                     |                 Planner, Backend                  |
+|:----------------------------------------------:|:---------------------------------------------:|:--------------------------------------------:|:----------------------------------------------:|:-----------------------------------------------:|:-------------------------------------------------:|
+| ![](https://github.com/menuhwang.png?size=200) | ![](https://github.com/yjyj1023.png?size=200) | ![](https://github.com/Senna97.png?size=200) | ![](https://github.com/simhyunbo.png?size=200) | ![](https://github.com/Universenn.png?size=200) | ![](https://github.com/Kim-Ji-Yeong.png?size=200) |
+|     [👑황민우](https://github.com/menuhwang)      |      [이연재](https://github.com/yjyj1023)       |      [장서현](https://github.com/Senna97)       |      [심현보](https://github.com/simhyunbo)       |      [우주완](https://github.com/Universenn)       |      [김지영](https://github.com/Kim-Ji-Yeong)       |
+
+# 🏠 팀 문화
