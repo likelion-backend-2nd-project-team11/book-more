@@ -93,8 +93,9 @@
 # 📝 프로젝트 소개
 
 ## ⚒️ 기술 스택
-![Stack1](assets/stack1.png)
-![Stack2](assets/stack2.png)
+![stack1](assets/stack1.png)
+![stack2](assets/stack2.png)
+![stack3](assets/stack3.png)
 
 ### 📍 ERD
 ![ERD](assets/bookmore-erd.png)
