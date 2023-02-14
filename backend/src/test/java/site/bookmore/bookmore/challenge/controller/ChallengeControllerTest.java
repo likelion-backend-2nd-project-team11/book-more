@@ -288,8 +288,6 @@ class ChallengeControllerTest {
                 .progress(2)
                 .completed(true)
                 .deadline("2222-01-01")
-                .createdDatetime("2023-02-14")
-                .LastModifiedDatetime("2023-02-14")
                 .build();
 
         given(challengeService.get(any(), any())).willReturn(challengeDetailResponse);
