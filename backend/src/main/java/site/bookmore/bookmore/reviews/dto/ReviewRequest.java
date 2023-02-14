@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import site.bookmore.bookmore.books.entity.Book;
+import site.bookmore.bookmore.common.support.annotation.ElementSize;
 import site.bookmore.bookmore.reviews.entity.Review;
 import site.bookmore.bookmore.users.entity.User;
 
@@ -22,6 +23,7 @@ public class ReviewRequest {
     private boolean spoiler;
     @Valid
     private ChartRequest chart;
+    @ElementSize(max = 10, message = "태그는 10자 이하로 입력해주세요.")
     private Set<String> tags;
 
     // 도서 리뷰 등록
