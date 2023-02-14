@@ -1,5 +1,5 @@
 <p align="middle">
-    <img width="250px;" src="assets/icon.png"/>
+    <img width="250px;" src="assets/favicon.png"/>
 </p>
 
 <div align="center">
