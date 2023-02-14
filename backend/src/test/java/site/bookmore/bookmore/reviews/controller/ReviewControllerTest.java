@@ -17,8 +17,7 @@ import site.bookmore.bookmore.reviews.service.ReviewService;
 import java.util.Set;
 
 import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -129,6 +128,30 @@ class ReviewControllerTest {
                 .andExpect(jsonPath("$.result.message").value("리뷰 등록 완료"));
 
         verify(reviewService).create(any(ReviewRequest.class), eq("9791158393083"), anyString());
+    }
+
+    @Test
+    @DisplayName("도서 리뷰 등록 실패 - 태그가 긴 경우")
+    @WithMockUser
+    void create_with_tag_is_too_long() throws Exception {
+        final Set<String> tags = Set.of("tag1", "abcdefghijk");
+        // given
+        ReviewRequest reviewRequest = new ReviewRequest("body", false, ChartRequest.builder().build(), tags);
+
+        // when
+        when(reviewService.create(any(ReviewRequest.class), eq("9791158393083"), anyString()))
+                .thenReturn(1L);
+
+        // then
+        mockMvc.perform(post("/api/v1/books/9791158393083/reviews")
+                        .with(csrf())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsBytes(reviewRequest)))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.resultCode").value("ERROR"))
+                .andExpect(jsonPath("$.result.message").value("태그는 10자 이하로 입력해주세요."));
+
+        verify(reviewService, never()).create(any(ReviewRequest.class), eq("9791158393083"), anyString());
     }
 
     /* ========== 도서 리뷰 조회 ========== */
