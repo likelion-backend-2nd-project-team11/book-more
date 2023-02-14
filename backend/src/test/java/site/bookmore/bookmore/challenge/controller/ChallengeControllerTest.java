@@ -7,11 +7,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.security.oauth2.client.servlet.OAuth2ClientAutoConfiguration;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.Page;
 import org.springframework.data.jpa.mapping.JpaMetamodelMappingContext;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithAnonymousUser;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
+import site.bookmore.bookmore.challenge.dto.ChallengeDetailResponse;
 import site.bookmore.bookmore.challenge.dto.ChallengeRequest;
 import site.bookmore.bookmore.challenge.dto.ChallengeResponse;
 import site.bookmore.bookmore.challenge.service.ChallengeService;
@@ -26,9 +28,12 @@ import java.time.LocalDate;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -269,6 +274,50 @@ class ChallengeControllerTest {
                 .with(csrf())
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().is(ErrorCode.DATABASE_ERROR.getHttpStatus().value()));
+    }
+
+    @Test
+    @WithMockUser
+    @DisplayName("첼린지 상세 조회 - 성공")
+    void challengeDetail_success() throws Exception {
+        ChallengeDetailResponse challengeDetailResponse = ChallengeDetailResponse.builder()
+                .id(3L)
+                .nickname("nickname")
+                .title("제목")
+                .description("설명")
+                .progress(2)
+                .completed(true)
+                .deadline("2222-01-01")
+                .createdDatetime("2023-02-14")
+                .LastModifiedDatetime("2023-02-14")
+                .build();
+
+        given(challengeService.get(any(), any())).willReturn(challengeDetailResponse);
+
+        mockMvc.perform(get("/api/v1/challenges/3")
+                        .with(csrf())
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.resultCode").value("SUCCESS"));
+
+        verify(challengeService).get(any(), any());
+    }
+
+    @Test
+    @WithMockUser   // 인증된 상태
+    @DisplayName("첼린지 리스트 조회 - 성공")
+    void challengeList_success() throws Exception {
+
+        given(challengeService.list(any(), any())).willReturn(Page.empty());
+
+        mockMvc.perform(get("/api/v1/challenges")
+                        .with(csrf())
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andDo(print())
+                .andExpect(jsonPath("$.resultCode").value("SUCCESS"));
+
+        verify(challengeService).list(any(), any());
     }
 
 }

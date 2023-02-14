@@ -263,7 +263,35 @@ class UserServiceTest {
                 userService.detail(user.getId()));
 
         assertEquals(ErrorCode.USER_NOT_FOUND, exception.getErrorCode());
-
     }
+
+    @Test
+    @DisplayName("검색 - 성공")
+    void search_success() {
+        when(userRepository.findByEmailAndDeletedDatetimeIsNull(user.getEmail()))
+                .thenReturn(Optional.of(user));
+
+        Assertions.assertDoesNotThrow(() -> userService.search(user.getEmail()));
+    }
+
+    @Test
+    @DisplayName("검색 - 실패")
+    void search_fail() {
+        UserNotFoundException exception = Assertions.assertThrows(UserNotFoundException.class, () ->
+                userService.search(user.getEmail()));
+
+        assertEquals(ErrorCode.USER_NOT_FOUND, exception.getErrorCode());
+    }
+
+    @Test
+    @DisplayName("회원 정보 수정 - 성공")
+    void infoEdit_success() {
+        when(userRepository.findByEmailAndDeletedDatetimeIsNull(user.getEmail()))
+                .thenReturn(Optional.of(user));
+
+        Assertions.assertDoesNotThrow(() -> userService.infoEdit(user.getEmail(), new UserUpdateRequest("updatePw", null, null)));
+    }
+
+
 
 }
