@@ -1,101 +1,60 @@
-# 📚Book More
+<p align="middle">
+    <img width="250px;" src="assets/favicon.png"/>
+</p>
 
-### Description
-
-바쁜 현대사회에서 책을 읽는 중요성이 떨어지고 있어서 책에 관해서 자유롭게 이야기를 나누고 생각을 공유할 수 있는 커뮤니티가 활성화된다면 좀 더 책을 읽을 수 있는 분위기가 형성될거라고 생각하여 프로젝트를 진행하게
-되었습니다.
+<div align="center">
+<h1> 📚 BookMore[북: 모아] </h1>
+<h3> 리뷰를 모아모아 독서량을 늘리자! </h3>
 
 <br>
 
-### 배포
+너무 바쁜 현대사회, 당신은 얼마만큼의 책을 읽고 있나요?<br>
+매일 책을 읽고자 결심하는 사람들은 많지만 지키기는 참으로 어렵습니다.<br>
+바빠서, 책은 어려워서, 세상에는 책보다 재미난 것들이 너무 많아서,,, 이처럼 이유들도 다양합니다.<br>
+
+<h4> SNS를 하듯 시각적인 효과를 가진 책 리뷰를 나누고 나만의 도전을 만들며 동기부여가 가능한 공간이 생긴다면 이 어렵기만 한 목표가 조금은 가까워지지 않을까요? </h4>
+저희는 이렇듯 독서를 쉽고 재밌게 접하는 분위기를 형성하여 독서량을 늘리고자 이 프로젝트를 진행하게 되었습니다.
+</div>
+
+<br>
+
+## 📌 배포
 - [Swagger](https://api.bookmore.site/swagger-ui/index.html)
 - [홈페이지](https://www.bookmore.site)
 
-### ⚒️ 개발 환경
+<br>
 
-- 에디터 : Intellij Ultimate
-- 개발 툴 : SpringBoot 2.7.5
-- 자바 : JAVA 11
-- 빌드 : Gradle 6.8
-- 서버 : AWS EC2
-- 배포 : Docker
-- 데이터베이스 : MySql 8.0
-- 필수 라이브러리 : SpringBoot Web, MySQL, Spring Data JPA, Lombok, Spring Security
+## 📝 프로젝트 소개
+### ⚒️ 기술 스택
+![stack1](assets/stack1.png)
+![stack2](assets/stack2.png)
+![stack3](assets/stack3.png)
 
 <br>
 
 ### 📍 ERD
-
 ![ERD](assets/bookmore-erd.png)
 
 <br>
 
-### 🌊Workflow
-
-![Infra](assets/infra.png)
+###  🪜 Architecture
+![Architecture](assets/architecture.png)
 
 <br>
 
-### 📄 기능 명세서
+### 📄 API 기능 정의서️
+- [API 기능 정의서 보기](https://auspicious-scar-b04.notion.site/API-5a4851f8d97a4f8bab0e17521210addb)
 
-#### 회원
+<br>
 
-| METHOD  | URL                 | 기능       |
-|---------|---------------------|----------|
-| POST    | /api/v1/users/join  | 회원 가입    |
-| POST    | /api/v1/users/login | 로그인      |
-| PATCH   | /api/v1/users/{id}  | 회원 정보 수정 |
-| DELETE  | /api/v1/users/{id}  | 회원 탈퇴    |
-| GET     | /api/v1/users/{id}  | 회원 상세 조회 |
+### 🖥 프런트 기능 소개
+- [BookMore[북: 모아] 미리 보기](https://auspicious-scar-b04.notion.site/BookMore-ba9f2e0cc4e344e0a048a49fff452302)
 
-#### 랭킹
+<br>
 
-| METHOD | URL                             | 기능            |
-|--------|---------------------------------|---------------|
-| GET    | /api/v1/users/ranks/{id}/follow | 개인 티어 & 랭킹 조회 |
-| GET    | /api/v1/users/ranks             | 티어 랭킹 리스트 조회  |
+## 🙋🏻‍♂️🙋🏻‍♀️ 팀원 소개
 
-#### 팔로잉
-
-| METHOD | URL                          | 기능        |
-|--------|------------------------------|-----------|
-| POST   | /api/v1/users/{id}/follow    | 팔로잉       |
-| DELETE | /api/v1/users/{id}/follow    | 언팔로잉      |
-| GET    | /api/v1/users/{id}/following | 유저 팔로잉 조회 |
-| GET    | /api/v1/users/{id}/follower  | 유저 팔로워 조회 |
-
-#### 챌린지
-
-| METHOD | URL                     | 기능        |
-|--------|-------------------------|-----------|
-| POST   | /api/v1/challenges      | 도전 등록     |
-| GET    | /api/v1/challenges/{id} | 도전 상세 조회  |
-| GET    | /api/v1/challenges      | 도전 리스트 조회 |
-| PATCH  | /api/v1/challenges/{id} | 도전 수정     |
-| DELETE | /api/v1/challenges/{id} | 도전 삭제     |
-
-
-#### 리뷰
-
-| METHOD | URL                              | 기능                 |
-|--------|----------------------------------|--------------------|
-| POST   | /api/v1/books/{isbn}/reviews     | 도서 리뷰 등록           |
-| GET    | /api/v1/books/{isbn}/reviews     | 도서 리뷰 조회           |
-| PATCH  | /api/v1/books/reviews/{id}       | 도서 리뷰 수정           |
-| DELETE | /api/v1/books/reviews/{id}       | 도서 리뷰 삭제           |
-| POST   | /api/v1/books/reviews/{id}/likes | 도서 리뷰 좋아요 / 좋아요 취소 |
-
-#### 책
-
-| METHOD | URL                                                 | 기능       |
-|--------|-----------------------------------------------------|----------|
-| GET    | /api/v1/books?query={title}&page={page}&size={size} | 도서 검색    |
-| GET    | /api/v1/books/{isbn}                                | 도서 상세 조회 |
-
-####  알림
-
-| METHOD | URL            | 기능            |
-|--------|----------------|---------------|
-| GET    | /api/v1/alarms | 팔로잉의 리뷰 등록 알림 |
-| GET    | /api/v1/alarms | 나를 팔로잉하면 알림   |
-| GET    | /api/v1/alarms | 내 리뷰에 좋아요 알림  |
+|                  CTO, Backend                  |                Infra, Backend                 |                 PM, Backend                  |                    Backend                     |                     Backend                     |                 Planner, Backend                  |
+|:----------------------------------------------:|:---------------------------------------------:|:--------------------------------------------:|:----------------------------------------------:|:-----------------------------------------------:|:-------------------------------------------------:|
+| ![](https://github.com/menuhwang.png?size=200) | ![](https://github.com/yjyj1023.png?size=200) | ![](https://github.com/Senna97.png?size=200) | ![](https://github.com/simhyunbo.png?size=200) | ![](https://github.com/Universenn.png?size=200) | ![](https://github.com/Kim-Ji-Yeong.png?size=200) |
+|     [👑황민우](https://github.com/menuhwang)      |      [이연재](https://github.com/yjyj1023)       |      [장서현](https://github.com/Senna97)       |      [심현보](https://github.com/simhyunbo)       |      [우주완](https://github.com/Universenn)       |      [김지영](https://github.com/Kim-Ji-Yeong)       |
