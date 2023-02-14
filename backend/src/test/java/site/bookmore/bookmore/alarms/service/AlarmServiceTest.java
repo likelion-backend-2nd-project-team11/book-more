@@ -69,7 +69,7 @@ class AlarmServiceTest {
         Page<Alarm> alarmPage = new PageImpl<>(List.of(alarm1, alarm2));
 
         when(userRepository.findByEmailAndDeletedDatetimeIsNull(user.getEmail())).thenReturn(Optional.of(user));
-        when(alarmRepository.findByTargetUserAndConfirmedIsFalseAndDeletedDatetimeIsNull(user, pageable)).thenReturn(alarmPage);
+        when(alarmRepository.findByTargetUserAndDeletedDatetimeIsNull(user, pageable)).thenReturn(alarmPage);
         when(reviewRepository.findById(review.getId())).thenReturn(Optional.of(review));
 
         Page<AlarmResponse> responses = alarmService.findByFollowingReview(pageable, user.getEmail());

@@ -1,5 +1,6 @@
 package site.bookmore.bookmore.alarms.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -8,7 +9,7 @@ import lombok.NoArgsConstructor;
 import site.bookmore.bookmore.alarms.entity.Alarm;
 import site.bookmore.bookmore.alarms.entity.AlarmType;
 
-import java.time.format.DateTimeFormatter;
+import java.time.LocalDateTime;
 import java.util.Map;
 
 @AllArgsConstructor
@@ -24,7 +25,8 @@ public class AlarmResponse {
     private String fromUserNickname;
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private Map<String, Object> source;
-    private String createdDatetime;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
+    private LocalDateTime createdDatetime;
 
     public static AlarmResponse of(Alarm alarm, Map<String, Object> source) {
         return AlarmResponse.builder()
@@ -34,7 +36,7 @@ public class AlarmResponse {
                 .fromUserId(alarm.getFromUser().getId())
                 .fromUserNickname(alarm.getFromUser().getNickname())
                 .source(source)
-                .createdDatetime(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss").format(alarm.getCreatedDatetime()))
+                .createdDatetime(alarm.getCreatedDatetime())
                 .build();
     }
 }
