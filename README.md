@@ -32,23 +32,28 @@
 
 <br>
 
+### 🧱 Architecture
+![Architecture](assets/architecture.png)
+
+<br>
+
 ### 📍 ERD
 ![ERD](assets/bookmore-erd.png)
 
 <br>
 
-###  🪜 Architecture
-![Architecture](assets/architecture.png)
-
-<br>
-
 ### 📄 API 기능 정의서️
-- [API 기능 정의서 보기](https://auspicious-scar-b04.notion.site/API-5a4851f8d97a4f8bab0e17521210addb)
+- [API 기능 정의서 & 에러 코드](https://auspicious-scar-b04.notion.site/API-5a4851f8d97a4f8bab0e17521210addb)
 
 <br>
 
-### 🖥 프런트 기능 소개
-- [BookMore[북: 모아] 미리 보기](https://auspicious-scar-b04.notion.site/BookMore-ba9f2e0cc4e344e0a048a49fff452302)
+### 📼 영상으로 만나는 BookMore[북: 모아]
+- [영상 튜토리얼](https://www.youtube.com/watch?v=qPnyP3Q3rXU)
+
+<br>
+
+### 📋 글로 만나는 BookMore[북: 모아]
+- [프런트 기능 미리 보기](https://auspicious-scar-b04.notion.site/BookMore-ba9f2e0cc4e344e0a048a49fff452302)
 
 <br>
 
